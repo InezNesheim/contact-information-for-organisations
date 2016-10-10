@@ -13,15 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AltinnDesktopTool
+namespace AltinnDesktopTool.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for SearchOrganizationInformation.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class SearchOrganizationInformation : UserControl
     {
-
-        public MainWindow()
+        public SearchOrganizationInformation()
         {
             InitializeComponent();
         }
