@@ -43,16 +43,11 @@ namespace AltinnDesktopTool.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<SearchOrganizationInformationViewModel>();
         }
 
-        public ViewModelBase Main
-        {
-            get
-            {
-                //return ServiceLocator.Current.GetInstance<MainViewModel>();
-                return ServiceLocator.Current.GetInstance<SearchOrganizationInformationViewModel>();
-            }
-        }
+        public ViewModelBase Main => ServiceLocator.Current.GetInstance<MainViewModel>();
+        public SearchOrganizationInformationViewModel SearchOrganizationInformationViewModel => ServiceLocator.Current.GetInstance<SearchOrganizationInformationViewModel>();
 
         public static void Cleanup()
         {

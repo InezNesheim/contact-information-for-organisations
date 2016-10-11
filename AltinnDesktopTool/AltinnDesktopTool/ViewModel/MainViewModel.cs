@@ -1,4 +1,6 @@
+using System.Security.Cryptography.X509Certificates;
 using GalaSoft.MvvmLight;
+using Microsoft.Practices.ServiceLocation;
 
 namespace AltinnDesktopTool.ViewModel
 {

@@ -1,6 +1,8 @@
-﻿namespace AltinnDesktopTool.Model
+﻿using GalaSoft.MvvmLight;
+
+namespace AltinnDesktopTool.Model
 {
-    public class ModelBase
+    public class ModelBase : ObservableObject
     {
     }
 }
