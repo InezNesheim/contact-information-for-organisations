@@ -12,8 +12,10 @@
   See http://www.galasoft.ch/mvvm
 */
 
+using System;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+using log4net;
 using Microsoft.Practices.ServiceLocation;
 
 namespace AltinnDesktopTool.ViewModel
@@ -30,20 +32,13 @@ namespace AltinnDesktopTool.ViewModel
         public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+            SimpleIoc.Default.Register(() => LogManager.GetLogger(GetType()));
+            log4net.Config.XmlConfigurator.Configure();
 
-            ////if (ViewModelBase.IsInDesignModeStatic)
-            ////{
-            ////    // Create design time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DesignDataService>();
-            ////}
-            ////else
-            ////{
-            ////    // Create run time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DataService>();
-            ////}
-
+            // View models
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<SearchOrganizationInformationViewModel>();
+
         }
 
         public ViewModelBase Main => ServiceLocator.Current.GetInstance<MainViewModel>();
