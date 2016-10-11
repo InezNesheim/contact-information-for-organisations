@@ -33,6 +33,7 @@ namespace AltinnDesktopTool.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             SimpleIoc.Default.Register(() => LogManager.GetLogger(GetType()));
+            log4net.Config.XmlConfigurator.Configure();
 
             // View models
             SimpleIoc.Default.Register<MainViewModel>();
