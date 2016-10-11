@@ -2,6 +2,8 @@
 {
     public class SearchOrganizationInformationModel : ModelBase
     {
-        public string SearchChriteria { get; set; }
+        public string SearchText { get; set; }
+
+        public SearchType SearchType { get; set; }
     }
 }
