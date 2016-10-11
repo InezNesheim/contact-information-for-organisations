@@ -1,5 +1,4 @@
-﻿using System;
-using AltinnDesktopTool.Model;
+﻿using AltinnDesktopTool.Model;
 using GalaSoft.MvvmLight;
 using log4net;
 
