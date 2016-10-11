@@ -13,6 +13,7 @@ namespace RestClient.Test
         string thumbprint = "5d15d6e888632370e0223b779c4e0f0d9d45ded0";
         string orgno = "910021451";
 
+        /*
         [TestMethod]
         public void GetOrganizationByOrgno_Test()
         {
@@ -50,7 +51,7 @@ namespace RestClient.Test
             SetupConfiguration(query.RestClient);
             var result = query.GetPersonalContacts(orgno);
         }
-
+        */
         /*
         [TestMethod]
         public void TestTest()

@@ -47,18 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AltinnRestClient.cs" />
-    <Compile Include="DTO\Link.cs" />
-    <Compile Include="DTO\Links.cs" />
     <Compile Include="DTO\OfficialContact.cs" />
-    <Compile Include="DTO\OfficialContactEmbedded.cs" />
-    <Compile Include="DTO\OfficialContactsResult.cs" />
     <Compile Include="DTO\Organization.cs" />
-    <Compile Include="DTO\OrganizationEmbedded.cs" />
+    <Compile Include="IRestQuery.cs" />
     <Compile Include="OrganizationQuery.cs" />
-    <Compile Include="DTO\OrganizationsResult.cs" />
     <Compile Include="DTO\PersonalContact.cs" />
-    <Compile Include="DTO\PersonalContactEmbedded.cs" />
-    <Compile Include="DTO\PersonalContactsResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestClientException.cs" />
   </ItemGroup>

@@ -33,7 +33,7 @@ namespace RestClient
         {
             RestClient = new AltinnRestClient();
         }
-
+        /*
         public OrganizationsResult GetOrganizations(string email, string phone = null)
         {
             EnsureAuthenticated();
@@ -99,7 +99,7 @@ namespace RestClient
             return ParseJson<PersonalContactsResult>(json);
         }
 
-
+*/
         /*
         public string TestTest()
         {
