@@ -13,7 +13,7 @@ namespace RestClient.DTO
         public string Type { get; set; }
         public DateTime? LastChanged { get; set; }
         public DateTime? LastConfirmed { get; set; }
-        public OfficialContactsResult OfficialContacts { get; set; }
-        public Links _links { get; set; }
+        public string OfficialContactsLink { get; set; }
+        public string PersonalContactsLink { get; set; }
     }
 }
