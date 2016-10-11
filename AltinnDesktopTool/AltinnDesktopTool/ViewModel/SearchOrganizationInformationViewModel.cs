@@ -14,7 +14,10 @@ namespace AltinnDesktopTool.ViewModel
             _logger = logger;
             Model = new SearchOrganizationInformationModel();
 
-            _logger.Debug("YEAH!");
+            _logger.Debug("Debug!");
+            _logger.Error("Error!");
+            _logger.Warn("Warn!");
+            _logger.Info("Info!");
         }
     }
 }
