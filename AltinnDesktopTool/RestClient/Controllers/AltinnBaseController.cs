@@ -1,5 +1,5 @@
-﻿using RestClient.DTO;
-using RestClient.Util;
+﻿using RestClient.Deserialize;
+using RestClient.DTO;
 using System.Collections.Generic;
 
 namespace RestClient.Controllers

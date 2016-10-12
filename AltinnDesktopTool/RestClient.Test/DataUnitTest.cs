@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RestClient;
 using RestClient.DTO;
-using RestClient.Util;
+using RestClient.Deserialize;
 
 namespace RestClient.Test
 {

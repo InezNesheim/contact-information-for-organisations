@@ -57,6 +57,7 @@
     <Compile Include="OrganizationQuery.UnitTest.cs" />
     <Compile Include="DataUnitTest.cs" />
     <Compile Include="StubTest.cs" />
+    <Compile Include="RestQueryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RestClient\RestClient.csproj">

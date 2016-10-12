@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RestClient
+namespace RestClient.Controllers
 {
 
     /// <summary>
@@ -23,6 +19,8 @@ namespace RestClient
         /// This defines the supported type for this controller.
         /// </summary>
         public Type SupportedType { get; set; }
+
+        internal Type ControllerType { get; set; }
 
         public RestQueryControllerAttribute(string name, Type supportedType)
         {

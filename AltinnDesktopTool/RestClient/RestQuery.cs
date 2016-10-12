@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using log4net;
 using RestClient.Controllers;
 using RestClient.DTO;
 using System.Reflection;
+using RestClient.Resources;
 
 namespace RestClient
 {
@@ -22,7 +21,8 @@ namespace RestClient
         private ILog _log;
         private AltinnRestClient _restClient;
         private bool _isAuthenticated = false;
-        private List<Controller> _controllers = new List<Controller>();
+        private List<RestQueryControllerAttribute> _controllers = new List<RestQueryControllerAttribute>();
+
 
         /// <summary>
         /// Gets or sets the configuration. 
@@ -125,13 +125,13 @@ namespace RestClient
             }
         }
 
-        private ControllerContext GetControllerContext(Controller controller)
+        private ControllerContext GetControllerContext(RestQueryControllerAttribute attr)
         {
             return new ControllerContext()
             {
                 Log = this._log,
                 RestClient = this._restClient,
-                ControllerBaseAddress = string.Format("{0}/{1}", _restQueryConfig.BaseAddress, controller.Name)
+                ControllerBaseAddress = string.Format("{0}/{1}", _restQueryConfig.BaseAddress, attr.Name)
             };
         }
 
@@ -216,13 +216,9 @@ namespace RestClient
                                     {
                                         string name = ((RestQueryControllerAttribute)attr).Name;
                                         Type supptype = ((RestQueryControllerAttribute)attr).SupportedType;
-                                        Controller controller = new Controller()
-                                        {
-                                            Name = name,
-                                            ControllerType = type,
-                                            SupportedType = supptype
-                                        };
-                                        _controllers.Add(controller);
+
+                                        ((RestQueryControllerAttribute)attr).ControllerType = type;
+                                        _controllers.Add((RestQueryControllerAttribute)attr);
                                     }
                                 }
                             }

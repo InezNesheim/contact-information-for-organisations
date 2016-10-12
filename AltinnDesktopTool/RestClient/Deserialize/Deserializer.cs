@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestClient.DTO;
-using RestClient.Deserialize;
 
-namespace RestClient.Util
+namespace RestClient.Deserialize
 {
     public class Deserializer
     {
