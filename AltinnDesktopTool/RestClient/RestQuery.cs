@@ -96,7 +96,7 @@ namespace RestClient
         /// <returns>A lif objects, possibly empty, but never null</returns>
         public IList<T> GetByLink<T>(string url) where T : HalJsonResource
         {
-            IRestQueryController controller = GetControllerByUrl(url, typeof(T));
+            IRestQueryController controller = GetControllerByUrl(url);
             if (controller == null)
                 throw new RestClientException(string.Format("No Controller for url {0}", url));
             return controller.GetByLink<T>(url);
@@ -157,7 +157,7 @@ namespace RestClient
         /// </summary>
         /// <param name="url">Either a full address inkcluding base address or a url part starting with controller name.</param>
         /// <returns>The controller, initiated with context</returns>
-        private IRestQueryController GetControllerByUrl(string url, Type type)
+        private IRestQueryController GetControllerByUrl(string url)
         {
             IRestQueryController controller = null;
             string u = url;
@@ -179,7 +179,7 @@ namespace RestClient
 
             foreach (var item in _controllers)
             {
-                if (item.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase) && item.SupportedType == type)
+                if (item.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
                 {
                     controller = (IRestQueryController)Activator.CreateInstance(item.ControllerType);
                     controller.Context = GetControllerContext(item);

@@ -54,7 +54,7 @@
     <Compile Include="Controller.cs" />
     <Compile Include="ControllerContext.cs" />
     <Compile Include="IRestQueryController.cs" />
-    <Compile Include="Controllers\OrganizationController.cs" />
+    <Compile Include="Controllers\AltinnBaseController.cs" />
     <Compile Include="Deserialize\HalJsonConverter.cs" />
     <Compile Include="Deserialize\OuterJson.cs" />
     <Compile Include="DTO\HalJsonResource.cs" />
