@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RestClient;
 using RestClient.DTO;
+using RestClient.Util;
 
 namespace RestClient.Test
 {
@@ -10,27 +11,94 @@ namespace RestClient.Test
     {
 
         private const string orgdata =
-@"{
-	""Name"": ""sample string 60"",
-	""OrganizationNumber"": ""sample string 17"",
-	""Type"": ""sample string 57"",
-	""LastChanged"": ""2016-10-10T09:16:30.0784402+02:00"",
-	""LastConfirmed"": ""2016-10-10T09:16:30.0784402+02:00"",
-	""OfficialContacts"": {
-		""_links"": {
-			""self"": {
-				""href"": ""sample string 27""
-			}
-		},
-	},
+@"
+{
+	""Name"": ""KIRKENES OG AUSTBØ"",
+	""OrganizationNumber"": ""910021451"",
+	""Type"": ""AS"",
+	""LastChanged"": ""2016-10-11T08:36:59.43"",
+	""LastConfirmed"": ""2016-08-05T15:38:06.403"",
 	""_links"": {
 		""self"": {
-			""href"": ""sample string 28""
+			""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451""
+		},
+		""personalcontacts"": {
+			""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451/personalcontacts""
+		},
+		""officialcontacts"": {
+			""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451/officialcontacts""
 		}
 	}
 }
 ";
 
+        private const string organizations =
+@"{
+	""_links"": {
+		""self"": {
+			""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations""
+		}
+	},
+	""_embedded"": {
+		""organizations"": [{
+			""Name"": ""Ikke i Altinn register"",
+			""OrganizationNumber"": ""00210    "",
+			""Type"": null,
+			""LastChanged"": null,
+			""LastConfirmed"": null,
+			""_links"": {
+				""self"": {
+					""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/00210    ""
+
+                },
+				""personalcontacts"": {
+					""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/00210    /personalcontacts""
+				},
+				""officialcontacts"": {
+					""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/00210    /officialcontacts""
+				}
+			}
+		},
+		{
+			""Name"": ""SKD TEST DLS 004"",
+			""OrganizationNumber"": ""007641060"",
+			""Type"": ""KS"",
+			""LastChanged"": ""2012-03-08T00:00:00"",
+			""LastConfirmed"": null,
+			""_links"": {
+				""self"": {
+					""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/007641060""
+				},
+				""personalcontacts"": {
+					""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/007641060/personalcontacts""
+				},
+				""officialcontacts"": {
+					""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/007641060/officialcontacts""
+				}
+			}
+		},
+		{
+			""Name"": ""SKD TEST DLS 005"",
+			""OrganizationNumber"": ""007978863"",
+			""Type"": ""KTRF"",
+			""LastChanged"": ""2012-03-08T00:00:00"",
+			""LastConfirmed"": null,
+			""_links"": {
+				""self"": {
+					""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/007978863""
+				},
+				""personalcontacts"": {
+					""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/007978863/personalcontacts""
+				},
+				""officialcontacts"": {
+					""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/007978863/officialcontacts""
+				}
+			}
+		}
+    ]
+    }
+    }
+";
 
         private const string perscontacts =
 @"
@@ -74,7 +142,7 @@ namespace RestClient.Test
 }
 ";
 
-        private const string officialcontacts=
+        private const string officialcontacts =
 @"
 {
 	""_links"": {
@@ -100,14 +168,36 @@ namespace RestClient.Test
 ";
 
 
-
-        /*
         [TestMethod]
-        public void Organization_Test ()
+        public void OrganizationsSerializer_Test()
         {
-            Organization org = OrganizationQuery.ParseJson<Organization>(orgdata);
-            Console.WriteLine(org.Name);
+            //var result = Util.Deserializer.DeserializeOrganizations(organizations);
+            var result = Deserializer.DeserializeHalJsonResourceList<Organization>(organizations);
+            Assert.AreEqual(3, result.Count);
         }
-        */
+
+        [TestMethod]
+        public void OrganizationSerializer_Test()
+        {
+            //var result = Util.Deserializer.DeserializeOrganizations(organizations);
+            var result = Deserializer.DeserializeHalJsonResource<Organization>(orgdata);
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public void PersonalContactsSerializer_Test()
+        {
+            //var result = Util.Deserializer.DeserializeOrganizations(organizations);
+            var result = Deserializer.DeserializeHalJsonResourceList<PersonalContact>(perscontacts);
+            Assert.AreEqual(2, result.Count);
+        }
+
+        [TestMethod]
+        public void OfficialContactsSerializer_Test()
+        {
+            //var result = Util.Deserializer.DeserializeOrganizations(organizations);
+            var result = Deserializer.DeserializeHalJsonResourceList<OfficialContact>(officialcontacts);
+            Assert.AreEqual(2, result.Count);
+        }
     }
 }
