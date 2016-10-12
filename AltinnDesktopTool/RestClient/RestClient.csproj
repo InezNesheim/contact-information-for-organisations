@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AltinnRestClient.cs" />
+    <Compile Include="Controller.cs" />
     <Compile Include="ControllerContext.cs" />
     <Compile Include="IRestQueryController.cs" />
     <Compile Include="Controllers\OrganizationController.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="RestClientException.cs" />
     <Compile Include="Deserialize\Deserializer.cs" />
     <Compile Include="RestQuery.cs" />
+    <Compile Include="RestQueryControllerAttribute.cs" />
     <Compile Include="RestQueryStub.cs" />
   </ItemGroup>
   <ItemGroup>
