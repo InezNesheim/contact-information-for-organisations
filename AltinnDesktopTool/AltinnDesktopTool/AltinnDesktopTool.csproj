@@ -83,6 +83,7 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\SearchOrganizationInformationModel.cs" />
+    <Compile Include="ViewModel\RadioButtonCheckedConverter.cs" />
     <Compile Include="ViewModel\SearchOrganizationInformationViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\SearchOrganizationInformation.xaml.cs">

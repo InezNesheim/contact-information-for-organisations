@@ -3,24 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Converters="clr-namespace:AltinnDesktopTool.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="400"
               DataContext="{Binding SearchOrganizationInformationViewModel, Source={StaticResource ViewModelLocator}}">
+    <UserControl.Resources>
+        <Converters:RadioButtonCheckedConverter x:Key="RadioButtonCheckedConverter"></Converters:RadioButtonCheckedConverter>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Stretch" DataContext="{Binding Model.SearchText, Mode=OneWayToSource}">Test</TextBox>
-        <Button Grid.Row="0" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right">Search</Button>
+        <TextBox Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Stretch" Text="{Binding Path=Model.SearchText, Mode=OneWayToSource}"></TextBox>
+        <Button Grid.Row="0" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Command="{Binding SearchCommand}" CommandParameter="{Binding Model}">Search</Button>
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
-            <RadioButton GroupName="SearchType" Content="Phone number" IsChecked="True"/>
-            <RadioButton GroupName="SearchType" Content="Email address" />
-            <RadioButton GroupName="SearchType" Content="Organisation number" />
+            <RadioButton GroupName="SearchType" Content="Phone number" IsChecked="{Binding Path=Model.SearchType, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter=PhoneNumber}"/>
+            <RadioButton GroupName="SearchType" Content="Email address" IsChecked="{Binding Path=Model.SearchType, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter=EmailAddress}"/>
+            <RadioButton GroupName="SearchType" Content="Organization number" IsChecked="{Binding Path=Model.SearchType, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter=OrganizationNumber}"/>
         </StackPanel>
     </Grid>
 </UserControl>
