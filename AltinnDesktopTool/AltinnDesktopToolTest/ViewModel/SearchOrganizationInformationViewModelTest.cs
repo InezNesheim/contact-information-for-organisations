@@ -1,8 +1,10 @@
-﻿using NUnit.Framework;
+﻿using System;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AltinnDesktopToolTest.ViewModel
 {
-    [TestFixture]
+    [TestClass]
     public class SearchOrganizationInformationViewModelTest
     {
     }

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RestClient.DTO
 {
-    public class OfficialContact
+    [PluralName("OfficialContacts")]
+    public class OfficialContact : HalJsonResource
     {
         public string MobileNumber { get; set; }
         public DateTime? MobileNumberChanged { get; set; }
