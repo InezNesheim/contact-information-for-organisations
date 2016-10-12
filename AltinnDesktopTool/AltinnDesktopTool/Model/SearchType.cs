@@ -16,8 +16,8 @@
         EmailAddress = 1,
 
         /// <summary>
-        /// The search input is an organisation number.
+        /// The search input is an organization number.
         /// </summary>
-        OrganisationNumber = 2
+        OrganizationNumber = 2
     }
 }
