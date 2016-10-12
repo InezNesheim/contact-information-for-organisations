@@ -64,7 +64,8 @@ namespace RestClient
 
 
         public T Get<T>(string id) where T : HalJsonResource
-        { 
+        {
+            EnsureAuthenticated();
             IRestQueryController controller = GetControllerByType(typeof(T));
             if (controller == null)
                 throw new RestClientException(string.Format("No Controller for type {0}", typeof(T)));
@@ -80,7 +81,8 @@ namespace RestClient
         /// <param name="filter">The name value pair filter</param>
         /// <returns>A list of objects, possibly empty, but never null.</returns>
         public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
-        { 
+        {
+            EnsureAuthenticated();
             IRestQueryController controller = GetControllerByType(typeof(T));
             if (controller == null)
                 throw new RestClientException(string.Format("No Controller for type {0}", typeof(T)));
@@ -96,6 +98,7 @@ namespace RestClient
         /// <returns>A lif objects, possibly empty, but never null</returns>
         public IList<T> GetByLink<T>(string url) where T : HalJsonResource
         {
+            EnsureAuthenticated();
             IRestQueryController controller = GetControllerByUrl(url);
             if (controller == null)
                 throw new RestClientException(string.Format("No Controller for url {0}", url));
@@ -171,7 +174,7 @@ namespace RestClient
                 u = u.Substring(1);
 
             string name = u;
-            int index = u.First(x => x == '/' || x == '?' || x == '$');
+            int index = u.IndexOfAny(new char[] { '/', '?', '$' });
             if (index > 0)
             {
                 name = u.Substring(0, index);
