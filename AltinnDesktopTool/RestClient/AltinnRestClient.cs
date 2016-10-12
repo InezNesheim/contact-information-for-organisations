@@ -81,18 +81,11 @@ namespace RestClient
         }
 
 
-        public AltinnRestClient()
+        public AltinnRestClient(string baseAddress, string apiKey, string certificateThumbprint)
         {
-            _baseAddress = ConfigurationManager.AppSettings["base_address"];
-            _apikey = ConfigurationManager.AppSettings["api_key"];
-            string timeoutstr = ConfigurationManager.AppSettings["timeout"];
-            if (!string.IsNullOrEmpty(timeoutstr))
-            {
-                int n;
-                if (int.TryParse(timeoutstr, out n))
-                    _timeout = n;
-            }
-            _thumbprint = ConfigurationManager.AppSettings["thumbprint"];
+            _baseAddress = baseAddress;
+            _apikey = apiKey;
+            _thumbprint = certificateThumbprint;
         }
 
 

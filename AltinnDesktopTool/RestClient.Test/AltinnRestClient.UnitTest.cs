@@ -14,11 +14,7 @@ namespace RestClient.Test
         [TestMethod]
         public void GetClient_Test()
         {
-            AltinnRestClient client = new AltinnRestClient();
-
-            client.BaseAddress = baseaddress;
-            client.ApiKey = apikey;
-            client.Thumbprint = thumbprint;
+            AltinnRestClient client = new AltinnRestClient(baseaddress, apikey, thumbprint);
 
             // Authenticate
             // NOTE: Altinn returns 401 even if it is validated.
