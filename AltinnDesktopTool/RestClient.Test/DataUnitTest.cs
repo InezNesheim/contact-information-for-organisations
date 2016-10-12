@@ -11,22 +11,22 @@ namespace RestClient.Test
     {
 
         private const string orgdata =
-@"{
-	""Name"": ""sample string 60"",
-	""OrganizationNumber"": ""sample string 17"",
-	""Type"": ""sample string 57"",
-	""LastChanged"": ""2016-10-10T09:16:30.0784402+02:00"",
-	""LastConfirmed"": ""2016-10-10T09:16:30.0784402+02:00"",
-	""OfficialContacts"": {
-		""_links"": {
-			""self"": {
-				""href"": ""sample string 27""
-			}
-		},
-	},
+@"
+{
+	""Name"": ""KIRKENES OG AUSTBØ"",
+	""OrganizationNumber"": ""910021451"",
+	""Type"": ""AS"",
+	""LastChanged"": ""2016-10-11T08:36:59.43"",
+	""LastConfirmed"": ""2016-08-05T15:38:06.403"",
 	""_links"": {
 		""self"": {
-			""href"": ""sample string 28""
+			""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451""
+		},
+		""personalcontacts"": {
+			""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451/personalcontacts""
+		},
+		""officialcontacts"": {
+			""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451/officialcontacts""
 		}
 	}
 }
