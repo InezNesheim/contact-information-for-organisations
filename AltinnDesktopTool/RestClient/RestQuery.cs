@@ -53,7 +53,7 @@ namespace RestClient
             _controllers.Add("organizations", typeof(OrganizationController));
         }
 
-        public T Get<T>(string id)
+        public T Get<T>(string id) where T : HalJsonResource
         {
             IRestQueryController controller = GetControllerByType(typeof(T));
             if (controller == null)
@@ -62,7 +62,7 @@ namespace RestClient
             return controller.Get<T>(id);
         }
 
-        public IList<T> Get<T>(KeyValuePair<string, string> filter)
+        public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
             IRestQueryController controller = GetControllerByType(typeof(T));
             if (controller == null)
@@ -71,7 +71,7 @@ namespace RestClient
             return controller.Get<T>(filter);
         }
 
-        public IList<T> GetByLink<T>(string url)
+        public IList<T> GetByLink<T>(string url) where T : HalJsonResource
         {
             IRestQueryController controller = GetControllerByUrl(url);
             if (controller == null)

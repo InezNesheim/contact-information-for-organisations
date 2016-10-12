@@ -43,7 +43,7 @@ namespace RestClient
         /// <typeparam name="T">Must be organization</typeparam>
         /// <param name="id">Organization Number</param>
         /// <returns></returns>
-        public T Get<T>(string id)
+        public T Get<T>(string id) where T : HalJsonResource
         {
             T org = Activator.CreateInstance<T>();
 
@@ -66,7 +66,7 @@ namespace RestClient
         /// <typeparam name="T">Must be Organization</typeparam>
         /// <param name="filter"></param>
         /// <returns>List</returns>
-        public IList<T> Get<T>(KeyValuePair<string, string> filter)
+        public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
             T org1 = Activator.CreateInstance<T>();
             T org2 = Activator.CreateInstance<T>();
@@ -84,7 +84,7 @@ namespace RestClient
             };
         }
 
-        public IList<T> GetByLink<T>(string url)
+        public IList<T> GetByLink<T>(string url) where T: HalJsonResource
         {
             T contact1 = Activator.CreateInstance<T>();
             T contact2 = Activator.CreateInstance<T>();
