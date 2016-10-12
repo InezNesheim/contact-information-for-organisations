@@ -2,10 +2,6 @@
 using Newtonsoft.Json.Linq;
 using RestClient.DTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RestClient.Deserialize
 {

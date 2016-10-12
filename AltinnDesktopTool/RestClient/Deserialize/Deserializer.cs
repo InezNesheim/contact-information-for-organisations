@@ -10,7 +10,8 @@ namespace RestClient.Util
     public class Deserializer
     {
         /// <summary>
-        /// De-serialize the list of HalJsonResources from HAL+JSON format
+        /// Deserializes a list of Typed objects from HAL+JSON format.
+        /// Type T should have HalJsonResource as base class
         /// </summary>
         /// <param name="json">Input string to deserialize</param>
         /// <returns></returns>
@@ -37,6 +38,13 @@ namespace RestClient.Util
             return resources;
         }
 
+        /// <summary>
+        /// Deserializes a Typed object from HAL+JSON format
+        /// Type T should have HalJsonResource as base class
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        /// <returns></returns>
         public static T DeserializeHalJsonResource<T>(string json) where T : HalJsonResource
         {
             T resource = null;

@@ -2,6 +2,9 @@
 
 namespace RestClient.DTO
 {
+    /// <summary>
+    /// Base class for Dto objects - deserializable from HAL+JSON format
+    /// </summary>
     public class HalJsonResource
     {
         public HalJsonResource()
@@ -15,6 +18,9 @@ namespace RestClient.DTO
         }
     }
 
+    /// <summary>
+    /// Attribute for indicating object list name
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class PluralNameAttribute : Attribute
     {
