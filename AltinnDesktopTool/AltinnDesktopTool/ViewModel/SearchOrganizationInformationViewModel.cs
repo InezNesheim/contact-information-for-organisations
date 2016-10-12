@@ -30,6 +30,7 @@ namespace AltinnDesktopTool.ViewModel
         private void SearchOrganizations(SearchOrganizationInformationModel obj)
         {
             // TODO call proxy and get orgs
+            return;
         }
     }
 }
