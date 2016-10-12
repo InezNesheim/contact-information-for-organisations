@@ -13,6 +13,7 @@ namespace RestClient
     {
         //private string _baseUri = "api/serviceowner/organizations";
 
+        /*
         private string _AuthenticateUri = "api/serviceowner/organizations?ForceEIAuthentication";
         private string _GetOrganizationByOrgnoUri = "api/serviceowner/organizations/{0}";
         private string _GetOrganizationsByPhoneOrEmailUri = "api/serviceowner/organizations?{0}={1}$top={2}$skip={3}";
@@ -33,6 +34,7 @@ namespace RestClient
         {
             RestClient = new AltinnRestClient();
         }
+        */
         /*
         public OrganizationsResult GetOrganizations(string email, string phone = null)
         {
@@ -110,7 +112,7 @@ namespace RestClient
         }
         */
 
-
+/*
         public static T ParseJson<T>(string json)
         {
             return JsonConvert.DeserializeObject<T>(json);
@@ -132,7 +134,7 @@ namespace RestClient
             }
 
         }
-
+*/
     }
 
 }

@@ -31,11 +31,83 @@ namespace RestClient.Test
 }
 ";
 
+
+        private const string perscontacts =
+@"
+{
+	""_links"": {
+		""self"": {
+			""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451/personalcontacts""
+		}
+	},
+	""_embedded"": {
+		""personalcontacts"": [{
+			""PersonalContactId"": ""r50022994"",
+			""Name"": ""ROLF BJØRN               "",
+			""SocialSecurityNumber"": ""06117701547"",
+			""MobileNumber"": ""47419641"",
+			""MobileNumberChanged"": ""2016-10-11T08:15:33.987"",
+			""EMailAddress"": ""erlend.oksvoll@brreg.no"",
+			""EMailAddressChanged"": ""2016-10-11T08:15:33.987"",
+			""_links"": {
+				""roles"": {
+					""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451/personalcontacts/r50022994/roles""
+
+                }
+			}
+		},
+		{
+			""PersonalContactId"": ""r50041943"",
+			""Name"": ""DRAGE TARALD"",
+			""SocialSecurityNumber"": ""11106700992"",
+			""MobileNumber"": ""98008410"",
+			""MobileNumberChanged"": ""2016-06-22T14:17:11.23"",
+			""EMailAddress"": ""aen@brreg.no"",
+			""EMailAddressChanged"": ""2016-06-22T14:17:11.23"",
+			""_links"": {
+				""roles"": {
+					""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451/personalcontacts/r50041943/roles""
+				}
+			}
+		}]
+	}
+}
+";
+
+        private const string officialcontacts=
+@"
+{
+	""_links"": {
+		""self"": {
+			""href"": ""https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451/officialcontacts""
+		}
+	},
+	""_embedded"": {
+		""officialcontacts"": [{
+			""MobileNumber"": ""12121313"",
+			""MobileNumberChanged"": ""2016-10-11T08:15:33.987"",
+			""EMailAddress"": ""petter@gmail.com"",
+			""EMailAddressChanged"": null
+        },
+        {
+			""MobileNumber"": ""12121414"",
+			""MobileNumberChanged"": ""2016-03-21T02:30:00"",
+			""EMailAddress"": ""pål@gmail.com"",
+			""EMailAddressChanged"": ""2016-03-21T02:32:25""
+        }]
+	}
+}
+";
+
+
+
+        /*
         [TestMethod]
         public void Organization_Test ()
         {
             Organization org = OrganizationQuery.ParseJson<Organization>(orgdata);
             Console.WriteLine(org.Name);
         }
+        */
     }
 }
