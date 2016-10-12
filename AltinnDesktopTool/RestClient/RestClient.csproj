@@ -51,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AltinnRestClient.cs" />
+    <Compile Include="Deserialize\HalJsonConverter.cs" />
+    <Compile Include="Deserialize\OuterJson.cs" />
+    <Compile Include="DTO\HalJsonResource.cs" />
     <Compile Include="DTO\OfficialContact.cs" />
     <Compile Include="DTO\Organization.cs" />
     <Compile Include="IRestQuery.cs" />
@@ -59,7 +62,7 @@
     <Compile Include="DTO\PersonalContact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestClientException.cs" />
-    <Compile Include="Util\Deserializer.cs" />
+    <Compile Include="Deserialize\Deserializer.cs" />
     <Compile Include="RestQuery.cs" />
     <Compile Include="RestQueryStub.cs" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RestClient;
 using RestClient.DTO;
+using RestClient.Util;
 
 namespace RestClient.Test
 {
@@ -109,7 +110,8 @@ namespace RestClient.Test
         [TestMethod]
         public void OrganizationSerializer_Test()
         {
-            var result = Util.Deserializer.DeserializeOrganizations(organizations);
+            //var result = Util.Deserializer.DeserializeOrganizations(organizations);
+            var result = Deserializer.DeserializeHalJsonResource<Organization>(organizations);
             ;
         }
     }

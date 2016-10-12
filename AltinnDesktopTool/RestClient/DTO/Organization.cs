@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace RestClient.DTO
 {
-    //[JsonConverter(typeof(Util.Deserializer.OrganizationConverter))]
-    public class Organization
+    [PluralName("Organizations")]
+    public class Organization : HalJsonResource
     {
         public string Name { get; set; }
         public string OrganizationNumber { get; set; }

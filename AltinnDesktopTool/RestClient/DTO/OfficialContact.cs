@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace RestClient.DTO
 {
-    public class OfficialContact
+    [PluralName("OfficialContacts")]
+    public class OfficialContact : HalJsonResource
     {
         public string MobileNumber { get; set; }
         public DateTime? MobileNumberChanged { get; set; }

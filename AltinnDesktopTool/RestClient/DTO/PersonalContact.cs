@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace RestClient.DTO
 {
-    public class PersonalContact
+    [PluralName("PersonalContacts")]
+    public class PersonalContact : HalJsonResource
     {
         public string PersonalContactId { get; set; }
         public string Name { get; set; }
