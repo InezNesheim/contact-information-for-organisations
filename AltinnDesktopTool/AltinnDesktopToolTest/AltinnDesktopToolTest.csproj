@@ -81,6 +81,10 @@
       <Project>{11bcd26a-9604-4b02-bccf-f85c693f685f}</Project>
       <Name>AltinnDesktopTool</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RestClient\RestClient.csproj">
+      <Project>{bf6fb931-d0c9-48a4-9e9d-15eb71b0f13e}</Project>
+      <Name>RestClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using AltinnDesktopTool.Model;
-using AltinnDesktopTool.Utils;
 using AltinnDesktopTool.Utils.PubSub;
 
 using RestClient;
@@ -15,10 +14,9 @@ namespace AltinnDesktopTool.ViewModel
 {
     public class SearchOrganizationInformationViewModel : ViewModelBase
     {
-        public event PubSubEventHandler<List<object>> SearchResultRecievedEventHandler;
-
         private readonly ILog _logger;
 
+        public event PubSubEventHandler<IList<Organization>> SearchResultRecievedEventHandler;
 
         public SearchOrganizationInformationModel Model { get; set; }
 
@@ -30,10 +28,10 @@ namespace AltinnDesktopTool.ViewModel
         {
             _logger = logger;
             Model = new SearchOrganizationInformationModel();
-            SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(SearchOrganizations);
             RestProxy = new RestQueryStub();
+            SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(SearchCommandHandler);
 
-            PubSub<List<object>>.AddEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
+            PubSub<IList<Organization>>.AddEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
 
             // Test loggers
             _logger.Debug("Debug!");
@@ -42,33 +40,35 @@ namespace AltinnDesktopTool.ViewModel
             _logger.Info("Info!");
         }
 
-        private void SearchOrganizations(SearchOrganizationInformationModel obj)
+        private void SearchCommandHandler(SearchOrganizationInformationModel obj)
         {
-            _logger.Debug(GetType().FullName + " Seraching for: " + obj.SearchText + ", " + obj.SearchType);
-
+            _logger.Debug(GetType().FullName + " Searching for: " + obj.SearchText + ", " + obj.SearchType);
+            
             IList<Organization> organizations = new List<Organization>();
             
             switch (obj.SearchType)
             {
                 case SearchType.EmailAddress:
-                    {
-                        organizations = RestProxy.Get<Organization>(new KeyValuePair<string, string>("email", obj.SearchText));
-                        break;
-                    }
+                {
+                    organizations = RestProxy.Get<Organization>(new KeyValuePair<string, string>("email", obj.SearchText));
+                    break;
+                }
                 case SearchType.PhoneNumber:
-                    {
-                        organizations = RestProxy.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", obj.SearchText));
-                        break;
-                    }
+                {
+                    organizations =
+                    RestProxy.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", obj.SearchText));
+                    break;
+                }
                 case SearchType.OrganizationNumber:
-                    {
-                        var organization = RestProxy.Get<Organization>(obj.SearchText);
-                        organizations.Add(organization);
-                        break;
-                    }
+                {
+                    var organization = RestProxy.Get<Organization>(obj.SearchText);
+                    organizations.Add(organization);
+                    break;
+                }
             }
-            
-            PubSub<IList<Organization>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this, new PubSubEventArgs<IList<Organization>>(organizations));
+
+            PubSub<IList<Organization>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
+                new PubSubEventArgs<IList<Organization>>(organizations));
         }
     }
 }
