@@ -63,7 +63,6 @@
   <ItemGroup>
     <Compile Include="AltinnRestClient.UnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="OrganizationQuery.UnitTest.cs" />
     <Compile Include="DataUnitTest.cs" />
     <Compile Include="StubTest.cs" />
     <Compile Include="RestQueryTest.cs" />
