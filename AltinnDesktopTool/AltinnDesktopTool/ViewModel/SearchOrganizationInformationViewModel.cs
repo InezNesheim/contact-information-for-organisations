@@ -9,7 +9,7 @@ namespace AltinnDesktopTool.ViewModel
 {
     public class SearchOrganizationInformationViewModel : ViewModelBase
     {
-        public event PubSubEventHandler<object> SearchResultRecievedEventHandler;
+        public event PubSubEventHandler<List<object>> SearchResultRecievedEventHandler;
 
         private readonly ILog _logger;
         
@@ -24,7 +24,7 @@ namespace AltinnDesktopTool.ViewModel
             Model = new SearchOrganizationInformationModel();
             SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(SearchCommandHandler);
 
-            PubSub<object>.AddEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
+            PubSub<List<object>>.AddEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
 
             // Test loggers
             _logger.Debug("Debug!");
@@ -40,7 +40,7 @@ namespace AltinnDesktopTool.ViewModel
             // TODO call proxy and get orgs
             
             var result = new List<object>(); // TODO Change object to relevant model
-            PubSub<object>.RaiseEvent(EventNames.SearchResultRecievedEvent, this, new PubSubEventArgs<object>(result));
+            PubSub<List<object>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this, new PubSubEventArgs<List<object>>(result));
             return;
         }
     }

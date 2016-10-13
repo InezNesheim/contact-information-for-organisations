@@ -65,7 +65,7 @@ namespace AltinnDesktopToolTest.ViewModel
         [TestCategory("ViewModel")]
         public void SearchOrganizationInformationViewModelTest_SendsEvent_WhenSearchResultIsRecieved()
         {
-            PubSub<object>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
+            PubSub<List<object>>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
 
             var target = GetViewModel();
 
@@ -75,9 +75,9 @@ namespace AltinnDesktopToolTest.ViewModel
 
         }
 
-        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<object> args)
+        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<List<object>> args)
         {
-            _searchResult = args.Item as List<object>;
+            _searchResult = args.Item;
         }
 
         #endregion
