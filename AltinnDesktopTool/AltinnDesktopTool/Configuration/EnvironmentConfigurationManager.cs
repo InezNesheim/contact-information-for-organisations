@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
-using System.Configuration;
 using System.Xml.Linq;
 using System.Linq;
 using System;
@@ -30,6 +28,7 @@ namespace AltinnDesktopTool.Configuration
                           select new EnvironmentConfiguration
                           {
                                 Name = config.Element("name").Value,
+                                ThemeName = config.Element("themeName").Value,
                                 ApiKey = config.Element("apiKey").Value,
                                 BaseAddress = config.Element("baseAddress").Value,
                                 ThumbPrint = config.Element("thumbprint").Value,

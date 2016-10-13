@@ -104,7 +104,7 @@ namespace RestClient
             if (controller == null)
             {
                 string err = string.Format(CONTROLLER_NOT_FOUND_FOR_TYPE_EXCEPTION, typeof(T));
-                Log(err, true);
+                Log(err, LogLevel.Error);
                 throw new RestClientException(err);
             }
             try
@@ -113,7 +113,7 @@ namespace RestClient
             }
             catch (Exception ex)
             {
-                Log(CONTROLLER_EXCEPTION_TEXT, true, ex);
+                Log(CONTROLLER_EXCEPTION_TEXT, LogLevel.Error, ex);
                 if (ex is RestClientException)
                     throw;
                 else
@@ -136,7 +136,7 @@ namespace RestClient
             if (controller == null)
             {
                 string err = string.Format(CONTROLLER_NOT_FOUND_FOR_TYPE_EXCEPTION, typeof(T));
-                Log(err, true);
+                Log(err, LogLevel.Error);
                 throw new RestClientException(err);
             }
             try
@@ -145,7 +145,7 @@ namespace RestClient
             }
             catch (Exception ex)
             {
-                Log(CONTROLLER_EXCEPTION_TEXT, true, ex);
+                Log(CONTROLLER_EXCEPTION_TEXT, LogLevel.Error, ex);
                 if (ex is RestClientException)
                     throw;
                 else
@@ -168,7 +168,7 @@ namespace RestClient
             if (controller == null)
             {
                 string err = string.Format(CONTROLLER_NOT_FOUND_FOR_URL, url);
-                Log(err, true);
+                Log(err, LogLevel.Error);
                 throw new RestClientException(err);
             }
             try
@@ -177,7 +177,7 @@ namespace RestClient
             }
             catch (Exception ex)
             {
-                Log(CONTROLLER_EXCEPTION_TEXT, true, ex);
+                Log(CONTROLLER_EXCEPTION_TEXT, LogLevel.Error, ex);
                 if (ex is RestClientException)
                     throw;
                 else
@@ -324,7 +324,7 @@ namespace RestClient
                 catch (Exception ex)
                 {
                     // In some situation an exception is raised which is not harmfull.
-                    Log("Error while browsing assemblies for controllers (harmless)", false, ex);
+                    Log("Error while browsing assemblies for controllers (harmless)", LogLevel.Warning, ex);
                 }
             }
         }
@@ -336,21 +336,43 @@ namespace RestClient
         /// <param name="text">Error text</param>
         /// <param name="fatal">True if logging is fatal</param>
         /// <param name="ex">Optional exception</param>
-        private void Log(string text, bool fatal = true, Exception ex = null)
+        private void Log(string text,  LogLevel level, Exception ex = null)
         {
             if (_log != null)
             {
                 try
                 {
-                    if (fatal)
-                        _log.Fatal(text, ex);
-                    else
-                        _log.Error(text, ex);
+                    switch(level)
+                    {
+                        case LogLevel.Debug:
+                            _log.Debug(text);
+                            break;
+                        case LogLevel.Error:
+                            _log.Error(text, ex);
+                            break;
+                        case LogLevel.Warning:
+                            _log.Warn(text);
+                            break;
+                        case LogLevel.Info:
+                            _log.Info(text);
+                            break;
+                        case LogLevel.Fatal:
+                            _log.Fatal(text, ex);
+                            break;
+                    }                        
                 }
                 catch { }
             }
         }
 
+        public enum LogLevel
+        {
+            Debug = 0,
+            Error,
+            Warning,
+            Info,
+            Fatal,
+        }
         #endregion
     }
 
