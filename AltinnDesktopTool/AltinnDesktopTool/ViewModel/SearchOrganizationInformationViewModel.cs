@@ -6,7 +6,7 @@ using RestClient.DTO;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-
+using GalaSoft.MvvmLight.Messaging;
 using log4net;
 
 namespace AltinnDesktopTool.ViewModel
@@ -19,11 +19,14 @@ namespace AltinnDesktopTool.ViewModel
 
         public RelayCommand<SearchOrganizationInformationModel> SearchCommand { get; set; }
 
+        public IRestQuery RestProxy { get; set; }
+
         public SearchOrganizationInformationViewModel(ILog logger)
         {
             _logger = logger;
             Model = new SearchOrganizationInformationModel();
             SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(SearchOrganizations);
+            RestProxy = new RestQueryStub();
 
             // Test loggers
             _logger.Debug("Debug!");
@@ -35,32 +38,31 @@ namespace AltinnDesktopTool.ViewModel
         private void SearchOrganizations(SearchOrganizationInformationModel obj)
         {
             _logger.Debug(GetType().FullName + " Seraching for: " + obj.SearchText + ", " + obj.SearchType);
-            // TODO call proxy and get orgs
 
-            IList<Organization> organizations = new List<Organization>();
+            IList<Organization> organizations = null;
 
             switch (obj.SearchType)
             {
                 case SearchType.EmailAddress:
                     {
-                        IRestQuery query = new RestQueryStub();
-                        organizations = query.Get<Organization>(new KeyValuePair<string, string>("email", obj.SearchText));
+                        organizations = RestProxy.Get<Organization>(new KeyValuePair<string, string>("email", obj.SearchText));
                         break;
                     }
                 case SearchType.PhoneNumber:
                     {
-                        IRestQuery query = new RestQueryStub();
-                        organizations = query.Get<Organization>(new KeyValuePair<string, string>("phonenumber", obj.SearchText));
+                        organizations = RestProxy.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", obj.SearchText));
                         break;
                     }
                 case SearchType.OrganizationNumber:
                     {
-                        IRestQuery query = new RestQueryStub();
-                        var organization = query.Get<Organization>(obj.SearchText);
-                        organizations.Add(organization);
+                        var organization = RestProxy.Get<Organization>(obj.SearchText);
+                        organizations = new List<Organization> {organization};
                         break;
                     }
             }
+
+            // TODO: The application should have its own Model and not use the DTO
+            MessengerInstance.Send(organizations);
         }
     }
 }
