@@ -23,7 +23,6 @@ namespace RestClient
         private string _thumbprint;
         #endregion
 
-
         #region public properties
 
         /// <summary>
@@ -113,7 +112,6 @@ namespace RestClient
         #endregion
 
 
-
         #region constructors
         /// <summary>
         /// Constructor providing the required properties
@@ -126,9 +124,7 @@ namespace RestClient
         }
 
         #endregion
-
-
-
+    
         #region public and protected methods
         /// <summary>
         /// Performs a Get towards Altinn
@@ -163,8 +159,6 @@ namespace RestClient
         }
 
         #endregion
-
-
 
         #region private implementation
         private void InvalidateHandler()
