@@ -11,8 +11,8 @@ namespace RestClient
         private static PropertyInfo Prop_Org_Name = typeof(Organization).GetProperty("Name");
         private static PropertyInfo Prop_Org_LastChanged = typeof(Organization).GetProperty("LastChanged");
         private static PropertyInfo Prop_Org_Type = typeof(Organization).GetProperty("Type");
-        private static PropertyInfo Prop_Org_Official_Contact = typeof(Organization).GetProperty("OfficialContactsLink");
-        private static PropertyInfo Prop_Org_Personal_Contact = typeof(Organization).GetProperty("PersonalContactsLink");
+        private static PropertyInfo Prop_Org_Official_Contact = typeof(Organization).GetProperty("OfficialContacts");
+        private static PropertyInfo Prop_Org_Personal_Contact = typeof(Organization).GetProperty("PersonalContacts");
         private static PropertyInfo Prop_Org_OrganizationNumber = typeof(Organization).GetProperty("OrganizationNumber");
 
         private static PropertyInfo PropOffCont_Email = typeof(OfficialContact).GetProperty("EmailAddress");
