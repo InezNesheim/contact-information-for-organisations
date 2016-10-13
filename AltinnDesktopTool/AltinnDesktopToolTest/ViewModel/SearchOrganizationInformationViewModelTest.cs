@@ -2,9 +2,7 @@
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.PubSub;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using AltinnDesktopTool.ViewModel;
-using Castle.Components.DictionaryAdapter;
 using log4net;
 using Moq;
 
