@@ -24,6 +24,8 @@ namespace AltinnDesktopTool.Utils.PubSub
         {
             if (_events.ContainsKey(name))
                 _events[name] += handler;
+            else
+                _events.Add(name, handler);
         }
     }
 }

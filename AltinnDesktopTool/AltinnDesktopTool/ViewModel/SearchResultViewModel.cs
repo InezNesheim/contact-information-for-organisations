@@ -17,7 +17,7 @@ namespace AltinnDesktopTool.ViewModel
             PubSub < List<object>>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
         }
 
-        private void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<List<object>> args)
+        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<List<object>> args)
         {
             // TODO Add result list to model bound to view
         }
