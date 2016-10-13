@@ -25,6 +25,7 @@ namespace AltinnDesktopTool.ViewModel
             Model = new SearchOrganizationInformationModel();
             SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(SearchOrganizations);
 
+            // Test loggers
             _logger.Debug("Debug!");
             _logger.Error("Error!");
             _logger.Warn("Warn!");
@@ -33,7 +34,8 @@ namespace AltinnDesktopTool.ViewModel
 
         private void SearchOrganizations(SearchOrganizationInformationModel obj)
         {
-            _logger.Info("Initiated a search");
+            _logger.Debug(GetType().FullName + " Seraching for: " + obj.SearchText + ", " + obj.SearchType);
+            // TODO call proxy and get orgs
 
             IList<Organization> organizations = new List<Organization>();
 

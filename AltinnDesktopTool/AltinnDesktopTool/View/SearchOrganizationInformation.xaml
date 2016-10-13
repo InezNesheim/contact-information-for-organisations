@@ -3,12 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:Converters="clr-namespace:AltinnDesktopTool.ViewModel"
+             xmlns:converter="clr-namespace:AltinnDesktopTool.Utils.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="400"
               DataContext="{Binding SearchOrganizationInformationViewModel, Source={StaticResource ViewModelLocator}}">
     <UserControl.Resources>
-        <Converters:RadioButtonCheckedConverter x:Key="RadioButtonCheckedConverter"></Converters:RadioButtonCheckedConverter>
+        <converter:RadioButtonCheckedConverter x:Key="RadioButtonCheckedConverter"></converter:RadioButtonCheckedConverter>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -28,3 +28,4 @@
         </StackPanel>
     </Grid>
 </UserControl>
+

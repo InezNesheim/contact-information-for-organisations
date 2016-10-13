@@ -11,23 +11,41 @@ namespace RestClient
 {
 
     /// <summary>
-    /// The Rest Query class implements IRestQuery. It is a generic implementation passing queries to IRestQueryControllers to perform the actual query.
+    /// The Rest Query class implements IRestQuery. 
     /// </summary>
+    /// <remarks>
+    /// It is a generic implementation passing queries to IRestQueryControllers to perform query by interpreting 
+    /// the url and pass this to the server using the AltinnRestClient.
+    /// The Controllers are identified by the  [RestQueryController] attribute and must implement IRestQueryController.
+    /// 
+    /// Exception Handling:
+    /// RestQuery will catch any Exception from Controller, log them and rethrow.
+    /// All Exceptions thrown by RestQuery are logged, meaning the caller does not need to log exceptions from RestQuery.
+    /// The Controller may log exceptions and errors with caution as RestQuery will log any Exception thrown by the Controller.
+    /// </remarks>
     public class RestQuery : IRestQuery
     {
+        #region private declarations
         private const string _authenticateUri = "organizations?ForceEIAuthentication";
-
+        private const string CONTROLLER_EXCEPTION_TEXT = "The controller threw an Exception";
+        private const string CONTROLLER_NOT_FOUND_FOR_TYPE_EXCEPTION = "No Controller for type {0}";
+        private const string CONTROLLER_NOT_FOUND_FOR_URL = "No Controller for url {0}";
         private IRestQueryConfig _restQueryConfig;
         private ILog _log;
         private AltinnRestClient _restClient;
         private bool _isAuthenticated = false;
         private List<RestQueryControllerAttribute> _controllers = new List<RestQueryControllerAttribute>();
+        #endregion
+        
 
 
+        #region public properties
         /// <summary>
-        /// Gets or sets the configuration. 
-        /// The configuration may be changed in which it will reconnect according to new configuration at first request.
+        /// Gets or sets the configuration as required by the RestQuery.
         /// </summary>
+        /// <remarks>
+        /// The configuration may be changed in which it will reconnect according to new configuration at first request.
+        /// </remarks>
         public IRestQueryConfig Config
         {
             get
@@ -44,14 +62,19 @@ namespace RestClient
                     _restClient.Timeout = _restQueryConfig.Timeout;
             }
         }
+        #endregion
 
 
+
+        #region constructors
         /// <summary>
         /// Constructs the RestQuery by injecting the configuration and log.
-        /// The configuration is mandatory, whereas the log is suggested, but not mandatory
         /// </summary>
         /// <param name="restQueryConfig">The configuration needed for connecting</param>
         /// <param name="log">Optional log4net log instance</param>
+        /// <remarks>
+        /// The configuration is mandatory, whereas the log is not not mandatory.
+        /// </remarks>
         public RestQuery(IRestQueryConfig restQueryConfig, ILog log = null)
         {
             _restQueryConfig = restQueryConfig;
@@ -61,49 +84,109 @@ namespace RestClient
                 _restClient.Timeout = restQueryConfig.Timeout;
             InitControllers();
         }
+        #endregion
 
 
+
+
+        #region IRestQuery implementation
+        /// <summary>
+        /// Fetches an object by providing and id.
+        /// </summary>
+        /// <exception cref="RestClientException">
+        /// Any Exception from the controller is logged and rethrown as RestClientException with InnerException being the caught Exception.
+        /// A RestClientException is also thrown when the controller could not be found supporting type T.
+        /// </exception>
         public T Get<T>(string id) where T : HalJsonResource
         {
             EnsureAuthenticated();
             IRestQueryController controller = GetControllerByType(typeof(T));
             if (controller == null)
-                throw new RestClientException(string.Format("No Controller for type {0}", typeof(T)));
-            return controller.Get<T>(id);
+            {
+                string err = string.Format(CONTROLLER_NOT_FOUND_FOR_TYPE_EXCEPTION, typeof(T));
+                Log(err, true);
+                throw new RestClientException(err);
+            }
+            try
+            {
+                return controller.Get<T>(id);
+            }
+            catch (Exception ex)
+            {
+                Log(CONTROLLER_EXCEPTION_TEXT, true, ex);
+                if (ex is RestClientException)
+                    throw;
+                else
+                    throw new RestClientException(CONTROLLER_EXCEPTION_TEXT, ex);
+            }
         }
+
 
         /// <summary>
         /// Search for a list of objects by filtering on a given name value pair.
-        /// The possible values name value pairs depends on the controller being called.
-        /// The controller is identified by the type T.
         /// </summary>
-        /// <typeparam name="T">The type of objects to be retrieved. This also determines the controller to call.</typeparam>
-        /// <param name="filter">The name value pair filter</param>
-        /// <returns>A list of objects, possibly empty, but never null.</returns>
+        /// <exception cref="RestClientException">
+        /// Any Exception from the controller is logged and rethrown as RestClientException with InnerException being the caught Exception.
+        /// A RestClientException is also thrown when the controller could not be found supporting type T.
+        /// </exception>
         public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
             EnsureAuthenticated();
             IRestQueryController controller = GetControllerByType(typeof(T));
             if (controller == null)
-                throw new RestClientException(string.Format("No Controller for type {0}", typeof(T)));
-            return controller.Get<T>(filter);
+            {
+                string err = string.Format(CONTROLLER_NOT_FOUND_FOR_TYPE_EXCEPTION, typeof(T));
+                Log(err, true);
+                throw new RestClientException(err);
+            }
+            try
+            {
+                return controller.Get<T>(filter);
+            }
+            catch (Exception ex)
+            {
+                Log(CONTROLLER_EXCEPTION_TEXT, true, ex);
+                if (ex is RestClientException)
+                    throw;
+                else
+                    throw new RestClientException(CONTROLLER_EXCEPTION_TEXT, ex);
+            }
         }
+
 
         /// <summary>
         /// Fetches a list of objects by a given link (url).
-        /// This is useful where a link is returned in a previous call.
         /// </summary>
-        /// <typeparam name="T">The type of object to be retrieved.</typeparam>
-        /// <param name="url">The url, possibly including base address (full url).</param>
-        /// <returns>A lif objects, possibly empty, but never null</returns>
+        /// <exception cref="RestClientException">
+        /// Any Exception from the controller is logged and rethrown as RestClientException with InnerException being the caught Exception.
+        /// A RestClientException is also thrown when the controller could not be found supporting type T.
+        /// </exception>
         public IList<T> GetByLink<T>(string url) where T : HalJsonResource
         {
             EnsureAuthenticated();
             IRestQueryController controller = GetControllerByUrl(url);
             if (controller == null)
-                throw new RestClientException(string.Format("No Controller for url {0}", url));
-            return controller.GetByLink<T>(url);
+            {
+                string err = string.Format(CONTROLLER_NOT_FOUND_FOR_URL, url);
+                Log(err, true);
+                throw new RestClientException(err);
+            }
+            try
+            {
+                return controller.GetByLink<T>(url);
+            }
+            catch (Exception ex)
+            {
+                Log(CONTROLLER_EXCEPTION_TEXT, true, ex);
+                if (ex is RestClientException)
+                    throw;
+                else
+                    throw new RestClientException(CONTROLLER_EXCEPTION_TEXT, ex);
+            }
         }
+        #endregion
+
+
 
         #region private implementation
 
@@ -128,6 +211,11 @@ namespace RestClient
             }
         }
 
+        /// <summary>
+        /// Generates a controller context to be passed to the controller
+        /// </summary>
+        /// <param name="attr">The controller's class attribute</param>
+        /// <returns>The Controller Contect to be passed to the controller</returns>
         private ControllerContext GetControllerContext(RestQueryControllerAttribute attr)
         {
             return new ControllerContext()
@@ -138,6 +226,11 @@ namespace RestClient
             };
         }
 
+        /// <summary>
+        /// Fetches the controller which supports Type t, meaning the controller which is registered with [RestQueryController(SupportedType = t)]
+        /// </summary>
+        /// <param name="t">The type matching SupportedType</param>
+        /// <returns>The found query controller or null if not found</returns>
         private IRestQueryController GetControllerByType(Type t)
         {
             IRestQueryController controller = null;
@@ -231,28 +324,32 @@ namespace RestClient
                 catch (Exception ex)
                 {
                     // In some situation an exception is raised which is not harmfull.
-                    LogException(ex, false);
+                    Log("Error while browsing assemblies for controllers (harmless)", false, ex);
                 }
             }
         }
 
 
-        private void LogException(Exception ex, bool fatal = true)
+        /// <summary>
+        /// Local logging which takes into account whether _log object is defined or not
+        /// </summary>
+        /// <param name="text">Error text</param>
+        /// <param name="fatal">True if logging is fatal</param>
+        /// <param name="ex">Optional exception</param>
+        private void Log(string text, bool fatal = true, Exception ex = null)
         {
             if (_log != null)
             {
-                string err = string.Format("{0} in {1}. Stack Trace. {2}. {3}",
-                    ex.Message,
-                    ex.Source,
-                    ex.StackTrace,
-                    ex.InnerException != null ? "Inner Exception: " + ex.InnerException.Message : "");
-                if (fatal)
-                    _log.Fatal(err);
-                else
-                    _log.Error(err);
+                try
+                {
+                    if (fatal)
+                        _log.Fatal(text, ex);
+                    else
+                        _log.Error(text, ex);
+                }
+                catch { }
             }
         }
-
 
         #endregion
     }

@@ -83,11 +83,15 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\SearchOrganizationInformationModel.cs" />
-    <Compile Include="ViewModel\RadioButtonCheckedConverter.cs" />
+    <Compile Include="Utils\Converter\RadioButtonCheckedConverter.cs" />
     <Compile Include="ViewModel\SearchOrganizationInformationViewModel.cs" />
+    <Compile Include="ViewModel\SearchResultViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\SearchOrganizationInformation.xaml.cs">
       <DependentUpon>SearchOrganizationInformation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SearchResultView.xaml.cs">
+      <DependentUpon>SearchResultView.xaml</DependentUpon>
     </Compile>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -102,6 +106,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\SearchOrganizationInformation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SearchResultView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

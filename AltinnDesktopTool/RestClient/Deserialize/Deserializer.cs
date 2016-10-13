@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestClient.DTO;
+using RestClient.Resources;
 
 namespace RestClient.Deserialize
 {
     public class Deserializer
     {
+        private static string ERROR_ON_DESERIALIZATION = "Error while deserializing Json data";
+
         /// <summary>
         /// Deserializes a list of Typed objects from HAL+JSON format.
         /// Type T should have HalJsonResource as base class
@@ -30,8 +33,8 @@ namespace RestClient.Deserialize
             }
             catch (Exception e)
             {
-                //TODO:: Log error
-                throw;
+                throw new RestClientException(ERROR_ON_DESERIALIZATION, e);
+                // Note, there is no need for logging here, as logging is done by RestClient.
             }
 
             return resources;
@@ -54,8 +57,8 @@ namespace RestClient.Deserialize
             }
             catch (Exception e)
             {
-                //TODO:: Log error
-                throw;
+                throw new RestClientException(ERROR_ON_DESERIALIZATION, e);
+                // Note, there is no need for logging here, as logging is done by RestClient.
             }
 
             return resource;

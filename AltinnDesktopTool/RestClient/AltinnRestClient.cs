@@ -5,17 +5,37 @@ using RestClient.Resources;
 
 namespace RestClient
 {
+
     /// <summary>
     /// Generic Altinn Rest Client.
     /// </summary>
+    /// <remarks>
+    /// Used internally by RestClient and the Controllers to communicate with Altinn REST Server interface.
+    /// Will only requst hal+json as response format from the Server.
+    /// </remarks>
     public class AltinnRestClient : IDisposable
     {
+        #region private declarations
         private HttpClient _httpClient;
         private string _baseAddress;
         private string _apikey;
         private int _timeout;
         private string _thumbprint;
+        #endregion
 
+
+        #region public properties
+
+        /// <summary>
+        /// The Base address must include the part of the path up to the first controller name.
+        /// </summary>
+        /// <remarks>
+        /// When the url is like: http://host/x/y/organizations/orgno
+        /// and organizations is the name of the controller, then the base address must be:
+        /// http://host/x/y
+        /// And without the ending /
+        /// The BaseAddress may be changed, in which case AltinnRestClient will reconnect to new host on next call.
+        /// </remarks>
         public string BaseAddress
         {
             get
@@ -30,7 +50,13 @@ namespace RestClient
         }
 
 
-         public string ApiKey
+        /// <summary>
+        /// The ApiKey is mandatory and must be provided in every call to Altinn server.
+        /// </summary>
+        /// <remarks>
+        /// The ApiKey may be changed, in which case AltinnRestClient will reconnect to new host on next call.
+        /// </remarks>
+        public string ApiKey
         {
             get
             {
@@ -45,8 +71,11 @@ namespace RestClient
 
 
         /// <summary>
-        /// Timeout in Seconds for each request
+        /// Timeout in Seconds for each request. Not mandatory.
         /// </summary>
+        /// <remarks>
+        /// Timeout may be changed, in which case AltinnRestClient will reconnect to new host on next call.
+        /// </remarks>
         public int Timeout
         {
             get
@@ -60,6 +89,14 @@ namespace RestClient
             }
         }
 
+
+        /// <summary>
+        /// The Thumbprint of the certificate required to authenticate as Service owner.
+        /// </summary>
+        /// <remarks>
+        /// The Certificate with this Thumbprint must be installed on the client computer in current user certificate store.
+        /// Thumbprint may be changed, in which case AltinnRestClient will reconnect to new host on next call.
+        /// </remarks>
         public string Thumbprint
         {
             get
@@ -73,7 +110,14 @@ namespace RestClient
             }
         }
 
+        #endregion
 
+
+
+        #region constructors
+        /// <summary>
+        /// Constructor providing the required properties
+        /// </summary>
         public AltinnRestClient(string baseAddress, string apiKey, string certificateThumbprint)
         {
             _baseAddress = baseAddress;
@@ -81,12 +125,19 @@ namespace RestClient
             _thumbprint = certificateThumbprint;
         }
 
+        #endregion
 
+
+
+        #region public and protected methods
         /// <summary>
         /// Performs a Get towards Altinn
         /// </summary>
         /// <param name="uriPart">The uriPart, added to base address if defined to form the full uri. If base address is undefined, this must be the full uri</param>
-        /// <returns></returns>
+        /// <returns>hal+Json data string</returns>
+        /// <remarks>
+        /// Exception is raised on communication error or error returned from Altinn server.
+        /// </remarks>
         public string Get(string uriPart)
         {
             EnsureHandler();
@@ -111,7 +162,11 @@ namespace RestClient
             GC.SuppressFinalize(this);
         }
 
+        #endregion
 
+
+
+        #region private implementation
         private void InvalidateHandler()
         {
             if (_httpClient != null)
@@ -170,6 +225,7 @@ namespace RestClient
             if (!string.IsNullOrEmpty(_baseAddress))
                 _httpClient.BaseAddress = new Uri(_baseAddress);
         }
+        #endregion
 
     }
 

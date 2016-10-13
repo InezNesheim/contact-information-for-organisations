@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace RestClient.Controllers
 {
+    /// <summary>
+    /// Generic Controller, currently supporting organizations. Extendible by adding additional attributes as long as the same URL pattern is used.
+    /// </summary>
     [RestQueryController(Name = "organizations", SupportedType = typeof(Organization))]
     public class AltinnBaseController : IRestQueryController
     {
