@@ -29,6 +29,7 @@ namespace AltinnDesktopTool.ViewModel
         {
             _logger.Debug(GetType().FullName + " Seraching for: " + obj.SearchText + ", " + obj.SearchType);
             // TODO call proxy and get orgs
+            return;
         }
     }
 }

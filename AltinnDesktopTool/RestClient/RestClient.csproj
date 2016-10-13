@@ -51,20 +51,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AltinnRestClient.cs" />
+    <Compile Include="Controllers\ControllerContext.cs" />
+    <Compile Include="Controllers\IRestQueryController.cs" />
+    <Compile Include="Controllers\AltinnBaseController.cs" />
+    <Compile Include="Deserialize\HalJsonConverter.cs" />
+    <Compile Include="Deserialize\OuterJson.cs" />
+    <Compile Include="DTO\HalJsonResource.cs" />
     <Compile Include="DTO\OfficialContact.cs" />
     <Compile Include="DTO\Organization.cs" />
     <Compile Include="IRestQuery.cs" />
     <Compile Include="IRestQueryConfig.cs" />
-    <Compile Include="OrganizationQuery.cs" />
     <Compile Include="DTO\PersonalContact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RestClientException.cs" />
+    <Compile Include="Resources\RestClientException.cs" />
+    <Compile Include="Deserialize\Deserializer.cs" />
     <Compile Include="RestQuery.cs" />
+    <Compile Include="Controllers\RestQueryControllerAttribute.cs" />
     <Compile Include="RestQueryStub.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
