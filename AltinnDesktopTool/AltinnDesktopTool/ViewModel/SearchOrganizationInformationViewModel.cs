@@ -1,8 +1,12 @@
-﻿using System.ComponentModel;
-using System.Windows.Input;
+﻿using System.Collections.Generic;
 using AltinnDesktopTool.Model;
+
+using RestClient;
+using RestClient.DTO;
+
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+
 using log4net;
 
 namespace AltinnDesktopTool.ViewModel
@@ -29,8 +33,32 @@ namespace AltinnDesktopTool.ViewModel
 
         private void SearchOrganizations(SearchOrganizationInformationModel obj)
         {
-            // TODO call proxy and get orgs
-            return;
+            _logger.Info("Initiated a search");
+
+            IList<Organization> organizations = new List<Organization>();
+
+            switch (obj.SearchType)
+            {
+                case SearchType.EmailAddress:
+                    {
+                        IRestQuery query = new RestQueryStub();
+                        organizations = query.Get<Organization>(new KeyValuePair<string, string>("email", obj.SearchText));
+                        break;
+                    }
+                case SearchType.PhoneNumber:
+                    {
+                        IRestQuery query = new RestQueryStub();
+                        organizations = query.Get<Organization>(new KeyValuePair<string, string>("phonenumber", obj.SearchText));
+                        break;
+                    }
+                case SearchType.OrganizationNumber:
+                    {
+                        IRestQuery query = new RestQueryStub();
+                        var organization = query.Get<Organization>(obj.SearchText);
+                        organizations.Add(organization);
+                        break;
+                    }
+            }
         }
     }
 }

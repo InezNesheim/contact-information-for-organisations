@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using AltinnDesktopTool.Model;
 using AltinnDesktopTool.ViewModel;
 
 using log4net;
@@ -43,6 +44,24 @@ namespace AltinnDesktopToolTest.ViewModel
 
             Assert.IsNotNull(target.Model);
             Assert.IsNotNull(target.SearchCommand);
+        }
+
+        [TestMethod]
+        [TestCategory("ViewModel")]
+        public void SearchCommandTest_PerformSearchBasedOnOrganizationNumber()
+        {
+            // Arrange
+            var logger = new Mock<ILog>();
+
+            var search = new SearchOrganizationInformationModel();
+
+            var target = new SearchOrganizationInformationViewModel(logger.Object);
+
+            // Act
+            target.SearchCommand.Execute(search);
+
+            // Assert
+            Assert.Inconclusive("Asserts needed!");
         }
     }
 }
