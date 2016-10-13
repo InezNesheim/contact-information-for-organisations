@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-
-using AltinnDesktopTool.Model;
-
+using AltinnDesktopTool.Utils;
+using AltinnDesktopTool.Utils.PubSub;
 using GalaSoft.MvvmLight;
 using log4net;
 using RestClient.DTO;
@@ -16,13 +15,12 @@ namespace AltinnDesktopTool.ViewModel
         {
             _logger = logger;
 
-            // TODO: The application should have its own Model and not use the DTO
-            MessengerInstance.Register<IList<Organization>>(this, DisplayResults);
+            PubSub < List<object>>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
         }
 
-        private void DisplayResults(IList<Organization> obj)
+        private void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<List<object>> args)
         {
-            // TODO: Implement a refresh of the visible grid.
+            // TODO Add result list to model bound to view
         }
     }
 }

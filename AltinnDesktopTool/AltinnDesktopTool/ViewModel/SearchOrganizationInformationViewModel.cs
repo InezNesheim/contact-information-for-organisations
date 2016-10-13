@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using AltinnDesktopTool.Model;
+using AltinnDesktopTool.Utils;
+using AltinnDesktopTool.Utils.PubSub;
 
 using RestClient;
 using RestClient.DTO;
@@ -13,7 +15,10 @@ namespace AltinnDesktopTool.ViewModel
 {
     public class SearchOrganizationInformationViewModel : ViewModelBase
     {
+        public event PubSubEventHandler<List<object>> SearchResultRecievedEventHandler;
+
         private readonly ILog _logger;
+
 
         public SearchOrganizationInformationModel Model { get; set; }
 
@@ -28,6 +33,8 @@ namespace AltinnDesktopTool.ViewModel
             SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(SearchOrganizations);
             RestProxy = new RestQueryStub();
 
+            PubSub<List<object>>.AddEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
+
             // Test loggers
             _logger.Debug("Debug!");
             _logger.Error("Error!");
@@ -40,7 +47,7 @@ namespace AltinnDesktopTool.ViewModel
             _logger.Debug(GetType().FullName + " Seraching for: " + obj.SearchText + ", " + obj.SearchType);
 
             IList<Organization> organizations = null;
-
+            
             switch (obj.SearchType)
             {
                 case SearchType.EmailAddress:
@@ -63,6 +70,12 @@ namespace AltinnDesktopTool.ViewModel
 
             // TODO: The application should have its own Model and not use the DTO
             MessengerInstance.Send(organizations);
+            _logger.Debug(GetType().FullName + " Seraching for: " + obj.SearchText + ", " + obj.SearchType);
+            // TODO call proxy and get orgs
+            
+            var result = new List<object>(); // TODO Change object to relevant model
+            PubSub<List<object>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this, new PubSubEventArgs<List<object>>(result));
+            return;
         }
     }
 }
