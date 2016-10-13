@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace AltinnDesktopTool.Utils.Converter
+namespace AltinnDesktopTool.Utils.Converters
 {
     public class RadioButtonCheckedConverter : IValueConverter
     {
