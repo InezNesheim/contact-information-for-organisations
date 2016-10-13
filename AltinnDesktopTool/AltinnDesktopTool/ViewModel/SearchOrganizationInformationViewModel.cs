@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Windows.Input;
-using AltinnDesktopTool.Model;
+﻿using AltinnDesktopTool.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using log4net;
@@ -29,6 +27,7 @@ namespace AltinnDesktopTool.ViewModel
 
         private void SearchOrganizations(SearchOrganizationInformationModel obj)
         {
+            _logger.Debug(GetType().FullName + " Seraching for: " + obj.SearchText + ", " + obj.SearchType);
             // TODO call proxy and get orgs
         }
     }

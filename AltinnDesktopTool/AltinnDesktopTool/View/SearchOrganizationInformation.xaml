@@ -19,9 +19,9 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Stretch" DataContext="{Binding Model.SearchText, Mode=OneWayToSource}">Test</TextBox>
+        <TextBox Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Stretch" Text="{Binding Model.SearchText, Mode=TwoWay}"/>
         <Button Grid.Row="0" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Command="{Binding SearchCommand}" CommandParameter="{Binding Model}">Search</Button>
-        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+        <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
             <RadioButton GroupName="SearchType" Content="Phone number" IsChecked="{Binding Path=Model.SearchType, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter=PhoneNumber}"/>
             <RadioButton GroupName="SearchType" Content="Email address" IsChecked="{Binding Path=Model.SearchType, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter=EmailAddress}"/>
             <RadioButton GroupName="SearchType" Content="Organization number" IsChecked="{Binding Path=Model.SearchType, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter=OrganizationNumber}"/>
