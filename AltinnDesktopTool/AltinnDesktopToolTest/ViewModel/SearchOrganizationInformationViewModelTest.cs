@@ -1,8 +1,13 @@
 ﻿using System.Collections.Generic;
+
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.PubSub;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AltinnDesktopTool.ViewModel;
+
+using RestClient.DTO;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using log4net;
 using Moq;
 
@@ -49,7 +54,7 @@ namespace AltinnDesktopToolTest.ViewModel
 
         #region Event tests
 
-        private List<object> _searchResult = null;
+        private List<Organization> _searchResult = null;
 
         /// <summary>
         /// Scenario: 
@@ -63,7 +68,7 @@ namespace AltinnDesktopToolTest.ViewModel
         [TestCategory("ViewModel")]
         public void SearchOrganizationInformationViewModelTest_SendsEvent_WhenSearchResultIsRecieved()
         {
-            PubSub<List<object>>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
+            PubSub<IList<Organization>>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
 
             var target = GetViewModel();
 
@@ -73,9 +78,9 @@ namespace AltinnDesktopToolTest.ViewModel
 
         }
 
-        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<List<object>> args)
+        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<IList<Organization>> args)
         {
-            _searchResult = args.Item;
+            _searchResult = args.Item as List<Organization>;
         }
 
         #endregion
