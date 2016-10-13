@@ -15,7 +15,7 @@ namespace AltinnDesktopTool.ViewModel
     public class SearchOrganizationInformationViewModel : ViewModelBase
     {
         private readonly ILog _logger;
-
+        
         public event PubSubEventHandler<IList<Organization>> SearchResultRecievedEventHandler;
 
         public SearchOrganizationInformationModel Model { get; set; }
@@ -66,7 +66,7 @@ namespace AltinnDesktopTool.ViewModel
                     break;
                 }
             }
-
+            
             PubSub<IList<Organization>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                 new PubSubEventArgs<IList<Organization>>(organizations));
         }
