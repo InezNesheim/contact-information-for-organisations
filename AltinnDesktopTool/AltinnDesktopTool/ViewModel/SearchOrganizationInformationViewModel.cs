@@ -46,7 +46,7 @@ namespace AltinnDesktopTool.ViewModel
         {
             _logger.Debug(GetType().FullName + " Seraching for: " + obj.SearchText + ", " + obj.SearchType);
 
-            IList<Organization> organizations = null;
+            IList<Organization> organizations = new List<Organization>();
             
             switch (obj.SearchType)
             {
@@ -63,19 +63,12 @@ namespace AltinnDesktopTool.ViewModel
                 case SearchType.OrganizationNumber:
                     {
                         var organization = RestProxy.Get<Organization>(obj.SearchText);
-                        organizations = new List<Organization> {organization};
+                        organizations.Add(organization);
                         break;
                     }
             }
-
-            // TODO: The application should have its own Model and not use the DTO
-            MessengerInstance.Send(organizations);
-            _logger.Debug(GetType().FullName + " Seraching for: " + obj.SearchText + ", " + obj.SearchType);
-            // TODO call proxy and get orgs
             
-            var result = new List<object>(); // TODO Change object to relevant model
-            PubSub<List<object>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this, new PubSubEventArgs<List<object>>(result));
-            return;
+            PubSub<IList<Organization>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this, new PubSubEventArgs<IList<Organization>>(organizations));
         }
     }
 }
