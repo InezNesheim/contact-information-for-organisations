@@ -71,7 +71,6 @@ namespace AltinnDesktopTool.ViewModel
                 }
             }
 
-
             var orgmodellist =_mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations);
 
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,

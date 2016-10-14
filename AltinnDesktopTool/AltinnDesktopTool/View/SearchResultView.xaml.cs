@@ -12,6 +12,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Xceed.Wpf.Toolkit;
+using Xceed.Wpf.DataGrid;
+using Xceed.Wpf.DataGrid.Converters;
+using Xceed.Wpf.DataGrid.ValidationRules;
+using Xceed.Wpf.DataGrid.Views;
+
 
 namespace AltinnDesktopTool.View
 {
@@ -23,6 +29,8 @@ namespace AltinnDesktopTool.View
         public SearchResultView()
         {
             InitializeComponent();
+            var view = OrganizationGrid.View as TableView;
+            view.ColumnStretchMode = ColumnStretchMode.All;            
         }
     }
 }
