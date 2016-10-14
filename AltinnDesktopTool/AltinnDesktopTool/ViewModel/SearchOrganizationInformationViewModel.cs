@@ -69,7 +69,20 @@ namespace AltinnDesktopTool.ViewModel
             }
 
 
-            var orgmodellist = AutoMapper.Mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations);
+            //var orgmodellist = AutoMapper.Mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations);
+            var orgmodellist = new ObservableCollection<OrganizationModel>();
+            foreach (var item in organizations)
+            {
+                OrganizationModel orgmodel = new OrganizationModel()
+                {
+                    Name = item.Name,
+                    OfficialContacts = item.OfficialContacts,
+                    OrganizationNumber = item.OrganizationNumber,
+                    PersonalContacts = item.PersonalContacts,
+                    Type = item.Type,
+                };
+                orgmodellist.Add(orgmodel);
+            }
 
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                 new PubSubEventArgs<ObservableCollection<OrganizationModel>>(orgmodellist));
