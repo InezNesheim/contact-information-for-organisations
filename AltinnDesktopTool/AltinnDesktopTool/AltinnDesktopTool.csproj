@@ -82,6 +82,8 @@
     <Compile Include="Configuration\EnvironmentConfiguration.cs" />
     <Compile Include="Configuration\EnvironmentConfigurationManager.cs" />
     <Compile Include="Configuration\IUIEnvironmentConfig.cs" />
+    <Compile Include="Model\OrganizationModel.cs" />
+    <Compile Include="Model\SearchResultModel.cs" />
     <Compile Include="Model\SearchType.cs" />
     <Compile Include="Utils\PubSub\EventNames.cs" />
     <Compile Include="Utils\PubSub\PubSub.cs" />
@@ -150,9 +152,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utils\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\RestClient\RestClient.csproj">
       <Project>{bf6fb931-d0c9-48a4-9e9d-15eb71b0f13e}</Project>
