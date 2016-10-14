@@ -16,6 +16,7 @@
             <RowDefinition Height="80"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        <view:TopView Grid.Row="0"/>
         <view:SearchOrganizationInformation Grid.Row="1"/>
         <view:SearchResultView Grid.Row="2"/>
     </Grid>

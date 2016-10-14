@@ -30,14 +30,6 @@ namespace AltinnDesktopTool.ViewModel
 
             Model.ResultCollection = args.Item;
 
-            /*
-            Model.ResultCollection = new System.Collections.ObjectModel.ObservableCollection<OrganizationModel>()
-            {
-                new OrganizationModel() { Name = "My organization", OrganizationNumber = "orgno" },
-                new OrganizationModel() { Name = "Coca company", OrganizationNumber = "cola orgno" },
-            };
-            */
-
             // TODO Add result list to model bound to view
         }
     }

@@ -123,12 +123,16 @@
     <Compile Include="ViewModel\MapperProfiles\SearchMapperProfile.cs" />
     <Compile Include="ViewModel\SearchOrganizationInformationViewModel.cs" />
     <Compile Include="ViewModel\SearchResultViewModel.cs" />
+    <Compile Include="ViewModel\TopViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\SearchOrganizationInformation.xaml.cs">
       <DependentUpon>SearchOrganizationInformation.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SearchResultView.xaml.cs">
       <DependentUpon>SearchResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TopView.xaml.cs">
+      <DependentUpon>TopView.xaml</DependentUpon>
     </Compile>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -147,6 +151,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SearchResultView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TopView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

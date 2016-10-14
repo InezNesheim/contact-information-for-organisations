@@ -46,11 +46,13 @@ namespace AltinnDesktopTool.ViewModel
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<SearchOrganizationInformationViewModel>();
             SimpleIoc.Default.Register<SearchResultViewModel>();
+            SimpleIoc.Default.Register<TopViewModel>();
         }
 
         public ViewModelBase Main => ServiceLocator.Current.GetInstance<MainViewModel>();
         public SearchOrganizationInformationViewModel SearchOrganizationInformationViewModel => ServiceLocator.Current.GetInstance<SearchOrganizationInformationViewModel>();
         public SearchResultViewModel SearchResultViewModel => ServiceLocator.Current.GetInstance<SearchResultViewModel>();
+        public TopViewModel TopViewModel => ServiceLocator.Current.GetInstance<TopViewModel>();
 
         public static void Cleanup()
         {
