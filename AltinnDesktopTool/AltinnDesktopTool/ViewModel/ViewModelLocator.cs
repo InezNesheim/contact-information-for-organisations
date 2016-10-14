@@ -12,7 +12,6 @@
   See http://www.galasoft.ch/mvvm
 */
 
-using System.Security.Authentication;
 using AltinnDesktopTool.ViewModel.MapperProfiles;
 using AutoMapper;
 using GalaSoft.MvvmLight;
