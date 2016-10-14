@@ -28,7 +28,7 @@ namespace RestClient
         /// </summary>
         /// <typeparam name="T">The type of objects to be retrieved. This also determines the controller to call.</typeparam>
         /// <param name="filter">The name value pair filter</param>
-        /// <returns>A list of objects, possibly empty, but never null.</returns>
+        /// <returns>A list of objects, empty or null if none found</returns>
         IList<T>Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource;
 
 
@@ -38,7 +38,7 @@ namespace RestClient
         /// </summary>
         /// <typeparam name="T">The type of object to be retrieved.</typeparam>
         /// <param name="url">The url, possibly including base address (full url).</param>
-        /// <returns>A lif objects, possibly empty, but never null</returns>
+        /// <returns>A lif objects, possibly empty or null if none found</returns>
         T Get<T>(string id) where T : HalJsonResource;
     }
 }

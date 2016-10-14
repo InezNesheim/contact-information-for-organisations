@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using RestClient.Resources;
+using System.Collections.Generic;
 
 namespace RestClient
 {
@@ -16,6 +17,7 @@ namespace RestClient
     public class AltinnRestClient : IDisposable
     {
         #region private declarations
+        private const string ACCEPTED_TYPE = "application/hal+json";
         private HttpClient _httpClient;
         private string _baseAddress;
         private string _apikey;
@@ -130,7 +132,7 @@ namespace RestClient
         /// Performs a Get towards Altinn
         /// </summary>
         /// <param name="uriPart">The uriPart, added to base address if defined to form the full uri. If base address is undefined, this must be the full uri</param>
-        /// <returns>hal+Json data string</returns>
+        /// <returns>hal+Json data string or null if not found</returns>
         /// <remarks>
         /// Exception is raised on communication error or error returned from Altinn server.
         /// </remarks>
@@ -139,7 +141,10 @@ namespace RestClient
             EnsureHandler();
             var responseMessage = _httpClient.GetAsync(uriPart, HttpCompletionOption.ResponseContentRead).Result;
             responseMessage.EnsureSuccessStatusCode();
-            return responseMessage.Content.ReadAsStringAsync().Result;
+            if (IsJsonResult(responseMessage))
+                return responseMessage.Content.ReadAsStringAsync().Result;
+            else
+                return null;
         }
 
 
@@ -178,6 +183,12 @@ namespace RestClient
             InitHttpClient();
         }
 
+        private bool IsJsonResult(HttpResponseMessage responseMessage)
+        {
+            var conttype = responseMessage.Content.Headers.ContentType.ToString();
+            return conttype.StartsWith(ACCEPTED_TYPE, StringComparison.InvariantCultureIgnoreCase);
+        }
+
 
         private void InitHttpClient()
         {
@@ -212,7 +223,7 @@ namespace RestClient
             _httpClient = new HttpClient(httpClientHandler, true);
 
             _httpClient.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
-            _httpClient.DefaultRequestHeaders.Add("Accept", "application/hal+json");
+            _httpClient.DefaultRequestHeaders.Add("Accept", ACCEPTED_TYPE);
             _httpClient.DefaultRequestHeaders.Add("ApiKey", _apikey);
             if (_timeout > 0)
                 _httpClient.Timeout = new TimeSpan(0, 0, 0, _timeout);

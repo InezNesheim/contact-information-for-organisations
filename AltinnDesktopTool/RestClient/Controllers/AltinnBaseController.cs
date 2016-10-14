@@ -16,19 +16,28 @@ namespace RestClient.Controllers
         public T Get<T>(string id) where T : HalJsonResource
         {
             var result = Context.RestClient.Get(string.Format("{0}/{1}", Context.ControllerBaseAddress, id));
-            return Deserializer.DeserializeHalJsonResource<T>(result);            
+            if (result != null)
+                return Deserializer.DeserializeHalJsonResource<T>(result);
+            else
+                return null;
         }
 
         public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
             var result = Context.RestClient.Get(string.Format("{0}?{1}={2}", Context.ControllerBaseAddress, filter.Key, filter.Value));
-            return Deserializer.DeserializeHalJsonResourceList<T>(result);
+            if (result != null)
+                return Deserializer.DeserializeHalJsonResourceList<T>(result);
+            else
+                return null;
         }
 
         public IList<T> GetByLink<T>(string url) where T : HalJsonResource
         {
             var result = Context.RestClient.Get(url);
-            return Deserializer.DeserializeHalJsonResourceList<T>(result);            
+            if (result != null)
+                return Deserializer.DeserializeHalJsonResourceList<T>(result);
+            else
+                return null;
         }
     }
 }
