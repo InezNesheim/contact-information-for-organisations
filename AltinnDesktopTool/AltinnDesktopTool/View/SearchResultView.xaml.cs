@@ -29,6 +29,8 @@ namespace AltinnDesktopTool.View
         public SearchResultView()
         {
             InitializeComponent();
+            var view = OrganizationGrid.View as TableView;
+            view.ColumnStretchMode = ColumnStretchMode.All;            
         }
     }
 }
