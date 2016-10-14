@@ -116,12 +116,11 @@
     <Compile Include="Utils\PubSub\EventNames.cs" />
     <Compile Include="Utils\PubSub\PubSub.cs" />
     <Compile Include="Utils\PubSub\PubSubEventArgs.cs" />
-    <Compile Include="ViewModel\Mappers\IAmAMapper.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\SearchOrganizationInformationModel.cs" />
     <Compile Include="Utils\Converters\RadioButtonCheckedConverter.cs" />
-    <Compile Include="ViewModel\Mappers\SearchMapper.cs" />
+    <Compile Include="ViewModel\Mappers\SearchMapperProfile.cs" />
     <Compile Include="ViewModel\SearchOrganizationInformationViewModel.cs" />
     <Compile Include="ViewModel\SearchResultViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />

@@ -12,10 +12,8 @@
   See http://www.galasoft.ch/mvvm
 */
 
-using System;
-using System.Linq;
-using System.Reflection;
 using AltinnDesktopTool.ViewModel.Mappers;
+using AutoMapper;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using log4net;
@@ -35,16 +33,18 @@ namespace AltinnDesktopTool.ViewModel
         public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-            SimpleIoc.Default.Register(() => LogManager.GetLogger(GetType()));
+
+            // Logging
+            SimpleIoc.Default.Register(() => LogManager.GetLogger(GetType())); // ILog
             log4net.Config.XmlConfigurator.Configure();
+
+            // AutoMapper
+            SimpleIoc.Default.Register(RunCreateMaps); // IMapper
 
             // View models
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<SearchOrganizationInformationViewModel>();
             SimpleIoc.Default.Register<SearchResultViewModel>();
-
-            RunCreateMaps();
-
         }
         
         public ViewModelBase Main => ServiceLocator.Current.GetInstance<MainViewModel>();
@@ -56,17 +56,14 @@ namespace AltinnDesktopTool.ViewModel
             // TODO Clear the ViewModels
         }
 
-        private static void RunCreateMaps()
+        private static IMapper RunCreateMaps()
         {
-            var instances = from t in Assembly.GetExecutingAssembly().GetTypes()
-                            where t.GetInterfaces().Contains(typeof(IAmAMapper))
-                                     && t.GetConstructor(Type.EmptyTypes) != null
-                            select Activator.CreateInstance(t) as IAmAMapper;
+            // Add profiles here
+            var config = new MapperConfiguration(cfg => {
+                cfg.AddProfile<SearchMapperProfile>();
+            });
 
-            foreach (var instance in instances)
-            {
-                instance.CreateMaps();
-            }
+            return config.CreateMapper();
         }
     }
 }
