@@ -1,13 +1,9 @@
 ﻿using System.Collections.Generic;
-
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.PubSub;
 using AltinnDesktopTool.ViewModel;
-
 using RestClient.DTO;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using log4net;
 using Moq;
 
