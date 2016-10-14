@@ -21,10 +21,10 @@
         </Grid.RowDefinitions>
         <TextBox Grid.Row="0" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Stretch" Text="{Binding Path=Model.SearchText, Mode=OneWayToSource}"></TextBox>
         <Button Grid.Row="0" Margin="10" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="left" Command="{Binding SearchCommand}" CommandParameter="{Binding Model}">Search</Button>
-        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal">
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="18,0,0,0" Width="314">
             <RadioButton GroupName="SearchType" Margin="5" Content="Phone number" IsChecked="{Binding Path=Model.SearchType, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter=PhoneNumber}"/>
             <RadioButton GroupName="SearchType" Margin="5" Content="Email address" IsChecked="{Binding Path=Model.SearchType, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter=EmailAddress}"/>
-            <RadioButton GroupName="SearchType" Margin="5" Content="Organization number" IsChecked="{Binding Path=Model.SearchType, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter=OrganizationNumber}"/>
+            <RadioButton GroupName="SearchType" Margin="5" Content="Organization number" IsChecked="{Binding Path=Model.SearchType, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter=OrganizationNumber}" Width="90"/>
         </StackPanel>
     </Grid>
 </UserControl>

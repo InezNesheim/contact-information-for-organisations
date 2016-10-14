@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
         <view:TopView Grid.Row="0"/>
         <view:SearchOrganizationInformation Grid.Row="1"/>
-        <view:SearchResultView Grid.Row="2"/>
+        <view:SearchResultView Grid.Row="2" Margin="0,5,0,-5"/>
     </Grid>
 </controls:MetroWindow>
 
