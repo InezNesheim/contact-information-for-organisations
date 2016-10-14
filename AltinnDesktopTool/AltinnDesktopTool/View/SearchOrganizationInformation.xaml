@@ -12,11 +12,11 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="46"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <TextBox Grid.Row="0" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Stretch" Text="{Binding Path=Model.SearchText, Mode=OneWayToSource}"></TextBox>
