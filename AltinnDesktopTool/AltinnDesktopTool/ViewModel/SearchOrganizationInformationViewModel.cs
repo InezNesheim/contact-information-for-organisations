@@ -10,13 +10,15 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using log4net;
 using System.Collections.ObjectModel;
+using AutoMapper;
 
 namespace AltinnDesktopTool.ViewModel
 {
     public class SearchOrganizationInformationViewModel : ViewModelBase
     {
         private readonly ILog _logger;
-        
+        private readonly IMapper _mapper;
+
         public event PubSubEventHandler<IList<Organization>> SearchResultRecievedEventHandler;
 
         public SearchOrganizationInformationModel Model { get; set; }
@@ -25,9 +27,10 @@ namespace AltinnDesktopTool.ViewModel
 
         public IRestQuery RestProxy { get; set; }
 
-        public SearchOrganizationInformationViewModel(ILog logger)
+        public SearchOrganizationInformationViewModel(ILog logger, IMapper mapper)
         {
             _logger = logger;
+            _mapper = mapper;
             Model = new SearchOrganizationInformationModel();
             RestProxy = new RestQueryStub();
             SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(SearchCommandHandler);
@@ -68,21 +71,7 @@ namespace AltinnDesktopTool.ViewModel
                 }
             }
 
-
-            //var orgmodellist = AutoMapper.Mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations);
-            var orgmodellist = new ObservableCollection<OrganizationModel>();
-            foreach (var item in organizations)
-            {
-                OrganizationModel orgmodel = new OrganizationModel()
-                {
-                    Name = item.Name,
-                    OfficialContacts = item.OfficialContacts,
-                    OrganizationNumber = item.OrganizationNumber,
-                    PersonalContacts = item.PersonalContacts,
-                    Type = item.Type,
-                };
-                orgmodellist.Add(orgmodel);
-            }
+            var orgmodellist =_mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations);
 
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                 new PubSubEventArgs<ObservableCollection<OrganizationModel>>(orgmodellist));

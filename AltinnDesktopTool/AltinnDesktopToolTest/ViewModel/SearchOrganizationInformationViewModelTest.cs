@@ -43,7 +43,7 @@ namespace AltinnDesktopToolTest.ViewModel
             logger.Setup(l => l.Debug("Debug!"));
 
             // Act
-            var target = new SearchOrganizationInformationViewModel(logger.Object);
+            var target = new SearchOrganizationInformationViewModel(logger.Object, null);
 
             // Assert
             logger.VerifyAll();
@@ -97,7 +97,7 @@ namespace AltinnDesktopToolTest.ViewModel
             logger.Setup(l => l.Info("Info!"));
             logger.Setup(l => l.Debug("Debug!"));
 
-            var target = new SearchOrganizationInformationViewModel(logger.Object);
+            var target = new SearchOrganizationInformationViewModel(logger.Object, null);
             return target;
         }
 
