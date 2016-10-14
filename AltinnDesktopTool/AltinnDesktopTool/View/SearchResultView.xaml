@@ -18,7 +18,7 @@
         <Grid.Resources>
             <xcdg:DataGridCollectionViewSource x:Key="mygridsource" Source="{Binding Model.ResultCollection}"/>
         </Grid.Resources>
-        <xcdg:DataGridControl x:Name="OrganizationGrid"  ItemsSource="{Binding Source={StaticResource mygridsource}}" Margin="10" />
+        <xcdg:DataGridControl x:Name="OrganizationGrid"  ItemsSource="{Binding Source={StaticResource mygridsource}}" Margin="10"/>
     </Grid>
 
 </UserControl>
