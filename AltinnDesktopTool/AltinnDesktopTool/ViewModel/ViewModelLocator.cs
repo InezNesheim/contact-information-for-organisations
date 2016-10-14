@@ -12,7 +12,8 @@
   See http://www.galasoft.ch/mvvm
 */
 
-using AltinnDesktopTool.ViewModel.Mappers;
+using System.Security.Authentication;
+using AltinnDesktopTool.ViewModel.MapperProfiles;
 using AutoMapper;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
@@ -46,7 +47,7 @@ namespace AltinnDesktopTool.ViewModel
             SimpleIoc.Default.Register<SearchOrganizationInformationViewModel>();
             SimpleIoc.Default.Register<SearchResultViewModel>();
         }
-        
+
         public ViewModelBase Main => ServiceLocator.Current.GetInstance<MainViewModel>();
         public SearchOrganizationInformationViewModel SearchOrganizationInformationViewModel => ServiceLocator.Current.GetInstance<SearchOrganizationInformationViewModel>();
         public SearchResultViewModel SearchResultViewModel => ServiceLocator.Current.GetInstance<SearchResultViewModel>();
@@ -59,11 +60,12 @@ namespace AltinnDesktopTool.ViewModel
         private static IMapper RunCreateMaps()
         {
             // Add profiles here
-            var config = new MapperConfiguration(cfg => {
+            Mapper.Initialize(cfg =>
+            {
                 cfg.AddProfile<SearchMapperProfile>();
             });
 
-            return config.CreateMapper();
+            return Mapper.Configuration.CreateMapper();
         }
     }
 }

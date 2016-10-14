@@ -120,7 +120,7 @@
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\SearchOrganizationInformationModel.cs" />
     <Compile Include="Utils\Converters\RadioButtonCheckedConverter.cs" />
-    <Compile Include="ViewModel\Mappers\SearchMapperProfile.cs" />
+    <Compile Include="ViewModel\MapperProfiles\SearchMapperProfile.cs" />
     <Compile Include="ViewModel\SearchOrganizationInformationViewModel.cs" />
     <Compile Include="ViewModel\SearchResultViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />

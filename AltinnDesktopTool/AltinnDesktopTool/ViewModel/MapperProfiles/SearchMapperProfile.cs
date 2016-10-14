@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace AltinnDesktopTool.ViewModel.Mappers
+namespace AltinnDesktopTool.ViewModel.MapperProfiles
 {
     public class SearchMapperProfile : Profile
     {
