@@ -8,6 +8,15 @@
         Title="Altinn Desktop Tool" Height="350" Width="525"
         DataContext="{Binding Main, Source={StaticResource ViewModelLocator}}">
     <Grid >
-        <view:SearchOrganizationInformation/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <view:SearchOrganizationInformation Grid.Row="1"/>
+        <view:SearchResultView Grid.Row="2"/>
     </Grid>
 </Window>

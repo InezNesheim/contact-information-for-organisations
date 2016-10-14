@@ -7,6 +7,19 @@
              d:DesignHeight="300" d:DesignWidth="300"
              DataContext="{Binding SearchResultViewModel, Source={StaticResource ViewModelLocator}}">
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <ListView x:Name="listView" HorizontalAlignment="Left" Height="300" VerticalAlignment="Top" Width="150" ItemsSource="{Binding Model.ResultCollection}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </UserControl>
