@@ -5,21 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             DataContext="{Binding SearchResultViewModel, Source={StaticResource ViewModelLocator}}">
+             DataContext="{Binding SearchResultViewModel, Source={StaticResource ViewModelLocator}}" Width="600">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <ListView x:Name="listView" HorizontalAlignment="Left" Height="300" VerticalAlignment="Top" Width="150" ItemsSource="{Binding Model.ResultCollection}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Margin="80,10,0,0" VerticalAlignment="Top" Height="280" Width="483" DataContext="{Binding Model.ResultCollection}"/>
     </Grid>
+
 </UserControl>

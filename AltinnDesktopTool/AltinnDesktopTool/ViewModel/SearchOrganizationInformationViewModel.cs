@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using log4net;
+using System.Collections.ObjectModel;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -66,9 +67,12 @@ namespace AltinnDesktopTool.ViewModel
                     break;
                 }
             }
-            
-            PubSub<IList<Organization>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
-                new PubSubEventArgs<IList<Organization>>(organizations));
+
+
+            var orgmodellist = AutoMapper.Mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations);
+
+            PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
+                new PubSubEventArgs<ObservableCollection<OrganizationModel>>(orgmodellist));
         }
     }
 }
