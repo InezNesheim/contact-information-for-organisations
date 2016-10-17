@@ -1,4 +1,5 @@
-﻿using AltinnDesktopTool.Utils.PubSub;
+﻿using System.Collections.Generic;
+using AltinnDesktopTool.Utils.PubSub;
 using RestClient.DTO;
 using log4net;
 using AltinnDesktopTool.Model;
