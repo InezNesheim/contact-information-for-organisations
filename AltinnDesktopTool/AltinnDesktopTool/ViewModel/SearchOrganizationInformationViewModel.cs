@@ -12,6 +12,7 @@ using log4net;
 using System.Collections.ObjectModel;
 using AutoMapper;
 using AltinnDesktopTool.Configuration;
+using System.Linq;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -34,7 +35,7 @@ namespace AltinnDesktopTool.ViewModel
             _mapper = mapper;
             Model = new SearchOrganizationInformationModel();
             //RestProxy = new RestQueryStub();
-            RestProxy = new RestQuery(new EnvironmentConfigurationManager().EnvironmentConfigurations[0], _logger);
+            RestProxy = new RestQuery(EnvironmentConfigurationManager.EnvironmentConfigurations.FirstOrDefault(c => c.Name == "PROD"), _logger);
             SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(SearchCommandHandler);
 
             PubSub<IList<Organization>>.AddEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
