@@ -3,6 +3,7 @@
 using AltinnDesktopTool.Configuration;
 
 using RestClient;
+using System.Linq;
 
 namespace AltinnDesktopTool.Utils.Helpers
 {
@@ -10,7 +11,7 @@ namespace AltinnDesktopTool.Utils.Helpers
     {
         public static IRestQueryConfig GetConfig()
         {
-            return EnvironmentConfigurationManager.EnvironmentConfigurations[0];
+            return EnvironmentConfigurationManager.EnvironmentConfigurations.FirstOrDefault(c => c.Name =="PROD");
         }
     }
 }
