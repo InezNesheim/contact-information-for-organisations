@@ -334,35 +334,33 @@ namespace RestClient
         /// Local logging which takes into account whether _log object is defined or not
         /// </summary>
         /// <param name="text">Error text</param>
-        /// <param name="fatal">True if logging is fatal</param>
+        /// <param name="level">Logging level</param>
         /// <param name="ex">Optional exception</param>
         private void Log(string text,  LogLevel level, Exception ex = null)
         {
-            if (_log != null)
+            if (_log == null) return;
+            try
             {
-                try
+                switch(level)
                 {
-                    switch(level)
-                    {
-                        case LogLevel.Debug:
-                            _log.Debug(text);
-                            break;
-                        case LogLevel.Error:
-                            _log.Error(text, ex);
-                            break;
-                        case LogLevel.Warning:
-                            _log.Warn(text);
-                            break;
-                        case LogLevel.Info:
-                            _log.Info(text);
-                            break;
-                        case LogLevel.Fatal:
-                            _log.Fatal(text, ex);
-                            break;
-                    }                        
-                }
-                catch { }
+                    case LogLevel.Debug:
+                        _log.Debug(text);
+                        break;
+                    case LogLevel.Error:
+                        _log.Error(text, ex);
+                        break;
+                    case LogLevel.Warning:
+                        _log.Warn(text);
+                        break;
+                    case LogLevel.Info:
+                        _log.Info(text);
+                        break;
+                    case LogLevel.Fatal:
+                        _log.Fatal(text, ex);
+                        break;
+                }                        
             }
+            catch { }
         }
 
         public enum LogLevel
