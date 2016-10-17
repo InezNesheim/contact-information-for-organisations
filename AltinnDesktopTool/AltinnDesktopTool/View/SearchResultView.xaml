@@ -19,7 +19,7 @@
         <!--<Grid.Resources>
             <xcdg:DataGridCollectionViewSource x:Key="mygridsource" Source="{Binding Model.ResultCollection}"/>
         </Grid.Resources>-->
-        <DataGrid x:Name="OrganizationGrid"  ItemsSource="{Binding Model.ResultCollection}" Margin="10"/>
+        <DataGrid x:Name="OrganizationGrid"  ItemsSource="{Binding Model.ResultCollection}" Margin="10" GridLinesVisibility="All" AlternationCount="2" HorizontalGridLinesBrush="{x:Null}" VerticalGridLinesBrush="{x:Null}" IsReadOnly="True"/>
     </Grid>
 
 </UserControl>

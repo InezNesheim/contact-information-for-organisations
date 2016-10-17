@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace AltinnDesktopTool.View
+﻿namespace AltinnDesktopTool.View
 {
     /// <summary>
     /// Interaction logic for SearchResultView.xaml

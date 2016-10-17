@@ -8,8 +8,8 @@ namespace AltinnDesktopTool.Configuration
     public class EnvironmentConfigurationManager
     {
         private static string _configPath = "Configuration\\EnvironmentConfigurations.xml";
-        private List<EnvironmentConfiguration> _configurationList;
-        public List<EnvironmentConfiguration> EnvironmentConfigurations
+        private static List<EnvironmentConfiguration> _configurationList;
+        public static List<EnvironmentConfiguration> EnvironmentConfigurations
         {
             get
             {
@@ -21,7 +21,7 @@ namespace AltinnDesktopTool.Configuration
             }
         }
 
-        private List<EnvironmentConfiguration> LoadEnvironmentConfigurations()
+        private static List<EnvironmentConfiguration> LoadEnvironmentConfigurations()
         {                    
             XElement xmlDoc = XElement.Load(_configPath);
             var configs = from config in xmlDoc.Descendants("EnvironmentConfiguration")

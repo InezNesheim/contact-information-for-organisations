@@ -10,7 +10,7 @@ namespace AltinnDesktopTool.Utils.Helpers
     {
         public static IRestQueryConfig GetConfig()
         {
-            return new EnvironmentConfigurationManager().EnvironmentConfigurations[0];
+            return EnvironmentConfigurationManager.EnvironmentConfigurations[0];
         }
     }
 }
