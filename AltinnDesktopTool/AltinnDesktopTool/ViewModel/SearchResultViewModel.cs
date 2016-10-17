@@ -35,16 +35,19 @@ namespace AltinnDesktopTool.ViewModel
 
         private void GetContactsCommandHandler(OrganizationModel obj)
         {
-            if (obj.OfficalContactsCollection == null && !string.IsNullOrEmpty(obj.OfficialContacts))
+            if (obj != null)
             {
-                var officialContactDTOCollection = _restQuery.GetByLink<OfficialContact>(obj.OfficialContacts);
-                obj.OfficalContactsCollection = _mapper.Map<ICollection<OfficialContact>, ObservableCollection<OfficialContactModel>>(officialContactDTOCollection);
-            }
+                if (obj.OfficalContactsCollection == null && !string.IsNullOrEmpty(obj.OfficialContacts))
+                {
+                    var officialContactDTOCollection = _restQuery.GetByLink<OfficialContact>(obj.OfficialContacts);
+                    obj.OfficalContactsCollection = _mapper.Map<ICollection<OfficialContact>, ObservableCollection<OfficialContactModel>>(officialContactDTOCollection);
+                }
 
-            if (obj.PersonalContactsCollection == null && !string.IsNullOrEmpty(obj.PersonalContacts))
-            {
-                var personalContactDTOCollecton = _restQuery.GetByLink<PersonalContact>(obj.PersonalContacts);
-                obj.PersonalContactsCollection = _mapper.Map<ICollection<PersonalContact>, ObservableCollection<PersonalContactModel>>(personalContactDTOCollecton);
+                if (obj.PersonalContactsCollection == null && !string.IsNullOrEmpty(obj.PersonalContacts))
+                {
+                    var personalContactDTOCollecton = _restQuery.GetByLink<PersonalContact>(obj.PersonalContacts);
+                    obj.PersonalContactsCollection = _mapper.Map<ICollection<PersonalContact>, ObservableCollection<PersonalContactModel>>(personalContactDTOCollecton);
+                }
             }
         }
 

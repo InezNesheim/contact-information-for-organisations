@@ -19,8 +19,8 @@
         </Grid.RowDefinitions>
         <DataGrid x:Name="OrganizationGrid"  ItemsSource="{Binding Model.ResultCollection}" Margin="10" GridLinesVisibility="All" AlternationCount="2" HorizontalGridLinesBrush="{x:Null}" VerticalGridLinesBrush="{x:Null}" IsReadOnly="True" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Organization Number" Binding="{Binding OrganizationNumber}"/>
+                <DataGridTextColumn Header="Navn" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Organisasjonsnummer" Binding="{Binding OrganizationNumber}"/>
                 <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
             </DataGrid.Columns>
             <i:Interaction.Triggers>
@@ -33,10 +33,22 @@
                 <DataTemplate>
                     <Border BorderThickness="1" Padding="10">
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="Official Contacts:"/>
-                            <DataGrid x:Name="OfficialContactsGrid" ItemsSource="{Binding Model.OfficalContactsCollection}" GridLinesVisibility="All" IsReadOnly="True"/>
-                            <TextBlock>Personal Contacts:</TextBlock>
-                            <DataGrid x:Name="PersonalContactsGrid" ItemsSource="{Binding Model.PersonalContactsCollection}" GridLinesVisibility="All" IsReadOnly="True"/>
+                            <TextBlock Text="Offisielle kontakter:"/>
+                            <DataGrid x:Name="OfficialContactsGrid" ItemsSource="{Binding OfficalContactsCollection}" GridLinesVisibility="All" IsReadOnly="True" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Epostadresse" Binding="{Binding EmailAddress}"/>
+                                    <DataGridTextColumn Header="Mobilnummer" Binding="{Binding MobileNumber}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <TextBlock Text="Personlige kontakter:"/>
+                            <DataGrid x:Name="PersonalContactsGrid" ItemsSource="{Binding PersonalContactsCollection}" GridLinesVisibility="All" IsReadOnly="True" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Navn" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Personnummer" Binding="{Binding SocialSecurityNumber}"/>
+                                    <DataGridTextColumn Header="Mobilnummer" Binding="{Binding MobileNumber}"/>
+                                    <DataGridTextColumn Header="Epostadresse" Binding="{Binding EmailAddress}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </StackPanel>
                     </Border>
                 </DataTemplate>
