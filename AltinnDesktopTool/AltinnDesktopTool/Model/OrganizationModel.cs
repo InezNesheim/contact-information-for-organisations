@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace AltinnDesktopTool.Model
 {
@@ -13,6 +9,10 @@ namespace AltinnDesktopTool.Model
         public string Type { get; set; }
         public string OfficialContacts { get; set; }
         public string PersonalContacts { get; set; }
+
+        public ObservableCollection<OfficialContactModel> OfficalContactsCollection { get; set; }
+
+        public ObservableCollection<PersonalContactModel> PersonalContactsCollection { get; set; }
 
         public override string ToString()
         {
