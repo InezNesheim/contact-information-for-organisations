@@ -16,14 +16,12 @@ using System.Linq;
 
 namespace AltinnDesktopTool.ViewModel
 {
-    public class SearchOrganizationInformationViewModel : ViewModelBase
+    public class SearchOrganizationInformationViewModel : AltinnViewModelBase
     {
         private readonly ILog _logger;
         private readonly IMapper _mapper;
 
         public event PubSubEventHandler<IList<Organization>> SearchResultRecievedEventHandler;
-
-        public SearchOrganizationInformationModel Model { get; set; }
 
         public RelayCommand<SearchOrganizationInformationModel> SearchCommand { get; set; }
 

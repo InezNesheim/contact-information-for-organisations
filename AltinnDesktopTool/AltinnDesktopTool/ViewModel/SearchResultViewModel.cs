@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-
-using AltinnDesktopTool.Utils.PubSub;
+﻿using AltinnDesktopTool.Utils.PubSub;
 using RestClient.DTO;
-
-using GalaSoft.MvvmLight;
 using log4net;
 using AltinnDesktopTool.Model;
 using System.Collections.ObjectModel;
@@ -11,7 +7,7 @@ using GalaSoft.MvvmLight.Command;
 
 namespace AltinnDesktopTool.ViewModel
 {
-    public class SearchResultViewModel : ViewModelBase
+    public class SearchResultViewModel : AltinnViewModelBase
     {
         private readonly ILog _logger;
 

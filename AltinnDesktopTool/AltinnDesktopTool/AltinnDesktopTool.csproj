@@ -64,6 +64,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.4.0-ALPHA021\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -96,6 +97,7 @@
     <Compile Include="Utils\PubSub\EventNames.cs" />
     <Compile Include="Utils\PubSub\PubSub.cs" />
     <Compile Include="Utils\PubSub\PubSubEventArgs.cs" />
+    <Compile Include="ViewModel\AltinnViewModelBase.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\SearchOrganizationInformationModel.cs" />
