@@ -12,6 +12,7 @@
   See http://www.galasoft.ch/mvvm
 */
 
+using AltinnDesktopTool.Utils.Helpers;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
