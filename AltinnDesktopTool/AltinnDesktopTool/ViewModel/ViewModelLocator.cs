@@ -12,12 +12,15 @@
   See http://www.galasoft.ch/mvvm
 */
 
-using AltinnDesktopTool.ViewModel.MapperProfiles;
-using AutoMapper;
+using AltinnDesktopTool.Utils.Helpers;
+
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+
 using log4net;
 using Microsoft.Practices.ServiceLocation;
+
+using RestClient;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -39,13 +42,16 @@ namespace AltinnDesktopTool.ViewModel
             log4net.Config.XmlConfigurator.Configure();
 
             // AutoMapper
-            SimpleIoc.Default.Register(RunCreateMaps); // IMapper
+            SimpleIoc.Default.Register(AutoMapperHelper.RunCreateMaps); // IMapper
 
             // View models
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<SearchOrganizationInformationViewModel>();
             SimpleIoc.Default.Register<SearchResultViewModel>();
             SimpleIoc.Default.Register<TopViewModel>();
+
+            // Proxy
+            SimpleIoc.Default.Register<IRestQuery>(() => new RestQuery(ProxyConfigHelper.GetConfig(), ServiceLocator.Current.GetInstance<ILog>()));
         }
 
         public ViewModelBase Main => ServiceLocator.Current.GetInstance<MainViewModel>();
@@ -56,17 +62,6 @@ namespace AltinnDesktopTool.ViewModel
         public static void Cleanup()
         {
             // TODO Clear the ViewModels
-        }
-
-        private static IMapper RunCreateMaps()
-        {
-            // Add profiles here
-            Mapper.Initialize(cfg =>
-            {
-                cfg.AddProfile<SearchMapperProfile>();
-            });
-
-            return Mapper.Configuration.CreateMapper();
         }
     }
 }

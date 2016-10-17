@@ -1,4 +1,5 @@
 ﻿<UserControl x:Class="AltinnDesktopTool.View.SearchResultView"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -16,10 +17,43 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <!--<Grid.Resources>
-            <xcdg:DataGridCollectionViewSource x:Key="mygridsource" Source="{Binding Model.ResultCollection}"/>
-        </Grid.Resources>-->
-        <DataGrid x:Name="OrganizationGrid"  ItemsSource="{Binding Model.ResultCollection}" Margin="10" GridLinesVisibility="All" AlternationCount="2" HorizontalGridLinesBrush="{x:Null}" VerticalGridLinesBrush="{x:Null}" IsReadOnly="True"/>
+        <DataGrid x:Name="OrganizationGrid"  ItemsSource="{Binding Model.ResultCollection}" Margin="10" GridLinesVisibility="All" AlternationCount="2" HorizontalGridLinesBrush="{x:Null}" VerticalGridLinesBrush="{x:Null}" IsReadOnly="True" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Navn" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Organisasjonsnummer" Binding="{Binding OrganizationNumber}"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
+            </DataGrid.Columns>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding GetContactsCommand}" 
+                        CommandParameter="{Binding Path=SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="1" Padding="10">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Offisielle kontakter:"/>
+                            <DataGrid x:Name="OfficialContactsGrid" ItemsSource="{Binding OfficalContactsCollection}" GridLinesVisibility="All" IsReadOnly="True" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Epostadresse" Binding="{Binding EmailAddress}"/>
+                                    <DataGridTextColumn Header="Mobilnummer" Binding="{Binding MobileNumber}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <TextBlock Text="Personlige kontakter:"/>
+                            <DataGrid x:Name="PersonalContactsGrid" ItemsSource="{Binding PersonalContactsCollection}" GridLinesVisibility="All" IsReadOnly="True" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Navn" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Personnummer" Binding="{Binding SocialSecurityNumber}"/>
+                                    <DataGridTextColumn Header="Mobilnummer" Binding="{Binding MobileNumber}"/>
+                                    <DataGridTextColumn Header="Epostadresse" Binding="{Binding EmailAddress}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
     </Grid>
 
 </UserControl>

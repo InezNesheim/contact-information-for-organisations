@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.PubSub;
 
@@ -7,12 +9,9 @@ using RestClient.DTO;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+
 using log4net;
-using System.Collections.ObjectModel;
 using AutoMapper;
-using AltinnDesktopTool.Configuration;
-using System.Linq;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -20,23 +19,22 @@ namespace AltinnDesktopTool.ViewModel
     {
         private readonly ILog _logger;
         private readonly IMapper _mapper;
+        private readonly IRestQuery _query;
 
-        public event PubSubEventHandler<IList<Organization>> SearchResultRecievedEventHandler;
+        public event PubSubEventHandler<ObservableCollection<OrganizationModel>> SearchResultRecievedEventHandler;
 
         public RelayCommand<SearchOrganizationInformationModel> SearchCommand { get; set; }
 
-        public IRestQuery RestProxy { get; set; }
-
-        public SearchOrganizationInformationViewModel(ILog logger, IMapper mapper)
+        public SearchOrganizationInformationViewModel(ILog logger, IMapper mapper, IRestQuery query)
         {
             _logger = logger;
             _mapper = mapper;
+            _query = query;
+
             Model = new SearchOrganizationInformationModel();
-            //RestProxy = new RestQueryStub();
-            RestProxy = new RestQuery(EnvironmentConfigurationManager.EnvironmentConfigurations.FirstOrDefault(c => c.Name == "PROD"), _logger);
             SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(SearchCommandHandler);
 
-            PubSub<IList<Organization>>.AddEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
 
             // Test loggers
             _logger.Debug("Debug!");
@@ -55,18 +53,18 @@ namespace AltinnDesktopTool.ViewModel
             {
                 case SearchType.EmailAddress:
                 {
-                    organizations = RestProxy.Get<Organization>(new KeyValuePair<string, string>("email", obj.SearchText));
+                    organizations = _query.Get<Organization>(new KeyValuePair<string, string>("email", obj.SearchText));
                     break;
                 }
                 case SearchType.PhoneNumber:
                 {
                     organizations =
-                    RestProxy.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", obj.SearchText));
+                    _query.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", obj.SearchText));
                     break;
                 }
                 case SearchType.OrganizationNumber:
                 {
-                    var organization = RestProxy.Get<Organization>(obj.SearchText);
+                    var organization = _query.Get<Organization>(obj.SearchText);
                     organizations.Add(organization);
                     break;
                 }

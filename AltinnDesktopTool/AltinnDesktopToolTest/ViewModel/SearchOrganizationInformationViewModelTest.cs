@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
+
 using AltinnDesktopTool.Model;
+using AltinnDesktopTool.Utils.Helpers;
 using AltinnDesktopTool.Utils.PubSub;
 using AltinnDesktopTool.ViewModel;
+
+using RestClient;
 using RestClient.DTO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using AutoMapper;
 using log4net;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace AltinnDesktopToolTest.ViewModel
@@ -12,11 +18,26 @@ namespace AltinnDesktopToolTest.ViewModel
     [TestClass]
     public class SearchOrganizationInformationViewModelTest
     {
+        private static IMapper _mapper;
+
+        private ObservableCollection<OrganizationModel> _searchResult;
 
         /// <summary>
         /// Gets or sets the test context for the current test.
         /// </summary>
         public TestContext TestContext { get; set; }
+
+        [ClassInitialize]
+        public static void ClassInit(TestContext context)
+        {
+            _mapper = AutoMapperHelper.RunCreateMaps();
+        }
+
+        [TestCleanup]
+        public void TestCleanUp()
+        {
+            _searchResult = null;
+        }
 
         /// <summary>
         /// Scenario: 
@@ -38,8 +59,10 @@ namespace AltinnDesktopToolTest.ViewModel
             logger.Setup(l => l.Info("Info!"));
             logger.Setup(l => l.Debug("Debug!"));
 
+            var query = new Mock<IRestQuery>();
+
             // Act
-            var target = new SearchOrganizationInformationViewModel(logger.Object, null);
+            var target = new SearchOrganizationInformationViewModel(logger.Object, _mapper, query.Object);
 
             // Assert
             logger.VerifyAll();
@@ -49,8 +72,6 @@ namespace AltinnDesktopToolTest.ViewModel
         }
 
         #region Event tests
-
-        private List<Organization> _searchResult = null;
 
         /// <summary>
         /// Scenario: 
@@ -64,19 +85,25 @@ namespace AltinnDesktopToolTest.ViewModel
         [TestCategory("ViewModel")]
         public void SearchOrganizationInformationViewModelTest_SendsEvent_WhenSearchResultIsRecieved()
         {
-            PubSub<IList<Organization>>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
+
+            var search = new SearchOrganizationInformationModel
+            {
+                SearchType = SearchType.OrganizationNumber,
+                SearchText = "910021451"
+            };
 
             var target = GetViewModel();
 
-            target.SearchCommand.Execute(new SearchOrganizationInformationModel());
+            target.SearchCommand.Execute(search);
 
             Assert.IsNotNull(_searchResult);
 
         }
 
-        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<IList<Organization>> args)
+        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
         {
-            _searchResult = args.Item as List<Organization>;
+            _searchResult = args.Item;
         }
 
         #endregion
@@ -85,15 +112,19 @@ namespace AltinnDesktopToolTest.ViewModel
 
         private static SearchOrganizationInformationViewModel GetViewModel()
         {
-            // Arrange
             var logger = new Mock<ILog>();
-
             logger.Setup(l => l.Error("Error!"));
             logger.Setup(l => l.Warn("Warn!"));
             logger.Setup(l => l.Info("Info!"));
             logger.Setup(l => l.Debug("Debug!"));
 
-            var target = new SearchOrganizationInformationViewModel(logger.Object, null);
+            var org = new Organization();
+
+            var query = new Mock<IRestQuery>();
+            query.Setup(s => s.Get<Organization>(It.IsAny<string>())).Returns(org);
+
+            var target = new SearchOrganizationInformationViewModel(logger.Object, _mapper, query.Object);
+
             return target;
         }
 
