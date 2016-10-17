@@ -189,9 +189,10 @@
     <Content Include="Configuration\EnvironmentConfigurations.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="View\Images\altinn.ico" />
     <Resource Include="Resources\Entypo-license.txt" />
     <Resource Include="Resources\WindowsIcons-license.txt" />
-    <Resource Include="View\a-logo-blue.png" />
+    <Resource Include="View\Images\a-logo-blue.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

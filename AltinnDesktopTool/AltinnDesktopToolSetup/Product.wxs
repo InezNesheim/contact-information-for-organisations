@@ -2,15 +2,15 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define AltinnDesktopTool_TargetDir=$(var.AltinnDesktopTool.TargetDir)?>
   <Product Id="A00397C7-8191-4A26-B20C-DF662D8F6C29" Name="AltinnDesktopToolSetup" Language="1033" Version="1.0.0.0" Manufacturer="Bronnoysundregistrene" UpgradeCode="5de716d3-3f9d-4c96-a1b0-286353b87cb9">
-    <!--<Package InstallerVersion="200" Compressed="yes" InstallPrivileges="limited" InstallScope="perUser" />-->
-    <Package InstallerVersion="200" Compressed="yes" InstallPrivileges="elevated" InstallScope="perMachine" />
+    <Package InstallerVersion="200" Compressed="yes" InstallPrivileges="limited" InstallScope="perUser" />
+    <!--<Package InstallerVersion="200" Compressed="yes" InstallPrivileges="elevated" InstallScope="perMachine" />-->
     <!--<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />-->
     
     <!--<UIRef Id="WixUI_InstallDir" />-->
     <!--<UIRef Id="WixUI_Common" />-->
     
-    <Icon Id="icon.ico" SourceFile="$(var.ProjectDir)Icon.ico" />
-    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+    <Icon Id="icon.ico" SourceFile="$(var.ProjectDir)altinn.ico" />
+    <Property Id="ARPPRODUCTICON" Value="altinn.ico" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes"/>
