@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define AltinnDesktopTool_TargetDir=$(var.AltinnDesktopTool.TargetDir)?>
-  <Product Id="*" Name="AltinnDesktopToolSetup" Language="1033" Version="1.0.0.0" Manufacturer="Bronnoysundregistrene" UpgradeCode="5de716d3-3f9d-4c96-a1b0-286353b87cb9">
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+  <Product Id="A00397C7-8191-4A26-B20C-DF662D8F6C29" Name="AltinnDesktopToolSetup" Language="1033" Version="1.0.0.0" Manufacturer="Bronnoysundregistrene" UpgradeCode="5de716d3-3f9d-4c96-a1b0-286353b87cb9">
+    <!--<Package InstallerVersion="200" Compressed="yes" InstallPrivileges="limited" InstallScope="perUser" />-->
+    <Package InstallerVersion="200" Compressed="yes" InstallPrivileges="elevated" InstallScope="perMachine" />
+    <!--<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />-->
+    
+    <!--<UIRef Id="WixUI_InstallDir" />-->
+    <!--<UIRef Id="WixUI_Common" />-->
+    
+    <Icon Id="icon.ico" SourceFile="$(var.ProjectDir)Icon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-    <MediaTemplate />
+    <MediaTemplate EmbedCab="yes"/>
 
     <Feature Id="ProductFeature" Title="AltinnDesktopToolSetup" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
@@ -39,13 +47,9 @@
     </Directory>
 
   </Fragment>
-  
+
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
-      <!-- <Component Id="ProductComponent"> -->
-      <!-- TODO: Insert files, registry keys, and other resources here. -->
-      <!-- </Component> -->
       <Component Id="AltinnDesktopTool.exe" Guid="e0a8f871-a572-4e3b-88a3-4a267d2f4e7c">
         <File Id="AltinnDesktopTool.exe" Name="AltinnDesktopTool.exe" Source="$(var.AltinnDesktopTool_TargetDir)AltinnDesktopTool.exe" />
       </Component>
