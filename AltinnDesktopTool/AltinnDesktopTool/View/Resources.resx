@@ -120,6 +120,9 @@
   <data name="InfoText" xml:space="preserve">
     <value>Erlend skriver...</value>
   </data>
+  <data name="NoDataText" xml:space="preserve">
+    <value>Ingen data funnet</value>
+  </data>
   <data name="OfficialContactsGridColumnEmail" xml:space="preserve">
     <value>E-post</value>
   </data>
