@@ -9,7 +9,7 @@
         Title="" Height="400.648" Width="400.559" MinWidth="450"
         GlowBrush="{DynamicResource AccentColorBrush}"
         ResizeMode="CanResizeWithGrip"
-        SaveWindowPosition="True" Icon="Images/altinn.ico"
+        SaveWindowPosition="True" Icon="Images/altinnT.ico"
         DataContext="{Binding Main, Source={StaticResource ViewModelLocator}}">
     <Window.Resources>
         <ResourceDictionary></ResourceDictionary>
