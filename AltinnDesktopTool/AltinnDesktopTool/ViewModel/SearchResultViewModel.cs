@@ -21,7 +21,7 @@ namespace AltinnDesktopTool.ViewModel
             _logger = logger;
             _mapper = mapper;
             _restQuery = restQuery;
-            
+
             Model = new SearchResultModel();
 
             PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
@@ -35,19 +35,18 @@ namespace AltinnDesktopTool.ViewModel
             {
                 if (obj.OfficalContactsCollection == null && !string.IsNullOrEmpty(obj.OfficialContacts))
                 {
-                    var officialContactDTOCollection = _restQuery.GetByLink<OfficialContact>(obj.OfficialContacts);
-                    obj.OfficalContactsCollection = _mapper.Map<ICollection<OfficialContact>, ObservableCollection<OfficialContactModel>>(officialContactDTOCollection);
+                    var officialContactDtoCollection = _restQuery.GetByLink<OfficialContact>(obj.OfficialContacts);
+                    obj.OfficalContactsCollection = _mapper.Map<ICollection<OfficialContact>, ObservableCollection<OfficialContactModel>>(officialContactDtoCollection);
                 }
 
                 if (obj.PersonalContactsCollection == null && !string.IsNullOrEmpty(obj.PersonalContacts))
                 {
-                    var personalContactDTOCollecton = _restQuery.GetByLink<PersonalContact>(obj.PersonalContacts);
-                    obj.PersonalContactsCollection = _mapper.Map<ICollection<PersonalContact>, ObservableCollection<PersonalContactModel>>(personalContactDTOCollecton);
+                    var personalContactDtoCollecton = _restQuery.GetByLink<PersonalContact>(obj.PersonalContacts);
+                    obj.PersonalContactsCollection = _mapper.Map<ICollection<PersonalContact>, ObservableCollection<PersonalContactModel>>(personalContactDtoCollecton);
                 }
             }
         }
 
-        public SearchResultModel Model { get; set; }
 
         public RelayCommand<OrganizationModel> GetContactsCommand { get; set; }
 
@@ -55,7 +54,7 @@ namespace AltinnDesktopTool.ViewModel
         {
             _logger.Debug("Handling search result received event.");
 
-            Model.ResultCollection = args.Item;
+            ((SearchResultModel)Model).ResultCollection = args.Item;
         }
     }
 }
