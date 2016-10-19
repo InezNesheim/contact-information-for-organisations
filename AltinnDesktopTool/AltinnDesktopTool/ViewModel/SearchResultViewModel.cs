@@ -50,7 +50,6 @@ namespace AltinnDesktopTool.ViewModel
         public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
         {
             this.logger.Debug("Handling search result received event.");
-
             this.Model.ResultCollection = args.Item;
         }
     }

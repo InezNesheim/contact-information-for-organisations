@@ -6,10 +6,10 @@
         mc:Ignorable="d"
         xmlns:view="clr-namespace:AltinnDesktopTool.View"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-        Title="" Height="400.648" Width="400.559" MinWidth="450"
+        Title="" Height="400.648" Width="400.559" MinWidth="460"
         GlowBrush="{DynamicResource AccentColorBrush}"
         ResizeMode="CanResizeWithGrip"
-        SaveWindowPosition="True" Icon="Images/altinn.ico"
+        SaveWindowPosition="True" Icon="Images/altinnT.ico"
         DataContext="{Binding Main, Source={StaticResource ViewModelLocator}}">
     <Window.Resources>
         <ResourceDictionary></ResourceDictionary>
@@ -20,7 +20,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <view:TopView Grid.Row="0" Loaded="TopView_Loaded"/>

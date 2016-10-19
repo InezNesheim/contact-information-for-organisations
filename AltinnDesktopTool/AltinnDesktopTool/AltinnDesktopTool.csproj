@@ -204,6 +204,7 @@
     <Content Include="Configuration\EnvironmentConfigurations.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="View\Images\altinnT.ico" />
     <Resource Include="View\Images\altinn.ico" />
     <Resource Include="Resources\Entypo-license.txt" />
     <Resource Include="Resources\WindowsIcons-license.txt" />

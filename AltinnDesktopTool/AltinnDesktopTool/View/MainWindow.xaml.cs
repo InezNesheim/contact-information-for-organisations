@@ -21,7 +21,7 @@ namespace AltinnDesktopTool.View
 
         private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            await this.ShowMessageAsync("Info", View.Resources.InfoText);
+            await this.ShowMessageAsync(View.Resources.HeaderText, View.Resources.InfoText);
         }
     }
 }
