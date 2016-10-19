@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 using AltinnDesktopTool.Configuration;
 
 using RestClient;

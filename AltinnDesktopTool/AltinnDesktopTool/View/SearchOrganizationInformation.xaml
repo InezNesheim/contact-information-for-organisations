@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:AltinnDesktopTool.Utils.Converters"
-             xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="AltinnDesktopTool.View.SearchOrganizationInformation"
+             xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:view="clr-namespace:AltinnDesktopTool.View"
+             x:Class="AltinnDesktopTool.View.SearchOrganizationInformation"
              mc:Ignorable="d" 
              d:DesignHeight="80" d:DesignWidth="500"
               >
@@ -24,7 +26,7 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <TextBox Grid.Row="0" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Stretch" Text="{Binding Model.SearchText, Mode=OneWayToSource}"/>
-        <Button Grid.Row="0" Margin="10" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="left" Command="{Binding SearchCommand}" CommandParameter="{Binding Model}" Style="{StaticResource AccentedSquareButtonStyle}" Content="Søk" Custom:ButtonHelper.PreserveTextCase="True"/>
+        <Button Grid.Row="0" Margin="10" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="left" Command="{Binding SearchCommand}" Content="{x:Static view:Resources.SearchButtonText}" CommandParameter="{Binding Model}" Style="{StaticResource AccentedSquareButtonStyle}" Custom:ButtonHelper.PreserveTextCase="True"/>
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="18,0,0,0">
             <RadioButton GroupName="SearchType" Margin="5" Content="Smart" IsChecked="{Binding Model.SearchType, ConverterParameter=Smart, Converter={StaticResource RadioButtonCheckedConverter}, Mode=TwoWay}"/>
             <RadioButton GroupName="SearchType" Margin="5" Content="Mobilnummer" IsChecked="{Binding Model.SearchType, ConverterParameter=PhoneNumber, Converter={StaticResource RadioButtonCheckedConverter}, Mode=TwoWay}"/>

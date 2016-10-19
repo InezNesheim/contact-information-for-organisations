@@ -1,4 +1,5 @@
-﻿using MahApps.Metro.Controls;
+﻿using System.Windows;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace AltinnDesktopTool.View
 {
@@ -16,6 +17,11 @@ namespace AltinnDesktopTool.View
         private void TopView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
 
+        }
+
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            await this.ShowMessageAsync("Info", View.Resources.InfoText);
         }
     }
 }

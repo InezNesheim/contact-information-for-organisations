@@ -6,7 +6,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"             
+             xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
+             xmlns:view="clr-namespace:AltinnDesktopTool.View"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="600"
              DataContext="{Binding SearchResultViewModel, Source={StaticResource ViewModelLocator}}">
@@ -19,9 +20,9 @@
         </Grid.RowDefinitions>
         <DataGrid x:Name="OrganizationGrid"  ItemsSource="{Binding Model.ResultCollection}" Margin="10" GridLinesVisibility="All" AlternationCount="2" HorizontalGridLinesBrush="{x:Null}" VerticalGridLinesBrush="{x:Null}" IsReadOnly="True" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Navn" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Organisasjonsnummer" Binding="{Binding OrganizationNumber}"/>
-                <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
+                <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnName}" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnOrganizationNumber}" Binding="{Binding OrganizationNumber}"/>
+                <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnType}" Binding="{Binding Type}"/>
             </DataGrid.Columns>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
@@ -33,20 +34,20 @@
                 <DataTemplate>
                     <Border BorderThickness="1" Padding="10">
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="Offisielle kontakter:"/>
+                            <TextBlock Text="{x:Static view:Resources.OfficialContactsTitle}"/>
                             <DataGrid x:Name="OfficialContactsGrid" ItemsSource="{Binding OfficalContactsCollection}" GridLinesVisibility="All" IsReadOnly="True" AutoGenerateColumns="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Epostadresse" Binding="{Binding EmailAddress}"/>
-                                    <DataGridTextColumn Header="Mobilnummer" Binding="{Binding MobileNumber}"/>
+                                    <DataGridTextColumn Header="{x:Static view:Resources.OfficialContactsGridColumnEmail}" Binding="{Binding EmailAddress}"/>
+                                    <DataGridTextColumn Header="{x:Static view:Resources.OfficialContactsGridColumnMobile}" Binding="{Binding MobileNumber}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <TextBlock Text="Personlige kontakter:"/>
+                            <TextBlock Text="{x:Static view:Resources.PersonalContactsTitle}"/>
                             <DataGrid x:Name="PersonalContactsGrid" ItemsSource="{Binding PersonalContactsCollection}" GridLinesVisibility="All" IsReadOnly="True" AutoGenerateColumns="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Navn" Binding="{Binding Name}"/>
-                                    <DataGridTextColumn Header="Personnummer" Binding="{Binding SocialSecurityNumber}"/>
-                                    <DataGridTextColumn Header="Mobilnummer" Binding="{Binding MobileNumber}"/>
-                                    <DataGridTextColumn Header="Epostadresse" Binding="{Binding EmailAddress}"/>
+                                    <DataGridTextColumn Header="{x:Static view:Resources.PersonalContactsGridColumnName}" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="{x:Static view:Resources.PersonalContactsGridColumnSsn}" Binding="{Binding SocialSecurityNumber}"/>
+                                    <DataGridTextColumn Header="{x:Static view:Resources.PersonalContactsGridColumnMobile}" Binding="{Binding MobileNumber}"/>
+                                    <DataGridTextColumn Header="{x:Static view:Resources.PersonalContactsGridColumnEmail}" Binding="{Binding EmailAddress}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
