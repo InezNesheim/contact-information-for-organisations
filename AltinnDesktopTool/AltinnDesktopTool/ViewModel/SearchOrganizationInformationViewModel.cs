@@ -11,6 +11,7 @@ using GalaSoft.MvvmLight.Command;
 
 using log4net;
 using AutoMapper;
+using RestClient.Resources;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -33,7 +34,8 @@ namespace AltinnDesktopTool.ViewModel
             Model = new SearchOrganizationInformationModel();
             SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(SearchCommandHandler);
 
-            PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultRecievedEvent,
+                SearchResultRecievedEventHandler);
 
             // Test loggers
             _logger.Debug("Debug!");
@@ -48,29 +50,45 @@ namespace AltinnDesktopTool.ViewModel
 
             // Removing all whitespaces from the search string.
             var searchText = new string(obj.SearchText.Where(c => !char.IsWhiteSpace(c)).ToArray());
-            var searchType = obj.SearchType == SearchType.Smart ? IdentifySearchType(searchText) : obj.SearchType;
-            
-            IList<Organization> organizations = new List<Organization>();
-            
-            switch (searchType)
+
+            if (string.IsNullOrEmpty(searchText))
             {
-                case SearchType.EmailAddress:
+                // Preventing an empty search. It takes a lot of time and the result is useless. 
+                return;
+            }
+
+            // After having removed the radio buttons where the user could select search type, search is always Smart, but the check
+            // is kept in case the radio buttons comes back in a future release. For example as advanced search.
+            var searchType = obj.SearchType == SearchType.Smart ? IdentifySearchType(searchText) : obj.SearchType;
+
+            IList<Organization> organizations = new List<Organization>();
+
+            try
+            {
+                switch (searchType)
                 {
-                    organizations = _query.Get<Organization>(new KeyValuePair<string, string>("email", searchText));
-                    break;
+                    case SearchType.EmailAddress:
+                        {
+                            organizations = _query.Get<Organization>(new KeyValuePair<string, string>("email", searchText));
+                            break;
+                        }
+                    case SearchType.PhoneNumber:
+                        {
+                            organizations =
+                            _query.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", searchText));
+                            break;
+                        }
+                    case SearchType.OrganizationNumber:
+                        {
+                            var organization = _query.Get<Organization>(searchText);
+                            organizations.Add(organization);
+                            break;
+                        }
                 }
-                case SearchType.PhoneNumber:
-                {
-                    organizations =
-                    _query.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", searchText));
-                    break;
-                }
-                case SearchType.OrganizationNumber:
-                {
-                    var organization = _query.Get<Organization>(searchText);
-                    organizations.Add(organization);
-                    break;
-                }
+            }
+            catch (RestClientException rex)
+            {
+                _logger.Error("Exception from the RestClient", rex);
             }
 
             var orgmodellist = organizations != null ?
