@@ -1,4 +1,7 @@
-﻿namespace AltinnDesktopTool.View
+﻿using System.Windows;
+using MahApps.Metro.Controls.Dialogs;
+
+namespace AltinnDesktopTool.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -14,6 +17,11 @@
         private void TopView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
 
+        }
+
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            await this.ShowMessageAsync("Info", View.Resources.InfoText);
         }
     }
 }
