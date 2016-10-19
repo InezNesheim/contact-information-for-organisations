@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using RestClient.Resources;
-using System.Collections.Generic;
 
 namespace RestClient
 {

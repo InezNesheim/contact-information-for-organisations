@@ -6,8 +6,6 @@ using AltinnDesktopTool.Utils.PubSub;
 
 using RestClient;
 using RestClient.DTO;
-
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
 using log4net;

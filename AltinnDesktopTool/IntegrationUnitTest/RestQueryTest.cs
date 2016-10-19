@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using log4net;
-using RestClient;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RestClient.DTO;
 
 

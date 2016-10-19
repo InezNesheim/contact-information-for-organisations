@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RestClient;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RestClient.DTO;
 using RestClient.Deserialize;
 

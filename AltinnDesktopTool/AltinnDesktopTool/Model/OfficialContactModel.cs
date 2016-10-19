@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AltinnDesktopTool.Model
+﻿namespace AltinnDesktopTool.Model
 {
     public class OfficialContactModel : ModelBase
     {
