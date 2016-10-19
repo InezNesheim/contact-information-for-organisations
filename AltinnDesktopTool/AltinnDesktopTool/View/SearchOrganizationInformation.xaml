@@ -6,7 +6,7 @@
              xmlns:converters="clr-namespace:AltinnDesktopTool.Utils.Converters"
              xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="AltinnDesktopTool.View.SearchOrganizationInformation"
              mc:Ignorable="d" 
-             d:DesignHeight="80" d:DesignWidth="400"
+             d:DesignHeight="80" d:DesignWidth="500"
               >
     <UserControl.Resources>
         <converters:RadioButtonCheckedConverter x:Key="RadioButtonCheckedConverter"/>
@@ -26,6 +26,7 @@
         <TextBox Grid.Row="0" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Stretch" Text="{Binding Model.SearchText, Mode=OneWayToSource}"/>
         <Button Grid.Row="0" Margin="10" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="left" Command="{Binding SearchCommand}" CommandParameter="{Binding Model}" Style="{StaticResource AccentedSquareButtonStyle}" Content="Søk" Custom:ButtonHelper.PreserveTextCase="True"/>
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="18,0,0,0">
+            <RadioButton GroupName="SearchType" Margin="5" Content="Smart" IsChecked="{Binding Model.SearchType, ConverterParameter=Smart, Converter={StaticResource RadioButtonCheckedConverter}, Mode=TwoWay}"/>
             <RadioButton GroupName="SearchType" Margin="5" Content="Mobilnummer" IsChecked="{Binding Model.SearchType, ConverterParameter=PhoneNumber, Converter={StaticResource RadioButtonCheckedConverter}, Mode=TwoWay}"/>
             <RadioButton GroupName="SearchType" Margin="5" Content="Epostadresse" IsChecked="{Binding Model.SearchType, ConverterParameter=EmailAddress, Converter={StaticResource RadioButtonCheckedConverter}, Mode=TwoWay}"/>
             <RadioButton GroupName="SearchType" Margin="5" Content="Organisasjonsnr" IsChecked="{Binding Model.SearchType, ConverterParameter=OrganizationNumber, Converter={StaticResource RadioButtonCheckedConverter}, Mode=TwoWay}"/>

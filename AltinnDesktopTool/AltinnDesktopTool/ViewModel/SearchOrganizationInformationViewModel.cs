@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
+using System.Linq;
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.PubSub;
 
@@ -46,25 +47,29 @@ namespace AltinnDesktopTool.ViewModel
         private void SearchCommandHandler(SearchOrganizationInformationModel obj)
         {
             _logger.Debug(GetType().FullName + " Searching for: " + obj.SearchText + ", " + obj.SearchType);
+
+            // Removing all whitespaces from the search string.
+            var searchText = new string(obj.SearchText.Where(c => !char.IsWhiteSpace(c)).ToArray());
+            var searchType = obj.SearchType == SearchType.Smart ? IdentifySearchType(searchText) : obj.SearchType;
             
             IList<Organization> organizations = new List<Organization>();
             
-            switch (obj.SearchType)
+            switch (searchType)
             {
                 case SearchType.EmailAddress:
                 {
-                    organizations = _query.Get<Organization>(new KeyValuePair<string, string>("email", obj.SearchText));
+                    organizations = _query.Get<Organization>(new KeyValuePair<string, string>("email", searchText));
                     break;
                 }
                 case SearchType.PhoneNumber:
                 {
                     organizations =
-                    _query.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", obj.SearchText));
+                    _query.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", searchText));
                     break;
                 }
                 case SearchType.OrganizationNumber:
                 {
-                    var organization = _query.Get<Organization>(obj.SearchText);
+                    var organization = _query.Get<Organization>(searchText);
                     organizations.Add(organization);
                     break;
                 }
@@ -76,6 +81,21 @@ namespace AltinnDesktopTool.ViewModel
 
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                 new PubSubEventArgs<ObservableCollection<OrganizationModel>>(orgmodellist));
+        }
+
+        private static SearchType IdentifySearchType(string searchText)
+        {
+            if (searchText.IndexOf("@", StringComparison.InvariantCulture) > 0)
+            {
+                return SearchType.EmailAddress;
+            }
+
+            if (searchText.Length == 9 && searchText.All(char.IsDigit))
+            {
+                return SearchType.OrganizationNumber;
+            }
+
+            return SearchType.PhoneNumber;
         }
     }
 }
