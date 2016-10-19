@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight.Command;
 using AutoMapper;
 using RestClient;
-using AltinnDesktopTool.Configuration;
 
 namespace AltinnDesktopTool.ViewModel
 {

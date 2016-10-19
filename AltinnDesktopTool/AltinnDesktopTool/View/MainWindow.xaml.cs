@@ -1,6 +1,4 @@
-﻿using MahApps.Metro.Controls;
-
-namespace AltinnDesktopTool.View
+﻿namespace AltinnDesktopTool.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
