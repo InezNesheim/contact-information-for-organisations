@@ -9,11 +9,10 @@ namespace RestClient.DTO
     {
         public HalJsonResource()
         {
-            Type t = GetType();
+            var t = this.GetType();
             if (t.IsDefined(typeof(PluralNameAttribute), false) == false)
             {
                 throw new InvalidOperationException("Missing Plural name attribute on HalJsonResource class!");
-
             }
         }
     }
@@ -28,7 +27,7 @@ namespace RestClient.DTO
 
         public PluralNameAttribute(string pluralName)
         {
-            PluralName = pluralName;
+            this.PluralName = pluralName;
         }
     }
 }

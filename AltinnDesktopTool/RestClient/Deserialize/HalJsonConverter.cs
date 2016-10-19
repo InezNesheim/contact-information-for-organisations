@@ -24,6 +24,7 @@ namespace RestClient.Deserialize
         /// <param name="writer">The JSON writer</param>
         /// <param name="value">Value to be written</param>
         /// <param name="serializer">The JSON serializer</param>
+        /// <exception cref="NotImplementedException"></exception>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
@@ -46,16 +47,16 @@ namespace RestClient.Deserialize
             //TODO:: deserialize _embedded
 
             // Deserialize _links
-            if (obj["_links"] != null && obj["_links"].HasValues)
+            if (obj["_links"] == null || !obj["_links"].HasValues) return ret;
+            using (var enumeratorEmbedded = ((JObject)obj["_links"]).GetEnumerator())
             {
-                var enumeratorEmbedded = ((JObject)obj["_links"]).GetEnumerator();
                 while (enumeratorEmbedded.MoveNext())
                 {
-                    string rel = enumeratorEmbedded.Current.Key;
+                    var rel = enumeratorEmbedded.Current.Key;
 
                     foreach (var property in objectType.GetProperties())
                     {
-                        bool attribute = property.Name.ToLower() == rel.ToLower();
+                        var attribute = property.Name.ToLower() == rel.ToLower();
 
                         if (attribute)
                         {
@@ -64,7 +65,6 @@ namespace RestClient.Deserialize
                     }
                 }
             }
-
             return ret;
         }
 

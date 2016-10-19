@@ -38,7 +38,7 @@ namespace AltinnDesktopTool.ViewModel
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             // Logging
-            SimpleIoc.Default.Register(() => LogManager.GetLogger(GetType())); // ILog
+            SimpleIoc.Default.Register(() => LogManager.GetLogger(this.GetType())); // ILog
             log4net.Config.XmlConfigurator.Configure();
 
             // AutoMapper

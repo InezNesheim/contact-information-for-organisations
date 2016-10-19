@@ -16,12 +16,12 @@ namespace RestClient
     public class AltinnRestClient : IDisposable
     {
         #region private declarations
-        private const string ACCEPTED_TYPE = "application/hal+json";
-        private HttpClient _httpClient;
-        private string _baseAddress;
-        private string _apikey;
-        private int _timeout;
-        private string _thumbprint;
+        private const string AcceptedType = "application/hal+json";
+        private HttpClient httpClient;
+        private string baseAddress;
+        private string apikey;
+        private int timeout;
+        private string thumbprint;
         #endregion
 
         #region public properties
@@ -40,12 +40,12 @@ namespace RestClient
         {
             get
             {
-                return _baseAddress;
+                return this.baseAddress;
             }
             set
             {
-                _baseAddress = value;
-                InvalidateHandler();
+                this.baseAddress = value;
+                this.InvalidateHandler();
             }
         }
 
@@ -60,12 +60,12 @@ namespace RestClient
         {
             get
             {
-                return _apikey;
+                return this.apikey;
             }
             set
             {
-                _apikey = value;
-                InvalidateHandler();
+                this.apikey = value;
+                this.InvalidateHandler();
             }
         }
 
@@ -80,12 +80,12 @@ namespace RestClient
         {
             get
             {
-                return _timeout;
+                return this.timeout;
             }
             set
             {
-                _timeout = value;
-                InvalidateHandler();
+                this.timeout = value;
+                this.InvalidateHandler();
             }
         }
 
@@ -101,12 +101,12 @@ namespace RestClient
         {
             get
             {
-                return _thumbprint;
+                return this.thumbprint;
             }
             set
             {
-                _thumbprint = value;
-                InvalidateHandler();
+                this.thumbprint = value;
+                this.InvalidateHandler();
             }
         }
 
@@ -119,9 +119,9 @@ namespace RestClient
         /// </summary>
         public AltinnRestClient(string baseAddress, string apiKey, string certificateThumbprint)
         {
-            _baseAddress = baseAddress;
-            _apikey = apiKey;
-            _thumbprint = certificateThumbprint;
+            this.baseAddress = baseAddress;
+            this.apikey = apiKey;
+            this.thumbprint = certificateThumbprint;
         }
 
         #endregion
@@ -137,13 +137,11 @@ namespace RestClient
         /// </remarks>
         public string Get(string uriPart)
         {
-            EnsureHandler();
-            var responseMessage = _httpClient.GetAsync(uriPart, HttpCompletionOption.ResponseContentRead).Result;
+            this.EnsureHandler();
+            var responseMessage = this.httpClient.GetAsync(uriPart, HttpCompletionOption.ResponseContentRead).Result;
             responseMessage.EnsureSuccessStatusCode();
-            if (IsJsonResult(responseMessage))
-                return responseMessage.Content.ReadAsStringAsync().Result;
-            else
-                return null;
+
+            return IsJsonResult(responseMessage) ? responseMessage.Content.ReadAsStringAsync().Result : null;
         }
 
 
@@ -151,14 +149,14 @@ namespace RestClient
         {
             if (disposing)
             {
-                InvalidateHandler();
+                this.InvalidateHandler();
             }
         }
 
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -167,51 +165,51 @@ namespace RestClient
         #region private implementation
         private void InvalidateHandler()
         {
-            if (_httpClient != null)
+            if (this.httpClient != null)
             {
-                _httpClient.Dispose();
-                _httpClient = null;
+                this.httpClient.Dispose();
+                this.httpClient = null;
             }
         }
 
 
         private void EnsureHandler()
         {
-            if (_httpClient != null)
+            if (this.httpClient != null)
                 return;
-            InitHttpClient();
+            this.InitHttpClient();
         }
 
-        private bool IsJsonResult(HttpResponseMessage responseMessage)
+        private static bool IsJsonResult(HttpResponseMessage responseMessage)
         {
             var conttype = responseMessage.Content.Headers.ContentType.ToString();
-            return conttype.StartsWith(ACCEPTED_TYPE, StringComparison.InvariantCultureIgnoreCase);
+            return conttype.StartsWith(AcceptedType, StringComparison.InvariantCultureIgnoreCase);
         }
 
 
         private void InitHttpClient()
         {
-            WebRequestHandler httpClientHandler = new WebRequestHandler();
+            var httpClientHandler = new WebRequestHandler();
 
-            if (string.IsNullOrEmpty(_apikey))
+            if (string.IsNullOrEmpty(this.apikey))
             {
                 throw new RestClientException("ApiKey is missing");
             }
 
-            if (string.IsNullOrEmpty(_thumbprint))
+            if (string.IsNullOrEmpty(this.thumbprint))
             {
                 throw new RestClientException("Certificate Thumbprint is missing");
             }
 
             var store = new X509Store(StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadOnly);
-            var certificateColl = store.Certificates.Find(X509FindType.FindByThumbprint, _thumbprint, false);
+            var certificateColl = store.Certificates.Find(X509FindType.FindByThumbprint, this.thumbprint, false);
             if (certificateColl.Count < 0)
             {
                 throw new RestClientException("Certificate not found.");
             }
             var cert = certificateColl[0];
-            bool verify = cert.Verify();
+            var verify = cert.Verify();
             if (!verify)
             {
                 throw new RestClientException("Certificate not valid");
@@ -219,15 +217,19 @@ namespace RestClient
 
             httpClientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             httpClientHandler.ClientCertificates.Add(cert);
-            _httpClient = new HttpClient(httpClientHandler, true);
+            this.httpClient = new HttpClient(httpClientHandler, true);
 
-            _httpClient.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
-            _httpClient.DefaultRequestHeaders.Add("Accept", ACCEPTED_TYPE);
-            _httpClient.DefaultRequestHeaders.Add("ApiKey", _apikey);
-            if (_timeout > 0)
-                _httpClient.Timeout = new TimeSpan(0, 0, 0, _timeout);
-            if (!string.IsNullOrEmpty(_baseAddress))
-                _httpClient.BaseAddress = new Uri(_baseAddress);
+            this.httpClient.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
+            this.httpClient.DefaultRequestHeaders.Add("Accept", AcceptedType);
+            this.httpClient.DefaultRequestHeaders.Add("ApiKey", this.apikey);
+            if (this.timeout > 0)
+            {
+                this.httpClient.Timeout = new TimeSpan(0, 0, 0, this.timeout);
+            }
+            if (!string.IsNullOrEmpty(this.baseAddress))
+            {
+                this.httpClient.BaseAddress = new Uri(this.baseAddress);
+            }
         }
         #endregion
 

@@ -5,7 +5,6 @@ namespace AltinnDesktopTool.ViewModel
 {
     public class AltinnViewModelBase : ViewModelBase
     {
-        public ModelBase Model { get; set; }
-       
+        public virtual ModelBase Model { get; set; }
     }
 }

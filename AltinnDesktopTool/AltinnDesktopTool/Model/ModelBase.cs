@@ -8,75 +8,104 @@ using GalaSoft.MvvmLight;
 
 namespace AltinnDesktopTool.Model
 {
+    /// <summary>
+    /// Base Class for Data Models used by Views and View Models.
+    /// </summary>
     public class ModelBase : ObservableObject, INotifyDataErrorInfo
     {
-        public readonly Dictionary<string, ICollection<string>> _validationErrors = new Dictionary<string, ICollection<string>>();
+        /// <summary>
+        /// Dictionary of ValidationErrors
+        /// </summary>
+        public readonly Dictionary<string, ICollection<string>> ValidationErrors = new Dictionary<string, ICollection<string>>();
 
         #region INotifyDataErrorInfo members
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-        private void RaiseErrorsChanged(string propertyName)
-        {
-            if (ErrorsChanged != null)
-                ErrorsChanged(this, new DataErrorsChangedEventArgs(propertyName));
-        }
 
-        public bool HasErrors
-        {
-            get { return _validationErrors.Count > 0; }
-        }
+        /// <summary>
+        /// Event handler for change of errors.
+        /// </summary>
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        /// <summary>
+        /// True if there are errors.
+        /// </summary>
+        public bool HasErrors => this.ValidationErrors.Count > 0;
+
         #endregion
+
+
+        /// <summary>
+        /// Get the error messages for a property
+        /// </summary>
+        /// <param name="propertyName">The property name</param>
+        /// <returns>The error messages or null if not found</returns>
         public IEnumerable GetErrors(string propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName) || !_validationErrors.ContainsKey(propertyName))
-                return null;
-
-            return _validationErrors[propertyName];
+            return string.IsNullOrEmpty(propertyName) || !this.ValidationErrors.ContainsKey(propertyName)
+                       ? null
+                       : this.ValidationErrors[propertyName];
         }
 
-
+        /// <summary>
+        /// Validates a property of the model using the defined validators
+        /// </summary>
+        /// <param name="value">The property value</param>
+        /// <param name="propertyName">The property name, which is a valid property of this model</param>
         protected void ValidateModelProperty(object value, string propertyName)
         {
-            if (_validationErrors.ContainsKey(propertyName))
-                _validationErrors.Remove(propertyName);
+            if (this.ValidationErrors.ContainsKey(propertyName))
+            {
+                this.ValidationErrors.Remove(propertyName);
+            }
 
             ICollection<ValidationResult> validationResults = new List<ValidationResult>();
-            ValidationContext validationContext =
+            var validationContext =
                 new ValidationContext(this, null, null) { MemberName = propertyName };
             if (!Validator.TryValidateProperty(value, validationContext, validationResults))
             {
-                _validationErrors.Add(propertyName, new List<string>());
-                foreach (ValidationResult validationResult in validationResults)
+                this.ValidationErrors.Add(propertyName, new List<string>());
+                foreach (var validationResult in validationResults)
                 {
-                    _validationErrors[propertyName].Add(validationResult.ErrorMessage);
+                    this.ValidationErrors[propertyName].Add(validationResult.ErrorMessage);
                 }
             }
-            RaiseErrorsChanged(propertyName);
+
+            this.RaiseErrorsChanged(propertyName);
         }
 
+        /// <summary>
+        /// Validates the model, meaning all the properties
+        /// </summary>
         protected void ValidateModel()
         {
-            _validationErrors.Clear();
+            this.ValidationErrors.Clear();
             ICollection<ValidationResult> validationResults = new List<ValidationResult>();
-            ValidationContext validationContext = new ValidationContext(this, null, null);
+            var validationContext = new ValidationContext(this, null, null);
             if (!Validator.TryValidateObject(this, validationContext, validationResults, true))
             {
-                foreach (ValidationResult validationResult in validationResults)
+                foreach (var validationResult in validationResults)
                 {
-                    string property = validationResult.MemberNames.ElementAt(0);
-                    if (_validationErrors.ContainsKey(property))
+                    var property = validationResult.MemberNames.ElementAt(0);
+                    if (this.ValidationErrors.ContainsKey(property))
                     {
-                        _validationErrors[property].Add(validationResult.ErrorMessage);
+                        this.ValidationErrors[property].Add(validationResult.ErrorMessage);
                     }
                     else
                     {
-                        _validationErrors.Add(property, new List<string> { validationResult.ErrorMessage });
+                        this.ValidationErrors.Add(property, new List<string> { validationResult.ErrorMessage });
                     }
                 }
             }
 
             /* Raise the ErrorsChanged for all properties explicitly */
-            RaiseErrorsChanged("Username");
-            RaiseErrorsChanged("Name");
+            this.RaiseErrorsChanged("Username");
+            this.RaiseErrorsChanged("Name");
         }
+
+
+        private void RaiseErrorsChanged(string propertyName)
+        {
+            this.ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
     }
 }

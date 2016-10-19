@@ -10,52 +10,48 @@ using RestClient;
 
 namespace AltinnDesktopTool.ViewModel
 {
-    public class SearchResultViewModel : AltinnViewModelBase
+    public sealed class SearchResultViewModel : AltinnViewModelBase
     {
-        private readonly ILog _logger;
-        private readonly IMapper _mapper;
-        private readonly IRestQuery _restQuery;
+        private readonly ILog logger;
+        private readonly IMapper mapper;
+        private readonly IRestQuery restQuery;
 
         public SearchResultViewModel(ILog logger, IMapper mapper, IRestQuery restQuery)
         {
-            _logger = logger;
-            _mapper = mapper;
-            _restQuery = restQuery;
-            
-            Model = new SearchResultModel();
+            this.logger = logger;
+            this.mapper = mapper;
+            this.restQuery = restQuery;
+
+            this.Model = new SearchResultModel();
 
             PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
 
-            GetContactsCommand = new RelayCommand<OrganizationModel>(GetContactsCommandHandler);
+            this.GetContactsCommand = new RelayCommand<OrganizationModel>(this.GetContactsCommandHandler);
         }
 
         private void GetContactsCommandHandler(OrganizationModel obj)
         {
-            if (obj != null)
+            if (obj == null) return;
+            if (obj.OfficalContactsCollection == null && !string.IsNullOrEmpty(obj.OfficialContacts))
             {
-                if (obj.OfficalContactsCollection == null && !string.IsNullOrEmpty(obj.OfficialContacts))
-                {
-                    var officialContactDTOCollection = _restQuery.GetByLink<OfficialContact>(obj.OfficialContacts);
-                    obj.OfficalContactsCollection = _mapper.Map<ICollection<OfficialContact>, ObservableCollection<OfficialContactModel>>(officialContactDTOCollection);
-                }
-
-                if (obj.PersonalContactsCollection == null && !string.IsNullOrEmpty(obj.PersonalContacts))
-                {
-                    var personalContactDTOCollecton = _restQuery.GetByLink<PersonalContact>(obj.PersonalContacts);
-                    obj.PersonalContactsCollection = _mapper.Map<ICollection<PersonalContact>, ObservableCollection<PersonalContactModel>>(personalContactDTOCollecton);
-                }
+                var officialContactDtoCollection = this.restQuery.GetByLink<OfficialContact>(obj.OfficialContacts);
+                obj.OfficalContactsCollection = this.mapper.Map<ICollection<OfficialContact>, ObservableCollection<OfficialContactModel>>(officialContactDtoCollection);
             }
+
+            if (obj.PersonalContactsCollection != null || string.IsNullOrEmpty(obj.PersonalContacts)) return;
+            var personalContactDtoCollecton = this.restQuery.GetByLink<PersonalContact>(obj.PersonalContacts);
+            obj.PersonalContactsCollection = this.mapper.Map<ICollection<PersonalContact>, ObservableCollection<PersonalContactModel>>(personalContactDtoCollecton);
         }
 
-        public SearchResultModel Model { get; set; }
+        public new SearchResultModel Model { get; set; }
 
         public RelayCommand<OrganizationModel> GetContactsCommand { get; set; }
 
         public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
         {
-            _logger.Debug("Handling search result received event.");
+            this.logger.Debug("Handling search result received event.");
 
-            Model.ResultCollection = args.Item;
+            this.Model.ResultCollection = args.Item;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace RestClient
         /// Fetches an object by providing and id.
         /// </summary>
         /// <typeparam name="T">The type of data object (DTO) which must be a subclass of HalJsonResource to be returned</typeparam>
-        /// <param name="id">The id of the object to be retrieved</param>
+        /// <param name="url">The url to send to Altinn</param>
         /// <returns>The found object or null if not found</returns>
         /// <remarks>
         /// Controller is identified by the controller having [RestQueryController(SupportedType=T)] defined with a matching T type.
@@ -37,7 +37,7 @@ namespace RestClient
         /// This is useful where a link is returned in a previous call.
         /// </summary>
         /// <typeparam name="T">The type of object to be retrieved.</typeparam>
-        /// <param name="url">The url, possibly including base address (full url).</param>
+        /// <param name="id">The id of the object to retrieve</param>
         /// <returns>A lif objects, possibly empty or null if none found</returns>
         T Get<T>(string id) where T : HalJsonResource;
     }

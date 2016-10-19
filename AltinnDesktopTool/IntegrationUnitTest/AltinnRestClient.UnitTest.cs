@@ -1,24 +1,27 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RestClient;
 
-namespace RestClient.Test
+namespace IntegrationUnitTest
 {
     [TestClass]
     public class UnitTest1
     {
-        string baseaddress = "https://tt02.altinn.basefarm.net/";
-        string apikey = "7FB6140D-B194-4BF6-B3C8-257094FBF8C4";
-        string thumbprint = "5d15d6e888632370e0223b779c4e0f0d9d45ded0";
+        private const string Baseaddress = "https://tt02.altinn.basefarm.net/";
+
+        private const string Apikey = "7FB6140D-B194-4BF6-B3C8-257094FBF8C4";
+
+        private const string Thumbprint = "5d15d6e888632370e0223b779c4e0f0d9d45ded0";
 
         [TestMethod]
-        public void GetClient_Test()
+        public void GetClientTest()
         {
-            AltinnRestClient client = new AltinnRestClient(baseaddress, apikey, thumbprint);
+            var client = new AltinnRestClient(UnitTest1.Baseaddress, Apikey, UnitTest1.Thumbprint);
 
             // Authenticate
             // NOTE: Altinn returns 401 even if it is validated.
-            string orgno = "910021451";
-            string uriPart = "api/serviceowner/organizations?ForceEIAuthentication";
+            const string Orgno = "910021451";
+            var uriPart = "api/serviceowner/organizations?ForceEIAuthentication";
             try
             {
                 client.Get(uriPart);
@@ -29,8 +32,8 @@ namespace RestClient.Test
             }
 
             // Get by orgno
-            uriPart = "api/serviceowner/organizations/" + orgno;
-            string result = "N/A";
+            uriPart = "api/serviceowner/organizations/" + Orgno;
+            var result = "N/A";
             try
             {
                 result = client.Get(uriPart);
@@ -41,7 +44,6 @@ namespace RestClient.Test
             }
 
             Console.WriteLine(result);
-
         }
     }
 }

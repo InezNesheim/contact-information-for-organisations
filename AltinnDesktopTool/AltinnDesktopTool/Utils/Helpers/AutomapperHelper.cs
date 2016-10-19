@@ -4,8 +4,15 @@ using AutoMapper;
 
 namespace AltinnDesktopTool.Utils.Helpers
 {
+    /// <summary>
+    /// Helper class for AutoMapper
+    /// </summary>
     public class AutoMapperHelper
     {
+        /// <summary>
+        /// Create the mapper
+        /// </summary>
+        /// <returns>The IMapper object</returns>
         public static IMapper RunCreateMaps()
         {
             // Add profiles here
