@@ -61,7 +61,18 @@ namespace AltinnDesktopTool.View {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erlend skriver....
+        ///   Looks up a localized string similar to Applikasjon for oppslag i kontaktinformasjon for virksomheter.
+        /// </summary>
+        public static string HeaderText {
+            get {
+                return ResourceManager.GetString("HeaderText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ved å fylle inn e-post/organisasjonsnummer/telefonnummer har man mulighet til å gjøre oppslag i Altinns kontaktinformasjon for virksomheter. Målet er å hjelpe kunder med å finne ut hvorfor de får varslinger fra Altinns miljøer.
+        ///
+        ///Kontakt Erlend Oksvoll (eok@brreg.no) ved spørsmål!.
         /// </summary>
         public static string InfoText {
             get {
