@@ -117,8 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="HeaderText" xml:space="preserve">
+    <value>Applikasjon for oppslag i kontaktinformasjon for virksomheter</value>
+  </data>
   <data name="InfoText" xml:space="preserve">
-    <value>Erlend skriver...</value>
+    <value>Ved å fylle inn e-post/organisasjonsnummer/telefonnummer har man mulighet til å gjøre oppslag i Altinns kontaktinformasjon for virksomheter. Målet er å hjelpe kunder med å finne ut hvorfor de får varslinger fra Altinns miljøer.
+
+Kontakt Erlend Oksvoll (eok@brreg.no) ved spørsmål!</value>
   </data>
   <data name="OfficialContactsGridColumnEmail" xml:space="preserve">
     <value>E-post</value>
