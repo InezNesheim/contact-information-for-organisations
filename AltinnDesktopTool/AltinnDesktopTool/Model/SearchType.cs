@@ -6,18 +6,23 @@
     public enum SearchType
     {
         /// <summary>
+        /// The search input is undefined. Try to find the correct type automatically.
+        /// </summary>
+        Smart = 0,
+
+        /// <summary>
         /// The search input is a phone number.
         /// </summary>
-        PhoneNumber = 0,
+        PhoneNumber = 1,
 
         /// <summary>
         /// The search input is an email address.
         /// </summary>
-        EmailAddress = 1,
+        EmailAddress = 2,
 
         /// <summary>
         /// The search input is an organization number.
         /// </summary>
-        OrganizationNumber = 2
+        OrganizationNumber = 3
     }
 }
