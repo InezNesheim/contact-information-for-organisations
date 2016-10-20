@@ -9,7 +9,7 @@ namespace AltinnDesktopTool.View
     {
         public TopView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

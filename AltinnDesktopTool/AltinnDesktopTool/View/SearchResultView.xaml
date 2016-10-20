@@ -25,6 +25,21 @@
                 <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnOrganizationNumber}" Binding="{Binding OrganizationNumber}"/>
                 <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnType}" Binding="{Binding Type}"/>
             </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{StaticResource AccentBaseColorBrush}"></Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Style>
+                <Style BasedOn="{StaticResource MetroDataGrid}" TargetType="{x:Type DataGrid}">
+                    <Setter Property="AlternatingRowBackground"
+                    Value="{DynamicResource GrayBrush10}" />
+                </Style>
+            </DataGrid.Style>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding GetContactsCommand}" 

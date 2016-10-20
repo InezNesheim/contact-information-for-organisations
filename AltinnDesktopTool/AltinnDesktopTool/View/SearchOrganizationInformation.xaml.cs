@@ -9,7 +9,7 @@ namespace AltinnDesktopTool.View
     {
         public SearchOrganizationInformation()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

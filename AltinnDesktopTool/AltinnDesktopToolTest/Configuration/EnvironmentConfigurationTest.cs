@@ -1,13 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AltinnDesktopTool.Configuration;
+﻿using AltinnDesktopTool.Configuration;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AltinnDesktopToolTest
+namespace AltinnDesktopToolTest.Configuration
 {
     [TestClass]
     public class EnvironmentConfigurationTest
     {
         [TestMethod]
-        public void EnvironmentConfigurationManager_Load_Test()
+        public void EnvironmentConfigurationManagerLoadTest()
         {
             var configs = EnvironmentConfigurationManager.EnvironmentConfigurations;
             Assert.IsNotNull(configs);

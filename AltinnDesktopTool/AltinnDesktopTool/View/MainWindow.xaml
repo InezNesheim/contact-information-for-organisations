@@ -23,7 +23,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <view:TopView Grid.Row="0" Loaded="TopView_Loaded"/>
+        <view:TopView Grid.Row="0" Loaded="TopViewLoaded"/>
         <view:SearchOrganizationInformation Grid.Row="1"/>
         <view:SearchResultView Grid.Row="2" Margin="0,5,0,-5"/>
     </Grid>
