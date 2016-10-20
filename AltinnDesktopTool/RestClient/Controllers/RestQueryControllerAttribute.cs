@@ -24,8 +24,8 @@ namespace RestClient.Controllers
 
         public RestQueryControllerAttribute(string name, Type supportedType)
         {
-            Name = name;
-            SupportedType = supportedType;
+            this.Name = name;
+            this.SupportedType = supportedType;
         }
 
         public RestQueryControllerAttribute()

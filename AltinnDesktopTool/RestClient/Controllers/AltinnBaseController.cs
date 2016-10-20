@@ -15,29 +15,21 @@ namespace RestClient.Controllers
 
         public T Get<T>(string id) where T : HalJsonResource
         {
-            var result = Context.RestClient.Get(string.Format("{0}/{1}", Context.ControllerBaseAddress, id));
-            if (result != null)
-                return Deserializer.DeserializeHalJsonResource<T>(result);
-            else
-                return null;
+            var result = this.Context.RestClient.Get($"{this.Context.ControllerBaseAddress}/{id}");
+            return result != null ? Deserializer.DeserializeHalJsonResource<T>(result) : null;
         }
 
         public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
-            var result = Context.RestClient.Get(string.Format("{0}?{1}={2}", Context.ControllerBaseAddress, filter.Key, filter.Value));
-            if (result != null)
-                return Deserializer.DeserializeHalJsonResourceList<T>(result);
-            else
-                return null;
+            var result = this.Context.RestClient.Get(
+                $"{this.Context.ControllerBaseAddress}?{filter.Key}={filter.Value}");
+            return result != null ? Deserializer.DeserializeHalJsonResourceList<T>(result) : null;
         }
 
         public IList<T> GetByLink<T>(string url) where T : HalJsonResource
         {
-            var result = Context.RestClient.Get(url);
-            if (result != null)
-                return Deserializer.DeserializeHalJsonResourceList<T>(result);
-            else
-                return null;
+            var result = this.Context.RestClient.Get(url);
+            return result != null ? Deserializer.DeserializeHalJsonResourceList<T>(result) : null;
         }
     }
 }

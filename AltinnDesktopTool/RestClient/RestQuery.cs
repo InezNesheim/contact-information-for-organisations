@@ -26,15 +26,15 @@ namespace RestClient
     public class RestQuery : IRestQuery
     {
         #region private declarations
-        private const string _authenticateUri = "organizations?ForceEIAuthentication";
-        private const string CONTROLLER_EXCEPTION_TEXT = "The controller threw an Exception";
-        private const string CONTROLLER_NOT_FOUND_FOR_TYPE_EXCEPTION = "No Controller for type {0}";
-        private const string CONTROLLER_NOT_FOUND_FOR_URL = "No Controller for url {0}";
-        private IRestQueryConfig _restQueryConfig;
-        private ILog _log;
-        private AltinnRestClient _restClient;
-        private bool _isAuthenticated = false;
-        private List<RestQueryControllerAttribute> _controllers = new List<RestQueryControllerAttribute>();
+        private const string AuthenticateUri = "organizations?ForceEIAuthentication";
+        private const string ControllerExceptionText = "The controller threw an Exception";
+        private const string ControllerNotFoundForTypeException = "No Controller for type {0}";
+        private const string ControllerNotFoundForUrl = "No Controller for url {0}";
+        private IRestQueryConfig restQueryConfig;
+        private readonly ILog log;
+        private readonly AltinnRestClient restClient;
+        private bool isAuthenticated = false;
+        private readonly List<RestQueryControllerAttribute> controllers = new List<RestQueryControllerAttribute>();
         #endregion
         
 
@@ -50,16 +50,16 @@ namespace RestClient
         {
             get
             {
-                return _restQueryConfig;
+                return this.restQueryConfig;
             }
             set
             {
-                _restQueryConfig = value;
-                _restClient.BaseAddress = _restQueryConfig.BaseAddress;
-                _restClient.ApiKey = _restQueryConfig.ApiKey;
-                _restClient.Thumbprint = _restQueryConfig.ThumbPrint;
-                if (_restQueryConfig.Timeout > 0)
-                    _restClient.Timeout = _restQueryConfig.Timeout;
+                this.restQueryConfig = value;
+                this.restClient.BaseAddress = this.restQueryConfig.BaseAddress;
+                this.restClient.ApiKey = this.restQueryConfig.ApiKey;
+                this.restClient.Thumbprint = this.restQueryConfig.ThumbPrint;
+                if (this.restQueryConfig.Timeout > 0)
+                    this.restClient.Timeout = this.restQueryConfig.Timeout;
             }
         }
         #endregion
@@ -77,15 +77,14 @@ namespace RestClient
         /// </remarks>
         public RestQuery(IRestQueryConfig restQueryConfig, ILog log = null)
         {
-            _restQueryConfig = restQueryConfig;
-            _log = log;
-            _restClient = new AltinnRestClient(restQueryConfig.BaseAddress, restQueryConfig.ApiKey, restQueryConfig.ThumbPrint);
+            this.restQueryConfig = restQueryConfig;
+            this.log = log;
+            this.restClient = new AltinnRestClient(restQueryConfig.BaseAddress, restQueryConfig.ApiKey, restQueryConfig.ThumbPrint);
             if (restQueryConfig.Timeout > 0)
-                _restClient.Timeout = restQueryConfig.Timeout;
-            InitControllers();
+                this.restClient.Timeout = restQueryConfig.Timeout;
+            this.InitControllers();
         }
         #endregion
-
 
 
 
@@ -99,12 +98,12 @@ namespace RestClient
         /// </exception>
         public T Get<T>(string id) where T : HalJsonResource
         {
-            EnsureAuthenticated();
-            IRestQueryController controller = GetControllerByType(typeof(T));
+            this.EnsureAuthenticated();
+            var controller = this.GetControllerByType(typeof(T));
             if (controller == null)
             {
-                string err = string.Format(CONTROLLER_NOT_FOUND_FOR_TYPE_EXCEPTION, typeof(T));
-                Log(err, LogLevel.Error);
+                var err = string.Format(ControllerNotFoundForTypeException, typeof(T));
+                this.Log(err, LogLevel.Error);
                 throw new RestClientException(err);
             }
             try
@@ -113,11 +112,11 @@ namespace RestClient
             }
             catch (Exception ex)
             {
-                Log(CONTROLLER_EXCEPTION_TEXT, LogLevel.Error, ex);
+                this.Log(ControllerExceptionText, LogLevel.Error, ex);
                 if (ex is RestClientException)
                     throw;
                 else
-                    throw new RestClientException(CONTROLLER_EXCEPTION_TEXT, ex);
+                    throw new RestClientException(ControllerExceptionText, ex);
             }
         }
 
@@ -131,12 +130,12 @@ namespace RestClient
         /// </exception>
         public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
-            EnsureAuthenticated();
-            IRestQueryController controller = GetControllerByType(typeof(T));
+            this.EnsureAuthenticated();
+            var controller = this.GetControllerByType(typeof(T));
             if (controller == null)
             {
-                string err = string.Format(CONTROLLER_NOT_FOUND_FOR_TYPE_EXCEPTION, typeof(T));
-                Log(err, LogLevel.Error);
+                var err = string.Format(ControllerNotFoundForTypeException, typeof(T));
+                this.Log(err, LogLevel.Error);
                 throw new RestClientException(err);
             }
             try
@@ -145,11 +144,11 @@ namespace RestClient
             }
             catch (Exception ex)
             {
-                Log(CONTROLLER_EXCEPTION_TEXT, LogLevel.Error, ex);
+                this.Log(ControllerExceptionText, LogLevel.Error, ex);
                 if (ex is RestClientException)
                     throw;
                 else
-                    throw new RestClientException(CONTROLLER_EXCEPTION_TEXT, ex);
+                    throw new RestClientException(ControllerExceptionText, ex);
             }
         }
 
@@ -163,12 +162,12 @@ namespace RestClient
         /// </exception>
         public IList<T> GetByLink<T>(string url) where T : HalJsonResource
         {
-            EnsureAuthenticated();
-            IRestQueryController controller = GetControllerByUrl(url);
+            this.EnsureAuthenticated();
+            var controller = this.GetControllerByUrl(url);
             if (controller == null)
             {
-                string err = string.Format(CONTROLLER_NOT_FOUND_FOR_URL, url);
-                Log(err, LogLevel.Error);
+                var err = string.Format(ControllerNotFoundForUrl, url);
+                this.Log(err, LogLevel.Error);
                 throw new RestClientException(err);
             }
             try
@@ -177,11 +176,11 @@ namespace RestClient
             }
             catch (Exception ex)
             {
-                Log(CONTROLLER_EXCEPTION_TEXT, LogLevel.Error, ex);
+                this.Log(ControllerExceptionText, LogLevel.Error, ex);
                 if (ex is RestClientException)
                     throw;
                 else
-                    throw new RestClientException(CONTROLLER_EXCEPTION_TEXT, ex);
+                    throw new RestClientException(ControllerExceptionText, ex);
             }
         }
         #endregion
@@ -198,16 +197,16 @@ namespace RestClient
         /// </remarks>
         private void EnsureAuthenticated()
         {
-            if (!_isAuthenticated)
+            if (!this.isAuthenticated)
             {
                 try
                 {
-                    _restClient.Get(_authenticateUri);
+                    this.restClient.Get(AuthenticateUri);
                 }
                 catch
                 {
                 }
-                _isAuthenticated = true;
+                this.isAuthenticated = true;
             }
         }
 
@@ -220,9 +219,9 @@ namespace RestClient
         {
             return new ControllerContext()
             {
-                Log = this._log,
-                RestClient = this._restClient,
-                ControllerBaseAddress = string.Format("{0}/{1}", _restQueryConfig.BaseAddress, attr.Name)
+                Log = this.log,
+                RestClient = this.restClient,
+                ControllerBaseAddress = $"{this.restQueryConfig.BaseAddress}/{attr.Name}"
             };
         }
 
@@ -234,12 +233,12 @@ namespace RestClient
         private IRestQueryController GetControllerByType(Type t)
         {
             IRestQueryController controller = null;
-            foreach (var item in _controllers)
+            foreach (var item in this.controllers)
             {
                 if (item.SupportedType == t)
                 {
                     controller = (IRestQueryController)Activator.CreateInstance(item.ControllerType);
-                    controller.Context = GetControllerContext(item);
+                    controller.Context = this.GetControllerContext(item);
                     break;
                 }
             }
@@ -256,31 +255,29 @@ namespace RestClient
         private IRestQueryController GetControllerByUrl(string url)
         {
             IRestQueryController controller = null;
-            string u = url;
-            if (u.StartsWith(_restQueryConfig.BaseAddress, StringComparison.InvariantCultureIgnoreCase))
+            var u = url;
+            if (u.StartsWith(this.restQueryConfig.BaseAddress, StringComparison.InvariantCultureIgnoreCase))
             {
-                u = u.Substring(_restQueryConfig.BaseAddress.Length);
+                u = u.Substring(this.restQueryConfig.BaseAddress.Length);
             }
 
             // It should start with controller name, but if it wrongly starts with / that / is removed
             if (u.StartsWith("/") && u.Length > 1)
                 u = u.Substring(1);
 
-            string name = u;
-            int index = u.IndexOfAny(new char[] { '/', '?', '$' });
+            var name = u;
+            var index = u.IndexOfAny(new char[] { '/', '?', '$' });
             if (index > 0)
             {
                 name = u.Substring(0, index);
             }
 
-            foreach (var item in _controllers)
+            foreach (var item in this.controllers)
             {
-                if (item.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    controller = (IRestQueryController)Activator.CreateInstance(item.ControllerType);
-                    controller.Context = GetControllerContext(item);
-                    break;
-                }
+                if (!item.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) continue;
+                controller = (IRestQueryController)Activator.CreateInstance(item.ControllerType);
+                controller.Context = this.GetControllerContext(item);
+                break;
             }
 
             return controller;
@@ -293,38 +290,32 @@ namespace RestClient
         /// </summary>
         private void InitControllers()
         {
-            Assembly[] assarr = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly ass in assarr)
+            var assarr = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var ass in assarr)
             {
                 try
                 {
-                    Type[] typearr = ass.GetTypes();
-                    foreach (Type type in typearr)
+                    var typearr = ass.GetTypes();
+                    foreach (var type in typearr)
                     {
-                        if (type.IsClass)
+                        if (!type.IsClass) continue;
+                        var attrArr = type.GetCustomAttributes();
+                        if (attrArr == null) continue;
+                        foreach (var attr in attrArr)
                         {
-                            IEnumerable<Attribute> attrArr = type.GetCustomAttributes();
-                            if (attrArr != null && attrArr.Count() > 0)
-                            {
-                                foreach (Attribute attr in attrArr)
-                                {
-                                    if (attr is RestQueryControllerAttribute)
-                                    {
-                                        string name = ((RestQueryControllerAttribute)attr).Name;
-                                        Type supptype = ((RestQueryControllerAttribute)attr).SupportedType;
-
-                                        ((RestQueryControllerAttribute)attr).ControllerType = type;
-                                        _controllers.Add((RestQueryControllerAttribute)attr);
-                                    }
-                                }
-                            }
+                            var item = attr as RestQueryControllerAttribute;
+                            if (item == null) continue;
+                            var name = item.Name;
+                            var supptype = item.SupportedType;
+                            item.ControllerType = type;
+                            this.controllers.Add(item);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     // In some situation an exception is raised which is not harmfull.
-                    Log("Error while browsing assemblies for controllers (harmless)", LogLevel.Warning, ex);
+                    this.Log("Error while browsing assemblies for controllers (harmless)", LogLevel.Warning, ex);
                 }
             }
         }
@@ -338,26 +329,28 @@ namespace RestClient
         /// <param name="ex">Optional exception</param>
         private void Log(string text,  LogLevel level, Exception ex = null)
         {
-            if (_log == null) return;
+            if (this.log == null) return;
             try
             {
                 switch(level)
                 {
                     case LogLevel.Debug:
-                        _log.Debug(text);
+                        this.log.Debug(text);
                         break;
                     case LogLevel.Error:
-                        _log.Error(text, ex);
+                        this.log.Error(text, ex);
                         break;
                     case LogLevel.Warning:
-                        _log.Warn(text);
+                        this.log.Warn(text);
                         break;
                     case LogLevel.Info:
-                        _log.Info(text);
+                        this.log.Info(text);
                         break;
                     case LogLevel.Fatal:
-                        _log.Fatal(text, ex);
+                        this.log.Fatal(text, ex);
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(level), level, null);
                 }                        
             }
             catch { }

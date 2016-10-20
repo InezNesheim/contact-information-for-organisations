@@ -19,16 +19,16 @@ namespace RestClient.Deserialize
         /// <returns></returns>
         public static List<T> DeserializeHalJsonResourceList<T>(string json) where T : HalJsonResource
         {
-            var resources = new List<T>();
+            List<T> resources;
 
             try
             {
                 var outerResource = JsonConvert.DeserializeObject<OuterJson>(json);
-                JObject innerObjectJson = outerResource._embedded;
+                var innerObjectJson = outerResource._embedded;
 
                 var attribute = (PluralNameAttribute)Attribute.GetCustomAttribute(typeof(T), typeof(PluralNameAttribute));
 
-                JToken resource = innerObjectJson[attribute.PluralName.ToLower()];
+                var resource = innerObjectJson[attribute.PluralName.ToLower()];
                 resources = JsonConvert.DeserializeObject<List<T>>(resource.ToString(), new JsonConverter[] { new HalJsonConverter() });
             }
             catch (Exception e)

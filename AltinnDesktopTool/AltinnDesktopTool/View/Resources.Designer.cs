@@ -81,6 +81,15 @@ namespace AltinnDesktopTool.View {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ingen data funnet.
+        /// </summary>
+        public static string NoDataText {
+            get {
+                return ResourceManager.GetString("NoDataText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to E-post.
         /// </summary>
         public static string OfficialContactsGridColumnEmail {

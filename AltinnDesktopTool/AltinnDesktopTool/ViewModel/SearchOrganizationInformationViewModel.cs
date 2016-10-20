@@ -15,11 +15,13 @@ using RestClient.Resources;
 
 namespace AltinnDesktopTool.ViewModel
 {
-    public class SearchOrganizationInformationViewModel : AltinnViewModelBase
+    using System;
+
+    public sealed class SearchOrganizationInformationViewModel : AltinnViewModelBase
     {
-        private readonly ILog _logger;
-        private readonly IMapper _mapper;
-        private readonly IRestQuery _query;
+        private readonly ILog logger;
+        private readonly IMapper mapper;
+        private readonly IRestQuery query;
 
         public event PubSubEventHandler<ObservableCollection<OrganizationModel>> SearchResultRecievedEventHandler;
 
@@ -27,26 +29,25 @@ namespace AltinnDesktopTool.ViewModel
 
         public SearchOrganizationInformationViewModel(ILog logger, IMapper mapper, IRestQuery query)
         {
-            _logger = logger;
-            _mapper = mapper;
-            _query = query;
+            this.logger = logger;
+            this.mapper = mapper;
+            this.query = query;
 
-            Model = new SearchOrganizationInformationModel();
-            SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(SearchCommandHandler);
+            this.Model = new SearchOrganizationInformationModel();
+            this.SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(this.SearchCommandHandler);
 
-            PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultRecievedEvent,
-                SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
 
             // Test loggers
-            _logger.Debug("Debug!");
-            _logger.Error("Error!");
-            _logger.Warn("Warn!");
-            _logger.Info("Info!");
+            this.logger.Debug("Debug!");
+            this.logger.Error("Error!");
+            this.logger.Warn("Warn!");
+            this.logger.Info("Info!");
         }
 
         private void SearchCommandHandler(SearchOrganizationInformationModel obj)
         {
-            _logger.Debug(GetType().FullName + " Searching for: " + obj.SearchText + ", " + obj.SearchType);
+            this.logger.Debug(this.GetType().FullName + " Searching for: " + obj.SearchText + ", " + obj.SearchType);
 
             // Removing all whitespaces from the search string.
             var searchText = new string(obj.SearchText.Where(c => !char.IsWhiteSpace(c)).ToArray());
@@ -69,30 +70,35 @@ namespace AltinnDesktopTool.ViewModel
                 {
                     case SearchType.EmailAddress:
                         {
-                            organizations = _query.Get<Organization>(new KeyValuePair<string, string>("email", searchText));
+                            organizations = this.query.Get<Organization>(new KeyValuePair<string, string>("email", obj.SearchText));
                             break;
                         }
                     case SearchType.PhoneNumber:
                         {
                             organizations =
-                            _query.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", searchText));
+                            this.query.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", obj.SearchText));
                             break;
                         }
                     case SearchType.OrganizationNumber:
                         {
-                            var organization = _query.Get<Organization>(searchText);
+                            var organization = this.query.Get<Organization>(obj.SearchText);
                             organizations.Add(organization);
                             break;
+
                         }
+                    case SearchType.Smart:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             catch (RestClientException rex)
             {
-                _logger.Error("Exception from the RestClient", rex);
+                this.logger.Error("Exception from the RestClient", rex);
             }
 
             var orgmodellist = organizations != null ?
-                _mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations) :
+                this.mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations) :
                 new ObservableCollection<OrganizationModel>();
 
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,

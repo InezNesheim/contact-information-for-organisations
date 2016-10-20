@@ -6,9 +6,9 @@ namespace AltinnDesktopTool.ViewModel.MapperProfiles
     {
         public SearchMapperProfile()
         {
-            CreateMap<RestClient.DTO.Organization, Model.OrganizationModel>();
-            CreateMap<RestClient.DTO.OfficialContact, Model.OfficialContactModel>();
-            CreateMap<RestClient.DTO.PersonalContact, Model.PersonalContactModel>();
+            this.CreateMap<RestClient.DTO.Organization, Model.OrganizationModel>();
+            this.CreateMap<RestClient.DTO.OfficialContact, Model.OfficialContactModel>();
+            this.CreateMap<RestClient.DTO.PersonalContact, Model.PersonalContactModel>();
         }
     }
 }
