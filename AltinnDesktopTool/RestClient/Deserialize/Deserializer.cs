@@ -28,7 +28,7 @@ namespace RestClient.Deserialize
                 var attribute = (PluralNameAttribute)Attribute.GetCustomAttribute(typeof(T), typeof(PluralNameAttribute));
 
                 var resource = innerObjectJson[attribute.PluralName.ToLower()];
-                resources = JsonConvert.DeserializeObject<List<T>>(resource.ToString(), new JsonConverter[] { new HalJsonConverter() });
+                resources = JsonConvert.DeserializeObject<List<T>>(resource.ToString(), new HalJsonConverter());
             }
             catch (Exception e)
             {
@@ -48,11 +48,11 @@ namespace RestClient.Deserialize
         /// <returns></returns>
         public static T DeserializeHalJsonResource<T>(string json) where T : HalJsonResource
         {
-            T resource = null;
+            T resource;
 
             try
             { 
-                resource = JsonConvert.DeserializeObject<T>(json, new JsonConverter[] { new HalJsonConverter() });
+                resource = JsonConvert.DeserializeObject<T>(json, new HalJsonConverter());
             }
             catch (Exception e)
             {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using log4net;
 using RestClient.Controllers;
 using RestClient.DTO;
@@ -33,7 +32,7 @@ namespace RestClient
         private IRestQueryConfig restQueryConfig;
         private readonly ILog log;
         private readonly AltinnRestClient restClient;
-        private bool isAuthenticated = false;
+        private bool isAuthenticated;
         private readonly List<RestQueryControllerAttribute> controllers = new List<RestQueryControllerAttribute>();
         #endregion
         
@@ -197,17 +196,16 @@ namespace RestClient
         /// </remarks>
         private void EnsureAuthenticated()
         {
-            if (!this.isAuthenticated)
+            if (this.isAuthenticated) return;
+            try
             {
-                try
-                {
-                    this.restClient.Get(AuthenticateUri);
-                }
-                catch
-                {
-                }
-                this.isAuthenticated = true;
+                this.restClient.Get(AuthenticateUri);
             }
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch
+            {
+            }
+            this.isAuthenticated = true;
         }
 
         /// <summary>
@@ -266,7 +264,7 @@ namespace RestClient
                 u = u.Substring(1);
 
             var name = u;
-            var index = u.IndexOfAny(new char[] { '/', '?', '$' });
+            var index = u.IndexOfAny(new[] { '/', '?', '$' });
             if (index > 0)
             {
                 name = u.Substring(0, index);
@@ -305,8 +303,6 @@ namespace RestClient
                         {
                             var item = attr as RestQueryControllerAttribute;
                             if (item == null) continue;
-                            var name = item.Name;
-                            var supptype = item.SupportedType;
                             item.ControllerType = type;
                             this.controllers.Add(item);
                         }
@@ -353,6 +349,7 @@ namespace RestClient
                         throw new ArgumentOutOfRangeException(nameof(level), level, null);
                 }                        
             }
+            // ReSharper disable once EmptyGeneralCatchClause
             catch { }
         }
 
