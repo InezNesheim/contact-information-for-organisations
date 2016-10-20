@@ -11,10 +11,10 @@ namespace AltinnDesktopTool.View
 
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
-        private void TopView_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void TopViewLoaded(object sender, RoutedEventArgs e)
         {
 
         }

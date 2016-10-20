@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Reflection;
-using System.Resources;
-
+﻿using System.Collections.ObjectModel;
 
 namespace AltinnDesktopTool.Model
 {
+    /// <summary>
+    /// Search Result Model
+    /// </summary>
     public class SearchResultModel : ModelBase
     {
-        private ObservableCollection<OrganizationModel> _resultCollection;
+        private ObservableCollection<OrganizationModel> resultCollection;
 
         private bool emptyMessageVisibility = false;
 
-        private string infoText = String.Empty;
+        private string infoText = string.Empty;
 
         private bool initRun = true;
 
         public bool EmptyMessageVisibility
         {
-            get { return emptyMessageVisibility; }
+            get { return this.emptyMessageVisibility; }
             set
             {
-                emptyMessageVisibility = value;
-                RaisePropertyChanged(() => EmptyMessageVisibility);
+                this.emptyMessageVisibility = value;
+                this.RaisePropertyChanged(() => this.EmptyMessageVisibility);
                 this.InfoText = value ? View.Resources.NoDataText : "";
             }
         }
@@ -36,34 +35,35 @@ namespace AltinnDesktopTool.Model
             set
             {
                 this.infoText = value;
-                RaisePropertyChanged(() => InfoText);
+                this.RaisePropertyChanged(() => this.InfoText);
             }
         }
 
         public ObservableCollection<OrganizationModel> ResultCollection
         {
-          get { return _resultCollection; }
+          get { return this.resultCollection; }
           set
             {
-                _resultCollection = value;
-                RaisePropertyChanged(() => ResultCollection);
-                if (!initRun)
+                this.resultCollection = value;
+                this.RaisePropertyChanged(() => this.ResultCollection);
+                if (!this.initRun)
                 {
-                    EmptyMessageVisibility = _resultCollection == null || _resultCollection.Count == 0;
+                    this.EmptyMessageVisibility = this.resultCollection == null || this.resultCollection.Count == 0;
                 }
                 else
                 {
-                    initRun = false;
+                    this.initRun = false;
                 }
             }
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public SearchResultModel()
         {
-            ResultCollection = new ObservableCollection<OrganizationModel>();
+            this.ResultCollection = new ObservableCollection<OrganizationModel>();
         }
-
-        
         
     }
 }

@@ -18,9 +18,9 @@ namespace AltinnDesktopToolTest.ViewModel
     [TestClass]
     public class SearchOrganizationInformationViewModelTest
     {
-        private static IMapper _mapper;
+        private static IMapper mapper;
 
-        private ObservableCollection<OrganizationModel> _searchResult;
+        private ObservableCollection<OrganizationModel> searchResult;
 
         /// <summary>
         /// Gets or sets the test context for the current test.
@@ -30,13 +30,13 @@ namespace AltinnDesktopToolTest.ViewModel
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            _mapper = AutoMapperHelper.RunCreateMaps();
+            mapper = AutoMapperHelper.RunCreateMaps();
         }
 
         [TestCleanup]
         public void TestCleanUp()
         {
-            _searchResult = null;
+            this.searchResult = null;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace AltinnDesktopToolTest.ViewModel
         /// </summary>
         [TestMethod]
         [TestCategory("ViewModel")]
-        public void SearchOrganizationInformationViewModelTest_Instantiation()
+        public void SearchOrganizationInformationViewModelTestInstantiation()
         {
             // Arrange
             var logger = new Mock<ILog>();
@@ -62,7 +62,7 @@ namespace AltinnDesktopToolTest.ViewModel
             var query = new Mock<IRestQuery>();
 
             // Act
-            var target = new SearchOrganizationInformationViewModel(logger.Object, _mapper, query.Object);
+            var target = new SearchOrganizationInformationViewModel(logger.Object, mapper, query.Object);
 
             // Assert
             logger.VerifyAll();
@@ -83,9 +83,9 @@ namespace AltinnDesktopToolTest.ViewModel
         /// </summary>
         [TestMethod]
         [TestCategory("ViewModel")]
-        public void SearchOrganizationInformationViewModelTest_SendsEvent_WhenSearchResultIsRecieved()
+        public void SearchOrganizationInformationViewModelTestSendsEventWhenSearchResultIsRecieved()
         {
-            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
 
             var search = new SearchOrganizationInformationModel
             {
@@ -97,13 +97,13 @@ namespace AltinnDesktopToolTest.ViewModel
 
             target.SearchCommand.Execute(search);
 
-            Assert.IsNotNull(_searchResult);
+            Assert.IsNotNull(this.searchResult);
 
         }
 
         public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
         {
-            _searchResult = args.Item;
+            this.searchResult = args.Item;
         }
 
         #endregion
@@ -123,7 +123,7 @@ namespace AltinnDesktopToolTest.ViewModel
             var query = new Mock<IRestQuery>();
             query.Setup(s => s.Get<Organization>(It.IsAny<string>())).Returns(org);
 
-            var target = new SearchOrganizationInformationViewModel(logger.Object, _mapper, query.Object);
+            var target = new SearchOrganizationInformationViewModel(logger.Object, mapper, query.Object);
 
             return target;
         }
