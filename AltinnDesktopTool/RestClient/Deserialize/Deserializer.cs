@@ -8,7 +8,7 @@ namespace RestClient.Deserialize
 {
     public class Deserializer
     {
-        private static string ERROR_ON_DESERIALIZATION = "Error while deserializing Json data";
+        private static readonly string ErrorOnDeserialization = "Error while deserializing Json data";
 
         /// <summary>
         /// Deserializes a list of Typed objects from HAL+JSON format.
@@ -32,7 +32,7 @@ namespace RestClient.Deserialize
             }
             catch (Exception e)
             {
-                throw new RestClientException(ERROR_ON_DESERIALIZATION, e);
+                throw new RestClientException(ErrorOnDeserialization, e);
                 // Note, there is no need for logging here, as logging is done by RestClient.
             }
 
@@ -56,7 +56,7 @@ namespace RestClient.Deserialize
             }
             catch (Exception e)
             {
-                throw new RestClientException(ERROR_ON_DESERIALIZATION, e);
+                throw new RestClientException(ErrorOnDeserialization, e);
                 // Note, there is no need for logging here, as logging is done by RestClient.
             }
 
