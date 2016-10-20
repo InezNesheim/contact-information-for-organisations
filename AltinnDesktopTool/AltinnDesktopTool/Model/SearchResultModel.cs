@@ -9,7 +9,7 @@ namespace AltinnDesktopTool.Model
     {
         private ObservableCollection<OrganizationModel> resultCollection;
 
-        private bool emptyMessageVisibility = false;
+        private bool emptyMessageVisibility;
 
         private string infoText = string.Empty;
 
@@ -64,6 +64,5 @@ namespace AltinnDesktopTool.Model
         {
             this.ResultCollection = new ObservableCollection<OrganizationModel>();
         }
-        
     }
 }

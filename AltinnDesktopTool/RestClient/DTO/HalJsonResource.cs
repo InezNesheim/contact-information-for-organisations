@@ -20,7 +20,7 @@ namespace RestClient.DTO
     /// <summary>
     /// Attribute for indicating object list name
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class PluralNameAttribute : Attribute
     {
         public readonly string PluralName;

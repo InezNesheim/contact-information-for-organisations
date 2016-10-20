@@ -56,7 +56,7 @@ namespace RestClient.Deserialize
 
                     foreach (var property in objectType.GetProperties())
                     {
-                        var attribute = property.Name.ToLower() == rel.ToLower();
+                        var attribute = property.Name.Equals(rel, StringComparison.InvariantCultureIgnoreCase) ;
 
                         if (attribute)
                         {

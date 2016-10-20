@@ -28,12 +28,6 @@ namespace RestClient
         private static readonly PropertyInfo PropPersContName = typeof(PersonalContact).GetProperty("Name");
         private static readonly PropertyInfo PropPersContSocialSecurityNumber = typeof(PersonalContact).GetProperty("SocialSecurityNumber");
 
-
-        public RestQueryStub()
-        {
-        }
-
-
         /// <summary>
         /// Supports only Organization in this Stub
         /// </summary>
@@ -114,16 +108,6 @@ namespace RestClient
 
             return list;
         }
-
-
-
-        private void SetProp(object o, string name, object value)
-        {
-            var propertyInfo = o.GetType().GetProperty(name, value.GetType());
-            if (propertyInfo != null)
-                propertyInfo.SetValue(o, value);
-        }
-
 
         private static void CreateOrg1(object org)
         {

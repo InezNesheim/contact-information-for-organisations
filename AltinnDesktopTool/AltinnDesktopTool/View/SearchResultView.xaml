@@ -8,6 +8,7 @@
              xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
              xmlns:view="clr-namespace:AltinnDesktopTool.View"
+             xmlns:spinner="clr-namespace:AltinnDesktopTool.View.Spinner"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="600"
              DataContext="{Binding SearchResultViewModel, Source={StaticResource ViewModelLocator}}">
@@ -72,5 +73,4 @@
         </DataGrid>
         <TextBlock FontWeight="Bold" HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{Binding Model.InfoText}"/>
     </Grid>
-
 </UserControl>
