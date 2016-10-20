@@ -1,4 +1,5 @@
-﻿using RestClient.Deserialize;
+﻿using System;
+using RestClient.Deserialize;
 using RestClient.DTO;
 using System.Collections.Generic;
 
@@ -15,19 +16,22 @@ namespace RestClient.Controllers
 
         public T Get<T>(string id) where T : HalJsonResource
         {
-            var result = this.Context.RestClient.Get($"{this.Context.ControllerBaseAddress}/{id}");
+            string url = $"{this.Context.ControllerBaseAddress}/{id}?ForceEIAuthentication";
+            var result = this.Context.RestClient.Get(url);
             return result != null ? Deserializer.DeserializeHalJsonResource<T>(result) : null;
         }
 
         public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
-            var result = this.Context.RestClient.Get(
-                $"{this.Context.ControllerBaseAddress}?{filter.Key}={filter.Value}");
+            string url = $"{this.Context.ControllerBaseAddress}?ForceEIAuthentication&{filter.Key}={filter.Value}";
+            var result = this.Context.RestClient.Get(url);
             return result != null ? Deserializer.DeserializeHalJsonResourceList<T>(result) : null;
         }
 
         public IList<T> GetByLink<T>(string url) where T : HalJsonResource
         {
+            url += url.IndexOf("?",StringComparison.InvariantCulture) > 0 ? "&" : "?";
+            url += "ForceEIAuthentication";
             var result = this.Context.RestClient.Get(url);
             return result != null ? Deserializer.DeserializeHalJsonResourceList<T>(result) : null;
         }

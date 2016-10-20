@@ -69,21 +69,19 @@ namespace AltinnDesktopTool.ViewModel
                 {
                     case SearchType.EmailAddress:
                         {
-                            organizations = this.query.Get<Organization>(new KeyValuePair<string, string>("email", obj.SearchText));
+                            organizations = this.query.Get<Organization>(new KeyValuePair<string, string>("email", searchText));
                             break;
                         }
                     case SearchType.PhoneNumber:
                         {
-                            organizations =
-                            this.query.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", obj.SearchText));
+                            organizations = this.query.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", searchText));
                             break;
                         }
                     case SearchType.OrganizationNumber:
                         {
-                            var organization = this.query.Get<Organization>(obj.SearchText);
+                            var organization = this.query.Get<Organization>(searchText);
                             organizations.Add(organization);
                             break;
-
                         }
                     case SearchType.Smart:
                         break;
