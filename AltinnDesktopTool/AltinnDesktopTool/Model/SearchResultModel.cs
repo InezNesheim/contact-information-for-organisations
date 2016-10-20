@@ -64,6 +64,5 @@ namespace AltinnDesktopTool.Model
         {
             this.ResultCollection = new ObservableCollection<OrganizationModel>();
         }
-        
     }
 }
