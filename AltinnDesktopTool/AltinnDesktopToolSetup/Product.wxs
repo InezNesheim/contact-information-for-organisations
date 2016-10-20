@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define AltinnDesktopTool_TargetDir=$(var.AltinnDesktopTool.TargetDir)?>
-  <Product Id="A00397C7-8191-4A26-B20C-DF662D8F6C29" Name="AltinnDesktopToolSetup" Language="1033" Version="1.0.0.0" Manufacturer="Bronnoysundregistrene" UpgradeCode="5de716d3-3f9d-4c96-a1b0-286353b87cb9">
+  <Product Id="A00397C7-8191-4A26-B20C-DF662D8F6C29" Name="Altinn Toolkit" Language="1033" Version="1.0.0.0" Manufacturer="Altinn" UpgradeCode="5de716d3-3f9d-4c96-a1b0-286353b87cb9">
     <!--<Package InstallerVersion="200" Compressed="yes" InstallPrivileges="limited" InstallScope="perUser" />-->
     <!--<Package InstallerVersion="200" Compressed="yes" InstallPrivileges="elevated" InstallScope="perMachine" />-->
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
@@ -9,13 +9,13 @@
     <!--<UIRef Id="WixUI_InstallDir" />-->
     <!--<UIRef Id="WixUI_Common" />-->
     
-    <Icon Id="icon.ico" SourceFile="$(var.ProjectDir)altinn.ico" />
+    <Icon Id="altinn.ico" SourceFile="altinn.ico" />
     <Property Id="ARPPRODUCTICON" Value="altinn.ico" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes"/>
 
-    <Feature Id="ProductFeature" Title="AltinnDesktopToolSetup" Level="1">
+    <Feature Id="ProductFeature" Title="AltinnToolkitSetup" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
       <ComponentGroupRef Id="Configuration_files" />
       <ComponentRef Id="ApplicationShortcut" />
@@ -24,10 +24,10 @@
     <DirectoryRef Id="ApplicationProgramsFolder">
       <Component Id="ApplicationShortcut" Guid="0D838500-6384-491C-BAAC-1E2382BDC10A">
         <Shortcut Id="ApplicationStartMenuShortcut"
-                  Name="Altinn Kontaktregister"
-                  Description="Oppslag i Altinns kontaktregister"
+                  Name="Altinn Toolkit"
                   Target="[#AltinnDesktopTool.exe]"
-                  WorkingDirectory="INSTALLFOLDER"/>
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon = "altinn.ico"/>
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
         <RegistryValue Root="HKCU" Key="Software\Microsoft\MyApplicationName" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
       </Component>
@@ -37,12 +37,12 @@
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLFOLDER" Name="AltinnDesktopTool">
+        <Directory Id="INSTALLFOLDER" Name="AltinnToolkit">
           <Directory Id="Configuration" Name="Configuration" />
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder">
-        <Directory Id="ApplicationProgramsFolder" Name="Altinn Kontaktregister"/>
+        <Directory Id="ApplicationProgramsFolder" Name="Altinn Toolkit"/>
       </Directory>
     </Directory>
 
@@ -51,10 +51,10 @@
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       <Component Id="AltinnDesktopTool.exe" Guid="e0a8f871-a572-4e3b-88a3-4a267d2f4e7c">
-        <File Id="AltinnDesktopTool.exe" Name="AltinnDesktopTool.exe" Source="$(var.AltinnDesktopTool_TargetDir)AltinnDesktopTool.exe" />
+        <File Id="AltinnDesktopTool.exe" Name="AltinnToolkit.exe" Source="$(var.AltinnDesktopTool_TargetDir)AltinnToolkit.exe" />
       </Component>
       <Component Id="AltinnDesktopTool.exe.config" Guid="3ad68517-1531-4a04-9774-0eb50f878ecc">
-        <File Id="AltinnDesktopTool.exe.config" Name="AltinnDesktopTool.exe.config" Source="$(var.AltinnDesktopTool_TargetDir)AltinnDesktopTool.exe.config" />
+        <File Id="AltinnDesktopTool.exe.config" Name="AltinnToolkit.exe.config" Source="$(var.AltinnDesktopTool_TargetDir)AltinnToolkit.exe.config" />
       </Component>
       <Component Id="AutoMapper.dll" Guid="83447254-9462-4654-8d2c-c8d00e0c7d3a">
         <File Id="AutoMapper.dll" Name="AutoMapper.dll" Source="$(var.AltinnDesktopTool_TargetDir)AutoMapper.dll" />
