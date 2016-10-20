@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AltinnDesktopTool.View"
-             xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="AltinnDesktopTool.View.Footer"
+             xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:configuration="clr-namespace:AltinnDesktopTool.Configuration"
+             x:Class="AltinnDesktopTool.View.Footer"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="300">
     <Grid>
@@ -14,6 +16,6 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <ComboBox Height="10" Width="100" HorizontalAlignment="Right" Margin="10,10,40,10"></ComboBox>
+        <ComboBox x:Name="configCombo" Height="10" Width="100" HorizontalAlignment="Right" Margin="10,10,40,10"></ComboBox>
     </Grid>
 </UserControl>

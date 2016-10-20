@@ -16,7 +16,7 @@
                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill"
-                     Visual="{DynamicResource appbar_clipboard_edit}" />
+                     Visual="{DynamicResource appbar_clipboard_paste}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </StackPanel>
