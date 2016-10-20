@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AltinnDesktopTool.Utils.PubSub;
 using RestClient.DTO;
 using log4net;
@@ -7,6 +8,7 @@ using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight.Command;
 using AutoMapper;
 using RestClient;
+using RestClient.Resources;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -24,23 +26,54 @@ namespace AltinnDesktopTool.ViewModel
 
             this.Model = new SearchResultModel();
 
-            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent,
+                SearchResultRecievedEventHandler);
 
             this.GetContactsCommand = new RelayCommand<OrganizationModel>(this.GetContactsCommandHandler);
         }
 
         private void GetContactsCommandHandler(OrganizationModel obj)
         {
-            if (obj == null) return;
-            if (obj.OfficalContactsCollection == null && !string.IsNullOrEmpty(obj.OfficialContacts))
+            if (obj == null)
             {
-                var officialContactDtoCollection = this.restQuery.GetByLink<OfficialContact>(obj.OfficialContacts);
-                obj.OfficalContactsCollection = this.mapper.Map<ICollection<OfficialContact>, ObservableCollection<OfficialContactModel>>(officialContactDtoCollection);
+                return;
             }
 
-            if (obj.PersonalContactsCollection != null || string.IsNullOrEmpty(obj.PersonalContacts)) return;
-            var personalContactDtoCollecton = this.restQuery.GetByLink<PersonalContact>(obj.PersonalContacts);
-            obj.PersonalContactsCollection = this.mapper.Map<ICollection<PersonalContact>, ObservableCollection<PersonalContactModel>>(personalContactDtoCollecton);
+            if (obj.OfficalContactsCollection == null && !string.IsNullOrEmpty(obj.OfficialContacts))
+            {
+                IList<OfficialContact> officialContactDtoCollection = new List<OfficialContact>();
+                try
+                {
+                    officialContactDtoCollection = this.restQuery.GetByLink<OfficialContact>(obj.OfficialContacts);
+                }
+                catch (RestClientException rex)
+                {
+                    this.logger.Error("Exception from the RestClient", rex);
+                }
+
+                obj.OfficalContactsCollection =
+                    this.mapper.Map<ICollection<OfficialContact>, ObservableCollection<OfficialContactModel>>(
+                        officialContactDtoCollection);
+            }
+
+            if (obj.PersonalContactsCollection != null || string.IsNullOrEmpty(obj.PersonalContacts))
+            {
+                return;
+            }
+
+            IList<PersonalContact> personalContactDtoCollecton = new List<PersonalContact>();
+            try
+            {
+                personalContactDtoCollecton = this.restQuery.GetByLink<PersonalContact>(obj.PersonalContacts);
+            }
+            catch (RestClientException rex)
+            {
+                this.logger.Error("Exception from the RestClient", rex);
+            }
+
+            obj.PersonalContactsCollection =
+                this.mapper.Map<ICollection<PersonalContact>, ObservableCollection<PersonalContactModel>>(
+                    personalContactDtoCollecton);
         }
 
         public new SearchResultModel Model { get; set; }
