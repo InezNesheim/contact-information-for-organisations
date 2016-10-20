@@ -8,6 +8,7 @@
              xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
              xmlns:view="clr-namespace:AltinnDesktopTool.View"
+             xmlns:spinner="clr-namespace:AltinnDesktopTool.View.Spinner"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="600"
              DataContext="{Binding SearchResultViewModel, Source={StaticResource ViewModelLocator}}">
@@ -24,6 +25,21 @@
                 <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnOrganizationNumber}" Binding="{Binding OrganizationNumber}"/>
                 <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnType}" Binding="{Binding Type}"/>
             </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{StaticResource AccentBaseColorBrush}"></Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Style>
+                <Style BasedOn="{StaticResource MetroDataGrid}" TargetType="{x:Type DataGrid}">
+                    <Setter Property="AlternatingRowBackground"
+                    Value="{DynamicResource GrayBrush10}" />
+                </Style>
+            </DataGrid.Style>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding GetContactsCommand}" 
@@ -57,5 +73,4 @@
         </DataGrid>
         <TextBlock FontWeight="Bold" HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{Binding Model.InfoText}"/>
     </Grid>
-
 </UserControl>

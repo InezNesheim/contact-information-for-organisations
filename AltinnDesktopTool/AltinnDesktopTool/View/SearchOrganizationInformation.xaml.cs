@@ -1,15 +1,13 @@
-﻿using System.Windows.Controls;
-
-namespace AltinnDesktopTool.View
+﻿namespace AltinnDesktopTool.View
 {
     /// <summary>
     /// Interaction logic for SearchOrganizationInformation.xaml
     /// </summary>
-    public partial class SearchOrganizationInformation : UserControl
+    public partial class SearchOrganizationInformation
     {
         public SearchOrganizationInformation()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

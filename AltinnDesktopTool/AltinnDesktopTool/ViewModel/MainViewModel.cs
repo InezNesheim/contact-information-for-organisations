@@ -19,6 +19,7 @@ namespace AltinnDesktopTool.ViewModel
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
+        // ReSharper disable once EmptyConstructor
         public MainViewModel()
         {
             ////if (IsInDesignMode)

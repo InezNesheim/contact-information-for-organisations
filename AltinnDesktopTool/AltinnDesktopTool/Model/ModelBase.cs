@@ -96,7 +96,7 @@ namespace AltinnDesktopTool.Model
                 }
             }
 
-            /* Raise the ErrorsChanged for all properties explicitly */
+            // Raise the ErrorsChanged for all properties explicitly
             this.RaiseErrorsChanged("Username");
             this.RaiseErrorsChanged("Name");
         }

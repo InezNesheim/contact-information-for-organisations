@@ -12,12 +12,14 @@ namespace RestClient.Deserialize
         ///  Gets or sets the _links container
         /// </summary>
         [JsonProperty(PropertyName = "_links")]
+        // ReSharper disable once InconsistentNaming
         public JObject _links { get; set; }
 
         /// <summary>
         ///  Gets or sets the _embedded container
         /// </summary>
         [JsonProperty(PropertyName = "_embedded")]
+        // ReSharper disable once InconsistentNaming
         public JObject _embedded { get; set; }
     }
 }

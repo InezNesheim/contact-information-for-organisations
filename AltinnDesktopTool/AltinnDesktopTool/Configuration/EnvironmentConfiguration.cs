@@ -2,7 +2,7 @@
 
 namespace AltinnDesktopTool.Configuration
 {
-    public class EnvironmentConfiguration : IUIEnvironmentConfig, IRestQueryConfig    
+    public class EnvironmentConfiguration : IUiEnvironmentConfig, IRestQueryConfig    
     {
         public string Name { get; set; }
 

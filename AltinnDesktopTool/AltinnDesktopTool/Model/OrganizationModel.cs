@@ -2,41 +2,69 @@
 
 namespace AltinnDesktopTool.Model
 {
+    /// <summary>
+    /// Model for Organization
+    /// </summary>
     public class OrganizationModel : ModelBase
     {
-        ObservableCollection<OfficialContactModel> _officalContactsCollection;
+        private ObservableCollection<OfficialContactModel> officalContactsCollection;
 
-        ObservableCollection<PersonalContactModel> _personalContactsCollection;
+        private ObservableCollection<PersonalContactModel> personalContactsCollection;
 
+        /// <summary>
+        /// Organization Name (as mapped from DTO)
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Organization Number (as mapped from DTO)
+        /// </summary>
         public string OrganizationNumber { get; set; }
+
+        /// <summary>
+        /// Organization Type (AS, ANS etc) (as mapped from DTO)
+        /// </summary>
         public string Type { get; set; }
+
+        /// <summary>
+        /// Link to official contacts (as mapped from DTO)
+        /// </summary>
         public string OfficialContacts { get; set; }
+
+        /// <summary>
+        /// Link to personal contacts (as mapped from DTO)
+        /// </summary>
         public string PersonalContacts { get; set; }
 
+        /// <summary>
+        /// Collection of Official Contacts, populate this to automatically update view
+        /// </summary>
         public ObservableCollection<OfficialContactModel> OfficalContactsCollection
         {
-            get { return _officalContactsCollection; }
+            get { return this.officalContactsCollection; }
             set
             {
-                _officalContactsCollection = value;
-                RaisePropertyChanged("OfficalContactsCollection");
+                this.officalContactsCollection = value;
+                this.RaisePropertyChanged();
             }
         }
 
+        /// <summary>
+        /// Collection of Personal Contacts, populate this to automatically update view
+        /// </summary>
         public ObservableCollection<PersonalContactModel> PersonalContactsCollection
         {
-            get { return _personalContactsCollection; }
+            get { return this.personalContactsCollection; }
             set
             {
-                _personalContactsCollection = value;
-                RaisePropertyChanged("PersonalContactsCollection");
+                this.personalContactsCollection = value;
+                this.RaisePropertyChanged();
             }
         }
 
         public override string ToString()
         {
-            return string.Format("{0} {2} ({1})", Name, OrganizationNumber, Type);
+            return string.Format("{0} {2} ({1})", this.Name, this.OrganizationNumber, this.Type);
         }
     }
 }

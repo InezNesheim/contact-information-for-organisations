@@ -7,7 +7,7 @@
     {
         public SearchResultView()
         {
-            InitializeComponent();      
+            this.InitializeComponent();      
         }
     }
 }

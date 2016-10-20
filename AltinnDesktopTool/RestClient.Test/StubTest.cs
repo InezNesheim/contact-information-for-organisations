@@ -7,7 +7,7 @@ namespace RestClient.Test
     public class StubTest
     {
         [TestMethod]
-        public void OrganizationSearchStub_Test()
+        public void OrganizationSearchStubTest()
         {
             IRestQuery query = new RestQueryStub();
             var list = query.Get<Organization>(new System.Collections.Generic.KeyValuePair<string, string>("email", "pål@gmail.com"));
@@ -15,7 +15,7 @@ namespace RestClient.Test
         }
 
         [TestMethod]
-        public void OrganizationGetStub_Test()
+        public void OrganizationGetStubTest()
         {
             IRestQuery query = new RestQueryStub();
             var org = query.Get<Organization>("070238225");
@@ -23,7 +23,7 @@ namespace RestClient.Test
         }
 
         [TestMethod]
-        public void OfficialContactStub_Test()
+        public void OfficialContactStubTest()
         {
             IRestQuery query = new RestQueryStub();
             var list = query.GetByLink<OfficialContact>("https://tt02.altinn.basefarm.net/api/serviceowner/organizations/070238225/officialcontacts");
@@ -31,7 +31,7 @@ namespace RestClient.Test
         }
 
         [TestMethod]
-        public void PersonalContactStub_Test()
+        public void PersonalContactStubTest()
         {
             IRestQuery query = new RestQueryStub();
             var list = query.GetByLink<PersonalContact>("https://tt02.altinn.basefarm.net/api/serviceowner/organizations/070238225/personalcontacts");

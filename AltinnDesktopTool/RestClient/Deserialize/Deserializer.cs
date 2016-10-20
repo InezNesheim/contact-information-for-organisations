@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RestClient.DTO;
 using RestClient.Resources;
 
@@ -9,7 +8,7 @@ namespace RestClient.Deserialize
 {
     public class Deserializer
     {
-        private static string ERROR_ON_DESERIALIZATION = "Error while deserializing Json data";
+        private static readonly string ErrorOnDeserialization = "Error while deserializing Json data";
 
         /// <summary>
         /// Deserializes a list of Typed objects from HAL+JSON format.
@@ -29,11 +28,11 @@ namespace RestClient.Deserialize
                 var attribute = (PluralNameAttribute)Attribute.GetCustomAttribute(typeof(T), typeof(PluralNameAttribute));
 
                 var resource = innerObjectJson[attribute.PluralName.ToLower()];
-                resources = JsonConvert.DeserializeObject<List<T>>(resource.ToString(), new JsonConverter[] { new HalJsonConverter() });
+                resources = JsonConvert.DeserializeObject<List<T>>(resource.ToString(), new HalJsonConverter());
             }
             catch (Exception e)
             {
-                throw new RestClientException(ERROR_ON_DESERIALIZATION, e);
+                throw new RestClientException(ErrorOnDeserialization, e);
                 // Note, there is no need for logging here, as logging is done by RestClient.
             }
 
@@ -49,15 +48,15 @@ namespace RestClient.Deserialize
         /// <returns></returns>
         public static T DeserializeHalJsonResource<T>(string json) where T : HalJsonResource
         {
-            T resource = null;
+            T resource;
 
             try
             { 
-                resource = JsonConvert.DeserializeObject<T>(json, new JsonConverter[] { new HalJsonConverter() });
+                resource = JsonConvert.DeserializeObject<T>(json, new HalJsonConverter());
             }
             catch (Exception e)
             {
-                throw new RestClientException(ERROR_ON_DESERIALIZATION, e);
+                throw new RestClientException(ErrorOnDeserialization, e);
                 // Note, there is no need for logging here, as logging is done by RestClient.
             }
 

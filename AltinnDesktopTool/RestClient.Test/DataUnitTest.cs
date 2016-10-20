@@ -8,7 +8,7 @@ namespace RestClient.Test
     public class DataUnitTest
     {
 
-        private const string orgdata =
+        private const string Orgdata =
 @"
 {
 	""Name"": ""KIRKENES OG AUSTBØ"",
@@ -30,7 +30,7 @@ namespace RestClient.Test
 }
 ";
 
-        private const string organizations =
+        private const string Organizations =
 @"{
 	""_links"": {
 		""self"": {
@@ -98,7 +98,7 @@ namespace RestClient.Test
     }
 ";
 
-        private const string perscontacts =
+        private const string Perscontacts =
 @"
 {
 	""_links"": {
@@ -140,7 +140,7 @@ namespace RestClient.Test
 }
 ";
 
-        private const string officialcontacts =
+        private const string Officialcontacts =
 @"
 {
 	""_links"": {
@@ -167,34 +167,34 @@ namespace RestClient.Test
 
 
         [TestMethod]
-        public void OrganizationsSerializer_Test()
+        public void OrganizationsSerializerTest()
         {
             //var result = Util.Deserializer.DeserializeOrganizations(organizations);
-            var result = Deserializer.DeserializeHalJsonResourceList<Organization>(organizations);
+            var result = Deserializer.DeserializeHalJsonResourceList<Organization>(Organizations);
             Assert.AreEqual(3, result.Count);
         }
 
         [TestMethod]
-        public void OrganizationSerializer_Test()
+        public void OrganizationSerializerTest()
         {
             //var result = Util.Deserializer.DeserializeOrganizations(organizations);
-            var result = Deserializer.DeserializeHalJsonResource<Organization>(orgdata);
+            var result = Deserializer.DeserializeHalJsonResource<Organization>(Orgdata);
             Assert.IsNotNull(result);
         }
 
         [TestMethod]
-        public void PersonalContactsSerializer_Test()
+        public void PersonalContactsSerializerTest()
         {
             //var result = Util.Deserializer.DeserializeOrganizations(organizations);
-            var result = Deserializer.DeserializeHalJsonResourceList<PersonalContact>(perscontacts);
+            var result = Deserializer.DeserializeHalJsonResourceList<PersonalContact>(Perscontacts);
             Assert.AreEqual(2, result.Count);
         }
 
         [TestMethod]
-        public void OfficialContactsSerializer_Test()
+        public void OfficialContactsSerializerTest()
         {
             //var result = Util.Deserializer.DeserializeOrganizations(organizations);
-            var result = Deserializer.DeserializeHalJsonResourceList<OfficialContact>(officialcontacts);
+            var result = Deserializer.DeserializeHalJsonResourceList<OfficialContact>(Officialcontacts);
             Assert.AreEqual(2, result.Count);
         }
     }

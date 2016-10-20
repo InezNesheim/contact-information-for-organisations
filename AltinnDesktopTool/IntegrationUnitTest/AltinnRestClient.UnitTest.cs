@@ -16,7 +16,7 @@ namespace IntegrationUnitTest
         [TestMethod]
         public void GetClientTest()
         {
-            var client = new AltinnRestClient(UnitTest1.Baseaddress, Apikey, UnitTest1.Thumbprint);
+            var client = new AltinnRestClient(Baseaddress, Apikey, Thumbprint);
 
             // Authenticate
             // NOTE: Altinn returns 401 even if it is validated.

@@ -114,4 +114,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="SearchOrganizationInformationModel_SearchText_You_must_enter_a_string_" xml:space="preserve">
+    <value>You must enter a string.</value>
+  </data>
 </root>
