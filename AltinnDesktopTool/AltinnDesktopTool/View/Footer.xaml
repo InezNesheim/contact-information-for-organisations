@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <ComboBox x:Name="configCombo" Height="10" Width="100" HorizontalAlignment="Right" Margin="10,10,40,10"></ComboBox>
+        <ComboBox x:Name="configCombo" Height="10" Width="100" HorizontalAlignment="Right" Margin="10,10,40,10"
+                  SelectionChanged="ConfigCombo_OnSelectionChanged"></ComboBox>
     </Grid>
 </UserControl>

@@ -1,5 +1,7 @@
 ﻿namespace AltinnDesktopTool.View
 {
+    using System.Windows.Controls;
+
     using Configuration;
 
     /// <summary>
@@ -14,6 +16,11 @@
             this.configCombo.ItemsSource = configItems;
             this.configCombo.DisplayMemberPath = "Name";
             this.configCombo.SelectedValue = configItems.Find(c => c.Name == "PROD");
+        }
+
+        private void ConfigCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+                        
         }
     }
 }
