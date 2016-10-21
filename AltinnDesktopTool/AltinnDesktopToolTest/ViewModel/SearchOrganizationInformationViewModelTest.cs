@@ -5,16 +5,22 @@ using AltinnDesktopTool.Utils.Helpers;
 using AltinnDesktopTool.Utils.PubSub;
 using AltinnDesktopTool.ViewModel;
 
+using AutoMapper;
+
+using log4net;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Moq;
+
 using RestClient;
 using RestClient.DTO;
 
-using AutoMapper;
-using log4net;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-
 namespace AltinnDesktopToolTest.ViewModel
 {
+    /// <summary>
+    /// Test class for unit tests of the <see cref="SearchOrganizationInformationViewModel"/> class.
+    /// </summary>
     [TestClass]
     public class SearchOrganizationInformationViewModelTest
     {
@@ -27,12 +33,20 @@ namespace AltinnDesktopToolTest.ViewModel
         /// </summary>
         public TestContext TestContext { get; set; }
 
+        /// <summary>
+        /// Initialize the test class. This ensures that <see cref="AutoMapper"/> has been properly configured for all test methods and
+        /// that logic performs actual mapping instead of having the mapping mocked.
+        /// </summary>
+        /// <param name="context">The current <see cref="TestContext"/> for the test class.</param>
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
             mapper = AutoMapperHelper.RunCreateMaps();
         }
 
+        /// <summary>
+        /// Perform clean up after every unit test by removing the test result.
+        /// </summary>
         [TestCleanup]
         public void TestCleanUp()
         {
@@ -52,17 +66,17 @@ namespace AltinnDesktopToolTest.ViewModel
         public void SearchOrganizationInformationViewModelTest_Instantiation()
         {
             // Arrange
-            var logger = new Mock<ILog>();
+            Mock<ILog> logger = new Mock<ILog>();
 
             logger.Setup(l => l.Error("Error!"));
             logger.Setup(l => l.Warn("Warn!"));
             logger.Setup(l => l.Info("Info!"));
             logger.Setup(l => l.Debug("Debug!"));
 
-            var query = new Mock<IRestQuery>();
+            Mock<IRestQuery> query = new Mock<IRestQuery>();
 
             // Act
-            var target = new SearchOrganizationInformationViewModel(logger.Object, mapper, query.Object);
+            SearchOrganizationInformationViewModel target = new SearchOrganizationInformationViewModel(logger.Object, mapper, query.Object);
 
             // Assert
             logger.VerifyAll();
@@ -75,11 +89,11 @@ namespace AltinnDesktopToolTest.ViewModel
 
         /// <summary>
         /// Scenario: 
-        ///   Search result is recieved
+        ///   Search result is retrieved
         /// Expected Result: 
         ///   An event is published.
         /// Success Criteria: 
-        ///   Event is recieved in this test
+        ///   Event is retrieved in this test
         /// </summary>
         [TestMethod]
         [TestCategory("ViewModel")]
@@ -87,23 +101,17 @@ namespace AltinnDesktopToolTest.ViewModel
         {
             PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
 
-            var search = new SearchOrganizationInformationModel
+            SearchOrganizationInformationModel search = new SearchOrganizationInformationModel
             {
                 SearchType = SearchType.OrganizationNumber,
                 SearchText = "910021451"
             };
 
-            var target = GetViewModel();
+            SearchOrganizationInformationViewModel target = GetViewModel();
 
             target.SearchCommand.Execute(search);
 
             Assert.IsNotNull(this.searchResult);
-
-        }
-
-        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
-        {
-            this.searchResult = args.Item;
         }
 
         #endregion
@@ -112,20 +120,25 @@ namespace AltinnDesktopToolTest.ViewModel
 
         private static SearchOrganizationInformationViewModel GetViewModel()
         {
-            var logger = new Mock<ILog>();
+            Mock<ILog> logger = new Mock<ILog>();
             logger.Setup(l => l.Error("Error!"));
             logger.Setup(l => l.Warn("Warn!"));
             logger.Setup(l => l.Info("Info!"));
             logger.Setup(l => l.Debug("Debug!"));
 
-            var org = new Organization();
+            Organization org = new Organization();
 
-            var query = new Mock<IRestQuery>();
+            Mock<IRestQuery> query = new Mock<IRestQuery>();
             query.Setup(s => s.Get<Organization>(It.IsAny<string>())).Returns(org);
 
-            var target = new SearchOrganizationInformationViewModel(logger.Object, mapper, query.Object);
+            SearchOrganizationInformationViewModel target = new SearchOrganizationInformationViewModel(logger.Object, mapper, query.Object);
 
             return target;
+        }
+
+        private void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
+        {
+            this.searchResult = args.Item;
         }
 
         #endregion

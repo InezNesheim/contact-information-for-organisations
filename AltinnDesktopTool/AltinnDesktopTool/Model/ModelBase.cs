@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+
 using GalaSoft.MvvmLight;
 
 namespace AltinnDesktopTool.Model
@@ -32,7 +33,6 @@ namespace AltinnDesktopTool.Model
 
         #endregion
 
-
         /// <summary>
         /// Get the error messages for a property
         /// </summary>
@@ -40,9 +40,7 @@ namespace AltinnDesktopTool.Model
         /// <returns>The error messages or null if not found</returns>
         public IEnumerable GetErrors(string propertyName)
         {
-            return string.IsNullOrEmpty(propertyName) || !this.ValidationErrors.ContainsKey(propertyName)
-                       ? null
-                       : this.ValidationErrors[propertyName];
+            return string.IsNullOrEmpty(propertyName) || !this.ValidationErrors.ContainsKey(propertyName) ? null : this.ValidationErrors[propertyName];
         }
 
         /// <summary>
@@ -58,12 +56,12 @@ namespace AltinnDesktopTool.Model
             }
 
             ICollection<ValidationResult> validationResults = new List<ValidationResult>();
-            var validationContext =
-                new ValidationContext(this, null, null) { MemberName = propertyName };
+            ValidationContext validationContext = new ValidationContext(this, null, null) { MemberName = propertyName };
+
             if (!Validator.TryValidateProperty(value, validationContext, validationResults))
             {
                 this.ValidationErrors.Add(propertyName, new List<string>());
-                foreach (var validationResult in validationResults)
+                foreach (ValidationResult validationResult in validationResults)
                 {
                     this.ValidationErrors[propertyName].Add(validationResult.ErrorMessage);
                 }
@@ -78,13 +76,15 @@ namespace AltinnDesktopTool.Model
         protected void ValidateModel()
         {
             this.ValidationErrors.Clear();
+
             ICollection<ValidationResult> validationResults = new List<ValidationResult>();
-            var validationContext = new ValidationContext(this, null, null);
+            ValidationContext validationContext = new ValidationContext(this, null, null);
+
             if (!Validator.TryValidateObject(this, validationContext, validationResults, true))
             {
-                foreach (var validationResult in validationResults)
+                foreach (ValidationResult validationResult in validationResults)
                 {
-                    var property = validationResult.MemberNames.ElementAt(0);
+                    string property = validationResult.MemberNames.ElementAt(0);
                     if (this.ValidationErrors.ContainsKey(property))
                     {
                         this.ValidationErrors[property].Add(validationResult.ErrorMessage);
@@ -101,11 +101,9 @@ namespace AltinnDesktopTool.Model
             this.RaiseErrorsChanged("Name");
         }
 
-
         private void RaiseErrorsChanged(string propertyName)
         {
             this.ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
-
     }
 }
