@@ -49,7 +49,7 @@ namespace AltinnDesktopToolTest.ViewModel
         /// </summary>
         [TestMethod]
         [TestCategory("ViewModel")]
-        public void SearchOrganizationInformationViewModelTestInstantiation()
+        public void SearchOrganizationInformationViewModelTest_Instantiation()
         {
             // Arrange
             var logger = new Mock<ILog>();
@@ -83,7 +83,7 @@ namespace AltinnDesktopToolTest.ViewModel
         /// </summary>
         [TestMethod]
         [TestCategory("ViewModel")]
-        public void SearchOrganizationInformationViewModelTestSendsEventWhenSearchResultIsRecieved()
+        public void SearchOrganizationInformationViewModelTest_SendsEventWhenSearchResultIsRecieved()
         {
             PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
 
