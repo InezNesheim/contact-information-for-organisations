@@ -9,5 +9,10 @@
         /// Search event
         /// </summary>
         public static readonly string SearchResultRecievedEvent = "SearchResultRecievedEvent";
+
+        /// <summary>
+        /// Search event
+        /// </summary>
+        public static readonly string EnvironmentChangedEvent = "EnvironmentChangedEvent";
     }
 }

@@ -16,13 +16,16 @@ namespace AltinnDesktopTool.ViewModel
 {
     using System;
 
+    using AltinnDesktopTool.Utils.Helpers;
+
     public sealed class SearchOrganizationInformationViewModel : AltinnViewModelBase
     {
         private readonly ILog logger;
         private readonly IMapper mapper;
-        private readonly IRestQuery query;
+        private IRestQuery query;
 
         public event PubSubEventHandler<ObservableCollection<OrganizationModel>> SearchResultRecievedEventHandler;
+        
 
         public RelayCommand<SearchOrganizationInformationModel> SearchCommand { get; set; }
 
@@ -36,6 +39,7 @@ namespace AltinnDesktopTool.ViewModel
             this.SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(this.SearchCommandHandler);
 
             PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+            PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, EnvironmentChangedEventHandler);
 
             // Test loggers
             this.logger.Debug("Debug!");
@@ -115,6 +119,15 @@ namespace AltinnDesktopTool.ViewModel
             }
 
             return SearchType.PhoneNumber;
+        }
+
+        public void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> args)
+        {
+            this.logger.Debug("Handling environment changed received event.");
+            this.query = new RestQuery(ProxyConfigHelper.GetConfig(args.Item), this.logger);
+            //delete result view
+            PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
+               new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));
         }
     }
 }

@@ -49,6 +49,7 @@ namespace AltinnDesktopTool.ViewModel
             SimpleIoc.Default.Register<SearchOrganizationInformationViewModel>();
             SimpleIoc.Default.Register<SearchResultViewModel>();
             SimpleIoc.Default.Register<TopViewModel>();
+            SimpleIoc.Default.Register<FooterViewModel>(); 
 
             // Proxy
             SimpleIoc.Default.Register<IRestQuery>(() => new RestQuery(ProxyConfigHelper.GetConfig(), ServiceLocator.Current.GetInstance<ILog>()));
@@ -58,6 +59,8 @@ namespace AltinnDesktopTool.ViewModel
         public SearchOrganizationInformationViewModel SearchOrganizationInformationViewModel => ServiceLocator.Current.GetInstance<SearchOrganizationInformationViewModel>();
         public SearchResultViewModel SearchResultViewModel => ServiceLocator.Current.GetInstance<SearchResultViewModel>();
         public TopViewModel TopViewModel => ServiceLocator.Current.GetInstance<TopViewModel>();
+
+        public FooterViewModel FooterViewModel => ServiceLocator.Current.GetInstance<FooterViewModel>();
 
         public static void Cleanup()
         {

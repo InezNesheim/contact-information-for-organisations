@@ -17,5 +17,10 @@ namespace AltinnDesktopTool.Utils.Helpers
         {
             return EnvironmentConfigurationManager.EnvironmentConfigurations.FirstOrDefault(c => c.Name == "PROD");
         }
+
+        public static IRestQueryConfig GetConfig(string environmentName)
+        {
+            return EnvironmentConfigurationManager.EnvironmentConfigurations.FirstOrDefault(c => c.Name == environmentName);
+        }
     }
 }

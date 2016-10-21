@@ -9,11 +9,7 @@
     {
         public Footer()
         {
-            var configItems = EnvironmentConfigurationManager.EnvironmentConfigurations;
             this.InitializeComponent();
-            this.configCombo.ItemsSource = configItems;
-            this.configCombo.DisplayMemberPath = "Name";
-            this.configCombo.SelectedValue = configItems.Find(c => c.Name == "PROD");
         }
     }
 }
