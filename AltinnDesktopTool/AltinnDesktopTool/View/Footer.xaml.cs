@@ -1,5 +1,7 @@
 ﻿namespace AltinnDesktopTool.View
 {
+    using System.Windows.Controls;
+
     using Configuration;
 
     /// <summary>
@@ -10,6 +12,6 @@
         public Footer()
         {
             this.InitializeComponent();
-        }
+        } 
     }
 }

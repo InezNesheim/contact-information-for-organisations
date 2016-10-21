@@ -27,6 +27,6 @@
                     <i:InvokeCommandAction Command="{Binding ChangeEnvironmentCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-        </ComboBox>
+            </ComboBox>
     </Grid>
 </UserControl>
