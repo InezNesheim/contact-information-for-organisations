@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 using AltinnDesktopTool.Configuration;
 using AltinnDesktopTool.Model;
@@ -56,7 +58,7 @@ namespace AltinnDesktopTool.ViewModel
             this.logger.Info("Info!");
         }
 
-        private void SearchCommandHandler(SearchOrganizationInformationModel obj)
+        private async void SearchCommandHandler(SearchOrganizationInformationModel obj)
         {
             this.logger.Debug(this.GetType().FullName + " Searching for: " + obj.SearchText + ", " + obj.SearchType);
 
@@ -80,21 +82,21 @@ namespace AltinnDesktopTool.ViewModel
                 switch (searchType)
                 {
                     case SearchType.EmailAddress:
-                        {
-                            organizations = this.query.Get<Organization>(new KeyValuePair<string, string>("email", searchText));
-                            break;
-                        }
+                    {
+                        organizations = await this.GetOrganizations("email", searchText);
+                        break;
+                    }
                     case SearchType.PhoneNumber:
-                        {
-                            organizations = this.query.Get<Organization>(new KeyValuePair<string, string>("phoneNumber", searchText));
-                            break;
-                        }
+                    {
+                        organizations = await this.GetOrganizations("", searchText);
+                        break;
+                    }
                     case SearchType.OrganizationNumber:
-                        {
-                            Organization organization = this.query.Get<Organization>(searchText);
-                            organizations.Add(organization);
-                            break;
-                        }
+                    {
+                        Organization organization = await this.GetOrganizations(searchText);
+                        organizations.Add(organization);
+                        break;
+                    }
                     case SearchType.Smart:
                         break;
                     default:
@@ -106,12 +108,29 @@ namespace AltinnDesktopTool.ViewModel
                 this.logger.Error("Exception from the RestClient", rex);
             }
 
-            ObservableCollection<OrganizationModel> orgmodellist = organizations != null
-                ? this.mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations)
-                : new ObservableCollection<OrganizationModel>();
+            App.Current.Dispatcher.Invoke(
+                () =>
+                {
+                    ObservableCollection<OrganizationModel> orgmodellist = organizations != null
+                        ? this.mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations)
+                        : new ObservableCollection<OrganizationModel>();
+                    PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
+                                                                               new PubSubEventArgs
+                                                                                   <ObservableCollection<OrganizationModel>>
+                                                                                   (
+                                                                                       orgmodellist));
+                    
+                });
+        }
 
-            PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
-                new PubSubEventArgs<ObservableCollection<OrganizationModel>>(orgmodellist));
+        private async Task<Organization> GetOrganizations(string searchText)
+        {
+            return await Task.Run(() => this.query.Get<Organization>(searchText));
+        }
+
+        private async Task<IList<Organization>> GetOrganizations(string type, string searchText)
+        {
+            return await Task.Run(() => this.query.Get<Organization>(new KeyValuePair<string, string>(type, searchText)));
         }
 
         private static SearchType IdentifySearchType(string searchText)
@@ -134,9 +153,9 @@ namespace AltinnDesktopTool.ViewModel
             this.logger.Debug("Handling environment changed received event.");
             var newConfig = ProxyConfigHelper.GetConfig(args.Item);
             this.query = new RestQuery(newConfig, this.logger);
-           
+
             //chnage theme
-            ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent((newConfig as EnvironmentConfiguration).ThemeName), ThemeManager.GetAppTheme("BaseLight"));            
+            ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent((newConfig as EnvironmentConfiguration).ThemeName), ThemeManager.GetAppTheme("BaseLight"));
 
             //clear result view
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
