@@ -18,18 +18,19 @@ namespace AltinnDesktopTool.Configuration
         public static List<EnvironmentConfiguration> EnvironmentConfigurations => configurationList ?? (configurationList = LoadEnvironmentConfigurations());
 
         private static List<EnvironmentConfiguration> LoadEnvironmentConfigurations()
-        {                    
-            var xmlDoc = XElement.Load(ConfigPath);
-            var configs = from config in xmlDoc.Descendants("EnvironmentConfiguration")
-                          select new EnvironmentConfiguration
-                          {
-                                Name = config?.Element("name")?.Value,
-                                ThemeName = config?.Element("themeName")?.Value,
-                                ApiKey = config?.Element("apiKey")?.Value,
-                                BaseAddress = config?.Element("baseAddress")?.Value,
-                                ThumbPrint = config?.Element("thumbprint")?.Value,
-                                Timeout = ParseInt(config?.Element("timeout")?.Value)
-                            };
+        {
+            XElement xmlDoc = XElement.Load(ConfigPath);
+            IEnumerable<EnvironmentConfiguration> configs = from config in xmlDoc.Descendants("EnvironmentConfiguration")
+                                                            select
+                                                            new EnvironmentConfiguration
+                                                            {
+                                                                Name = config?.Element("name")?.Value,
+                                                                ThemeName = config?.Element("themeName")?.Value,
+                                                                ApiKey = config?.Element("apiKey")?.Value,
+                                                                BaseAddress = config?.Element("baseAddress")?.Value,
+                                                                ThumbPrint = config?.Element("thumbprint")?.Value,
+                                                                Timeout = ParseInt(config?.Element("timeout")?.Value)
+                                                            };
             return configs.ToList();
         }
 
