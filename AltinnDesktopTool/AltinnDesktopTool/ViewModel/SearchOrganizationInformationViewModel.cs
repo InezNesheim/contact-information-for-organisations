@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
-
-using AltinnDesktopTool.Configuration;
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.Helpers;
 using AltinnDesktopTool.Utils.PubSub;
@@ -14,8 +11,6 @@ using AutoMapper;
 using GalaSoft.MvvmLight.Command;
 
 using log4net;
-
-using MahApps.Metro;
 
 using RestClient;
 using RestClient.DTO;
@@ -33,7 +28,6 @@ namespace AltinnDesktopTool.ViewModel
         private IRestQuery query;
 
         public event PubSubEventHandler<ObservableCollection<OrganizationModel>> SearchResultRecievedEventHandler;
-
 
         public RelayCommand<SearchOrganizationInformationModel> SearchCommand { get; set; }
 
@@ -133,12 +127,8 @@ namespace AltinnDesktopTool.ViewModel
         {
             this.logger.Debug("Handling environment changed received event.");
             var newConfig = ProxyConfigHelper.GetConfig(args.Item);
-            this.query = new RestQuery(newConfig, this.logger);
-           
-            //chnage theme
-            ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent((newConfig as EnvironmentConfiguration).ThemeName), ThemeManager.GetAppTheme("BaseLight"));            
-
-            //clear result view
+            this.query = new RestQuery(newConfig, this.logger);                                
+            
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));
         }

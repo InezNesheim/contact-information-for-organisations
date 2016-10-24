@@ -1,9 +1,5 @@
 ﻿namespace AltinnDesktopTool.View
 {
-    using System.Windows.Controls;
-
-    using Configuration;
-
     /// <summary>
     /// Interaction logic for TopView.xaml
     /// </summary>
