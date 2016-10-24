@@ -2,6 +2,10 @@ using GalaSoft.MvvmLight;
 
 namespace AltinnDesktopTool.ViewModel
 {
+    using System.Windows;
+
+    using MahApps.Metro;
+
     /// <summary>
     /// This class contains properties that the main View can data bind to.
     /// <para>
@@ -22,14 +26,7 @@ namespace AltinnDesktopTool.ViewModel
         // ReSharper disable once EmptyConstructor
         public MainViewModel()
         {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
+            ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent("Blue"), ThemeManager.GetAppTheme("BaseLight"));
         }
     }
 }

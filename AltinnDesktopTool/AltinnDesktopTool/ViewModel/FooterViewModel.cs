@@ -5,9 +5,11 @@ using GalaSoft.MvvmLight.Command;
 
 namespace AltinnDesktopTool.ViewModel
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Windows;
 
     using AltinnDesktopTool.Configuration;
     using AltinnDesktopTool.Model;
@@ -15,6 +17,8 @@ namespace AltinnDesktopTool.ViewModel
     using AltinnDesktopTool.Utils.PubSub;
 
     using log4net;
+
+    using MahApps.Metro;
 
     using Microsoft.Practices.ServiceLocation;
 
@@ -74,7 +78,7 @@ namespace AltinnDesktopTool.ViewModel
 
         public void ChangeEnvironmentHandler()
         {            
-            PubSub<string>.RaiseEvent(EventNames.EnvironmentChangedEvent, this, new PubSubEventArgs<string>(this.selectedEnvironment));            
+            PubSub<string>.RaiseEvent(EventNames.EnvironmentChangedEvent, this, new PubSubEventArgs<string>(this.selectedEnvironment));
         }
 
     }

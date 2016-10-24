@@ -26,10 +26,10 @@
                 <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnType}" Binding="{Binding Type}"/>
             </DataGrid.Columns>
             <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}">
+                <Style BasedOn="{StaticResource MetroDataGridRow}" TargetType="{x:Type DataGridRow}">
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{StaticResource AccentBaseColorBrush}"></Setter>
+                            <Setter Property="Background" Value="{DynamicResource AccentBaseColorBrush}"></Setter>
                         </Trigger>
                     </Style.Triggers>
                 </Style>

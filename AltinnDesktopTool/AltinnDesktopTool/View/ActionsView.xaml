@@ -6,11 +6,11 @@
              x:Class="AltinnDesktopTool.View.ActionsView"    
              mc:Ignorable="d" 
              d:DesignHeight="80" d:DesignWidth="300">
-    <Grid Background="{DynamicResource {x:Static SystemColors.GradientActiveCaptionBrushKey}}">
+    <Grid Background="{DynamicResource AccentColorBrush2}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button Width="50" Height="50" HorizontalAlignment="Right" Margin="0,15,40,15" Style="{StaticResource AccentedSquareButtonStyle}" ToolTip="Copy to clipboard">
+        <Button Width="50" Height="50" HorizontalAlignment="Right" Margin="0,15,40,15" Style="{DynamicResource AccentedSquareButtonStyle}" ToolTip="Copy to clipboard">
             <StackPanel Orientation="Horizontal">
                 <Rectangle x:Name="headerLogo" Width="40" Height="40"
                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">

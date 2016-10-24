@@ -1,23 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.PubSub;
 
-using RestClient;
-using RestClient.DTO;
+using AutoMapper;
+
 using GalaSoft.MvvmLight.Command;
 
 using log4net;
-using AutoMapper;
+
+using RestClient;
+using RestClient.DTO;
 using RestClient.Resources;
 
 namespace AltinnDesktopTool.ViewModel
 {
     using System;
+    using System.Windows;
 
+    using AltinnDesktopTool.Configuration;
     using AltinnDesktopTool.Utils.Helpers;
 
+    using MahApps.Metro;
+    
+    /// <summary>
+    /// ViewModel for SearchOrganizationInformation view
+    /// </summary>    
     public sealed class SearchOrganizationInformationViewModel : AltinnViewModelBase
     {
         private readonly ILog logger;
@@ -124,8 +134,13 @@ namespace AltinnDesktopTool.ViewModel
         public void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> args)
         {
             this.logger.Debug("Handling environment changed received event.");
-            this.query = new RestQuery(ProxyConfigHelper.GetConfig(args.Item), this.logger);
-            //delete result view
+            var newConfig = ProxyConfigHelper.GetConfig(args.Item);
+            this.query = new RestQuery(newConfig, this.logger);
+           
+            //chnage theme
+            ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent((newConfig as EnvironmentConfiguration).ThemeName), ThemeManager.GetAppTheme("BaseLight"));            
+
+            //clear result view
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));
         }
