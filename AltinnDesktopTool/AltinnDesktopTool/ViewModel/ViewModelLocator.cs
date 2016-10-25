@@ -49,7 +49,7 @@ namespace AltinnDesktopTool.ViewModel
             SimpleIoc.Default.Register<SearchOrganizationInformationViewModel>();
             SimpleIoc.Default.Register<SearchResultViewModel>();
             SimpleIoc.Default.Register<TopViewModel>();
-            SimpleIoc.Default.Register<FooterViewModel>(); 
+            SimpleIoc.Default.Register<FooterViewModel>();
 
             // Proxy
             SimpleIoc.Default.Register<IRestQuery>(() => new RestQuery(ProxyConfigHelper.GetConfig(), ServiceLocator.Current.GetInstance<ILog>()));

@@ -4,10 +4,17 @@ using RestClient.DTO;
 using log4net;
 using AltinnDesktopTool.Model;
 using System.Collections.ObjectModel;
+using System.Text;
+using System.Windows;
+using System.Windows.Input;
+
 using GalaSoft.MvvmLight.Command;
 using AutoMapper;
 using RestClient;
 using RestClient.Resources;
+using System;
+
+using AltinnDesktopTool.Utils.Helpers;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -15,7 +22,20 @@ namespace AltinnDesktopTool.ViewModel
     {
         private readonly ILog logger;
         private readonly IMapper mapper;
-        private readonly IRestQuery restQuery;
+        private HashSet<OrganizationModel> organizationModels = new HashSet<OrganizationModel>();
+        private IRestQuery restQuery;
+
+        public new SearchResultModel Model { get; set; }
+
+        public RelayCommand<OrganizationModel> GetContactsCommand { get; set; }
+        public RelayCommand<OrganizationModel> ItemChecked { get; set; }
+        public RelayCommand<OrganizationModel> ItemUnchecked { get; set; }
+        public ICommand CopyToClipboardPlainTextCommand { get; private set; }
+        public ICommand CopyToClipboardSemiColonSeparatedCommand { get; private set; }
+        public bool Expanded { get; set; }
+
+        //public event PubSubEventHandler<string> EnvironmentChangedEventHandler;
+
 
         public SearchResultViewModel(ILog logger, IMapper mapper, IRestQuery restQuery)
         {
@@ -27,8 +47,21 @@ namespace AltinnDesktopTool.ViewModel
 
             PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
             PubSub<bool>.RegisterEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
+            PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
+
 
             this.GetContactsCommand = new RelayCommand<OrganizationModel>(this.GetContactsCommandHandler);
+            this.ItemChecked = new RelayCommand<OrganizationModel>(this.ItemCheckedHandler);
+            this.ItemUnchecked = new RelayCommand<OrganizationModel>(this.ItemUncheckedHandler);
+            this.CopyToClipboardPlainTextCommand = new RelayCommand(this.CopyToClipboardPlainTextHandler);
+            this.CopyToClipboardSemiColonSeparatedCommand = new RelayCommand(this.CopyToClipboardSemiColonSeparatedHandler);
+            Expanded = true;
+        }
+
+        private void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> e)
+        {
+            this.logger.Debug("Handling environment changed received event.");            
+            this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
         }
 
         private void SearchStartedEventHandler(object sender, PubSubEventArgs<bool> e)
@@ -81,9 +114,8 @@ namespace AltinnDesktopTool.ViewModel
                     personalContactDtoCollecton);
         }
 
-        public new SearchResultModel Model { get; set; }
 
-        public RelayCommand<OrganizationModel> GetContactsCommand { get; set; }
+
 
         public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
         {
@@ -95,6 +127,59 @@ namespace AltinnDesktopTool.ViewModel
                 this.Model.ShowNoResultText = false;
             }
             this.Model.IsBusy = false;
+        }
+
+        public void ItemCheckedHandler(OrganizationModel organizationModel)
+        {
+            this.GetContactsCommandHandler(organizationModel);
+            this.organizationModels.Add(organizationModel);
+        }
+
+        public void ItemUncheckedHandler(OrganizationModel organizationModel)
+        {
+            this.GetContactsCommandHandler(organizationModel);
+            this.organizationModels.Remove(organizationModel);
+        }
+
+        public void CopyToClipboardPlainTextHandler()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (OrganizationModel organizationModel in this.organizationModels)
+            {
+                stringBuilder.AppendFormat(organizationModel.Name + " " + organizationModel.OrganizationNumber + " " + organizationModel.Type + "{0}", Environment.NewLine);
+
+                if (organizationModel.OfficalContactsCollection.Count > 0)
+                {
+                    stringBuilder.AppendFormat("Offisielle kontakter:{0}", Environment.NewLine);
+
+                    foreach (OfficialContactModel officialContactModel in organizationModel.OfficalContactsCollection)
+                    {
+                        if (!String.IsNullOrEmpty(officialContactModel.EmailAddress) && !String.IsNullOrEmpty(officialContactModel.MobileNumber))
+                        {
+                            stringBuilder.AppendFormat(officialContactModel.EmailAddress + " " + officialContactModel.MobileNumber + "{0}", Environment.NewLine);
+                            continue;
+                        }
+
+                        if (!String.IsNullOrEmpty(officialContactModel.EmailAddress))
+                        {
+                            stringBuilder.AppendFormat(officialContactModel.EmailAddress + "{0}", Environment.NewLine);
+                            continue;
+                        }
+
+                        if (!String.IsNullOrEmpty(officialContactModel.MobileNumber))
+                        {
+                            stringBuilder.AppendFormat(officialContactModel.MobileNumber + "{0}", Environment.NewLine);
+                        }
+                    }
+                }
+                stringBuilder.Append(Environment.NewLine);
+            }
+            Clipboard.SetText(stringBuilder.ToString());
+        }
+
+        public void CopyToClipboardSemiColonSeparatedHandler()
+        {
+
         }
     }
 }

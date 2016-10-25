@@ -10,7 +10,6 @@
              x:Class="AltinnDesktopTool.View.Footer"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="300">
-
     <UserControl.DataContext>
         <Binding Path="FooterViewModel" Source="{StaticResource ViewModelLocator}"/>
     </UserControl.DataContext>

@@ -42,8 +42,8 @@ namespace AltinnDesktopTool.Model
 
         public ObservableCollection<OrganizationModel> ResultCollection
         {
-          get { return this.resultCollection; }
-          set
+            get { return this.resultCollection; }
+            set
             {
                 this.resultCollection = value;
                 this.RaisePropertyChanged(() => this.ResultCollection);

@@ -79,9 +79,7 @@ namespace AltinnDesktopTool.ViewModel
         public void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> args)
         {
             this.logger.Debug("Handling environment changed received event.");
-            IRestQueryConfig newConfig = ProxyConfigHelper.GetConfig(args.Item);
-
-            this.query = new RestQuery(newConfig, this.logger);
+            this.query = new RestQuery(ProxyConfigHelper.GetConfig(args.Item), this.logger);
 
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));
@@ -135,21 +133,21 @@ namespace AltinnDesktopTool.ViewModel
                 {
                     case SearchType.EMail:
                         {
-                            obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.EMail + " " + searchText);
+                        obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.EMail + " " + searchText);
                             organizations = await this.GetOrganizations(searchType, searchText);
                             break;
                         }
 
                     case SearchType.PhoneNumber:
                         {
-                            obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.PhoneNumber + " " + searchText);
+                        obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.PhoneNumber + " " + searchText);
                             organizations = await this.GetOrganizations(searchType, searchText);
                             break;
                         }
 
                     case SearchType.OrganizationNumber:
                         {
-                            obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.OrganizationNumber + " " + searchText);
+                        obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.OrganizationNumber + " " + searchText);
                             Organization organization = await this.GetOrganizations(searchText);
                             organizations.Add(organization);
                             break;
