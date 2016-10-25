@@ -132,33 +132,23 @@ namespace AltinnDesktopTool.ViewModel
                 switch (searchType)
                 {
                     case SearchType.EMail:
-                        {
                         obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.EMail + " " + searchText);
-                            organizations = await this.GetOrganizations(searchType, searchText);
-                            break;
-                        }
-
+                        organizations = await this.GetOrganizations(searchType, searchText);
+                        break;
                     case SearchType.PhoneNumber:
-                        {
                         obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.PhoneNumber + " " + searchText);
-                            organizations = await this.GetOrganizations(searchType, searchText);
-                            break;
-                        }
-
+                        organizations = await this.GetOrganizations(searchType, searchText);
+                        break;
                     case SearchType.OrganizationNumber:
-                        {
                         obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.OrganizationNumber + " " + searchText);
-                            Organization organization = await this.GetOrganizations(searchText);
-                            organizations.Add(organization);
-                            break;
-                        }
-
+                        Organization organization = await this.GetOrganizations(searchText);
+                        organizations.Add(organization);
+                        break;
                     case SearchType.Smart:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-
             }
             catch (RestClientException rex)
             {
