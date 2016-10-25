@@ -80,6 +80,5 @@ namespace AltinnDesktopTool.ViewModel
         {            
             PubSub<string>.RaiseEvent(EventNames.EnvironmentChangedEvent, this, new PubSubEventArgs<string>(this.selectedEnvironment));
         }
-
     }
 }
