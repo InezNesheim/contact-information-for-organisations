@@ -82,12 +82,12 @@ namespace AltinnDesktopTool.ViewModel
                 {
                     case SearchType.EmailAddress:
                         {
-                            organizations = await this.GetOrganizations("email", searchText);
+                            organizations = await this.GetOrganizations(searchType, searchText);
                             break;
                         }
                     case SearchType.PhoneNumber:
                         {
-                            organizations = await this.GetOrganizations("", searchText);
+                            organizations = await this.GetOrganizations(searchType, searchText);
                             break;
                         }
                     case SearchType.OrganizationNumber:
@@ -120,9 +120,9 @@ namespace AltinnDesktopTool.ViewModel
             return await Task.Run(() => this.query.Get<Organization>(searchText));
         }
 
-        private async Task<IList<Organization>> GetOrganizations(string type, string searchText)
+        private async Task<IList<Organization>> GetOrganizations(SearchType type, string searchText)
         {
-            return await Task.Run(() => this.query.Get<Organization>(new KeyValuePair<string, string>(type, searchText)));
+            return await Task.Run(() => this.query.Get<Organization>(new KeyValuePair<string, string>(type.ToString(), searchText)));
         }
 
         private static SearchType IdentifySearchType(string searchText)
