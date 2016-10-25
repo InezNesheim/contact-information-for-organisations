@@ -4,19 +4,14 @@ namespace AltinnDesktopTool.ViewModel
 {
     using System.Windows;
 
+    using Configuration;
+
     using MahApps.Metro;
 
+    using Utils.PubSub;
+
     /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// ViewModel for MainView
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
@@ -25,8 +20,13 @@ namespace AltinnDesktopTool.ViewModel
         /// </summary>
         // ReSharper disable once EmptyConstructor
         public MainViewModel()
-        {
-            ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent("Blue"), ThemeManager.GetAppTheme("BaseLight"));
+        {            
+            PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
+        }
+
+        private void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> args)
+        {            
+            ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(EnvironmentConfigurationManager.ActiveEnvironmentConfiguration.ThemeName), ThemeManager.GetAppTheme("BaseLight"));
         }
     }
 }

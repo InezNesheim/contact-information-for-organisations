@@ -56,13 +56,5 @@ namespace AltinnDesktopTool.Model
                 }
             }
         }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public SearchResultModel()
-        {
-            this.ResultCollection = new ObservableCollection<OrganizationModel>();
-        }
     }
 }

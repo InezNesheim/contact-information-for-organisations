@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
 
-using AltinnDesktopTool.Configuration;
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.Helpers;
 using AltinnDesktopTool.Utils.PubSub;
@@ -17,11 +13,11 @@ using GalaSoft.MvvmLight.Command;
 
 using log4net;
 
-using MahApps.Metro;
-
 using RestClient;
 using RestClient.DTO;
 using RestClient.Resources;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -36,7 +32,6 @@ namespace AltinnDesktopTool.ViewModel
 
         public event PubSubEventHandler<ObservableCollection<OrganizationModel>> SearchResultRecievedEventHandler;
 
-
         public RelayCommand<SearchOrganizationInformationModel> SearchCommand { get; set; }
 
         public SearchOrganizationInformationViewModel(ILog logger, IMapper mapper, IRestQuery query)
@@ -49,7 +44,7 @@ namespace AltinnDesktopTool.ViewModel
             this.SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(this.SearchCommandHandler);
 
             PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
-            PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, EnvironmentChangedEventHandler);
+            PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
 
             // Test loggers
             this.logger.Debug("Debug!");
@@ -108,7 +103,7 @@ namespace AltinnDesktopTool.ViewModel
                 this.logger.Error("Exception from the RestClient", rex);
             }
 
-            App.Current.Dispatcher.Invoke(
+            Application.Current.Dispatcher.Invoke(
                 () =>
                 {
                     ObservableCollection<OrganizationModel> orgmodellist = organizations != null
@@ -152,12 +147,10 @@ namespace AltinnDesktopTool.ViewModel
         {
             this.logger.Debug("Handling environment changed received event.");
             var newConfig = ProxyConfigHelper.GetConfig(args.Item);
-            this.query = new RestQuery(newConfig, this.logger);
 
-            //chnage theme
-            ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent((newConfig as EnvironmentConfiguration).ThemeName), ThemeManager.GetAppTheme("BaseLight"));
+            this.query = new RestQuery(newConfig, this.logger);                                
+            
 
-            //clear result view
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));
         }
