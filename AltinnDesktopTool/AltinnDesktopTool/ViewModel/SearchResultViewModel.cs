@@ -26,8 +26,14 @@ namespace AltinnDesktopTool.ViewModel
             this.Model = new SearchResultModel();
 
             PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+            PubSub<bool>.RegisterEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
 
             this.GetContactsCommand = new RelayCommand<OrganizationModel>(this.GetContactsCommandHandler);
+        }
+
+        private void SearchStartedEventHandler(object sender, PubSubEventArgs<bool> e)
+        {
+            this.Model.IsBusy = true;
         }
 
         private void GetContactsCommandHandler(OrganizationModel obj)
@@ -82,7 +88,7 @@ namespace AltinnDesktopTool.ViewModel
         {
             this.logger.Debug("Handling search result received event.");
             this.Model.ResultCollection = args.Item;
-            this.IsBusy = false;
+            this.Model.IsBusy = false;
         }
     }
 }

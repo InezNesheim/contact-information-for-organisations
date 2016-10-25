@@ -30,6 +30,7 @@ namespace AltinnDesktopTool.ViewModel
         private readonly IMapper mapper;
         private IRestQuery query;
 
+        public event PubSubEventHandler<bool> SearchStartedEventHandler;
         public event PubSubEventHandler<ObservableCollection<OrganizationModel>> SearchResultRecievedEventHandler;
 
         public RelayCommand<SearchOrganizationInformationModel> SearchCommand { get; set; }
@@ -44,13 +45,14 @@ namespace AltinnDesktopTool.ViewModel
             this.SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(this.SearchCommandHandler);
 
             PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+            PubSub<bool>.AddEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
             PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
 
             // Test loggers
-            this.logger.Debug("Debug!");
-            this.logger.Error("Error!");
-            this.logger.Warn("Warn!");
-            this.logger.Info("Info!");
+            //this.logger.Debug("Debug!");
+            //this.logger.Error("Error!");
+            //this.logger.Warn("Warn!");
+            //this.logger.Info("Info!");
         }
 
         private async void SearchCommandHandler(SearchOrganizationInformationModel obj)
@@ -66,6 +68,8 @@ namespace AltinnDesktopTool.ViewModel
                 return;
             }
 
+            PubSub<bool>.RaiseEvent(EventNames.SearchStartedEvent, this, new PubSubEventArgs<bool>(true));
+
             // After having removed the radio buttons where the user could select search type, search is always Smart, but the check
             // is kept in case the radio buttons comes back in a future release. For example as advanced search.
             SearchType searchType = obj.SearchType == SearchType.Smart ? IdentifySearchType(searchText) : obj.SearchType;
@@ -77,21 +81,21 @@ namespace AltinnDesktopTool.ViewModel
                 switch (searchType)
                 {
                     case SearchType.EmailAddress:
-                    {
-                        organizations = await this.GetOrganizations("email", searchText);
-                        break;
-                    }
+                        {
+                            organizations = await this.GetOrganizations("email", searchText);
+                            break;
+                        }
                     case SearchType.PhoneNumber:
-                    {
-                        organizations = await this.GetOrganizations("", searchText);
-                        break;
-                    }
+                        {
+                            organizations = await this.GetOrganizations("", searchText);
+                            break;
+                        }
                     case SearchType.OrganizationNumber:
-                    {
-                        Organization organization = await this.GetOrganizations(searchText);
-                        organizations.Add(organization);
-                        break;
-                    }
+                        {
+                            Organization organization = await this.GetOrganizations(searchText);
+                            organizations.Add(organization);
+                            break;
+                        }
                     case SearchType.Smart:
                         break;
                     default:
@@ -103,19 +107,12 @@ namespace AltinnDesktopTool.ViewModel
                 this.logger.Error("Exception from the RestClient", rex);
             }
 
-            Application.Current.Dispatcher.Invoke(
-                () =>
-                {
-                    ObservableCollection<OrganizationModel> orgmodellist = organizations != null
-                        ? this.mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations)
-                        : new ObservableCollection<OrganizationModel>();
-                    PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
-                                                                               new PubSubEventArgs
-                                                                                   <ObservableCollection<OrganizationModel>>
-                                                                                   (
-                                                                                       orgmodellist));
-                    
-                });
+            ObservableCollection<OrganizationModel> orgmodellist = organizations != null
+                         ? this.mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations)
+                         : new ObservableCollection<OrganizationModel>();
+
+            PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(
+                EventNames.SearchResultRecievedEvent, this, new PubSubEventArgs<ObservableCollection<OrganizationModel>>(orgmodellist));
         }
 
         private async Task<Organization> GetOrganizations(string searchText)
@@ -148,8 +145,7 @@ namespace AltinnDesktopTool.ViewModel
             this.logger.Debug("Handling environment changed received event.");
             var newConfig = ProxyConfigHelper.GetConfig(args.Item);
 
-            this.query = new RestQuery(newConfig, this.logger);                                
-            
+            this.query = new RestQuery(newConfig, this.logger);
 
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));
