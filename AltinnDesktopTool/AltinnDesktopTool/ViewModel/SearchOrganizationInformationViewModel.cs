@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
 
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.Helpers;
 using AltinnDesktopTool.Utils.PubSub;
+using AltinnDesktopTool.View;
 
 using AutoMapper;
 
@@ -16,11 +19,6 @@ using log4net;
 using RestClient;
 using RestClient.DTO;
 using RestClient.Resources;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-
-using AltinnDesktopTool.View;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -33,11 +31,12 @@ namespace AltinnDesktopTool.ViewModel
         private readonly IMapper mapper;
         private IRestQuery query;
 
-        public event PubSubEventHandler<bool> SearchStartedEventHandler;
-        public event PubSubEventHandler<ObservableCollection<OrganizationModel>> SearchResultRecievedEventHandler;
-
-        public RelayCommand<SearchOrganizationInformationModel> SearchCommand { get; set; }
-
+        /// <summary>
+        /// Initializes a new instance of the SearchOrganizationInformationViewModel class.
+        /// </summary>
+        /// <param name="logger">The logger to be used by the instance.</param>
+        /// <param name="mapper">The AutoMapper instance to use by the view model.</param>
+        /// <param name="query">The query proxy to use in the actual searches.</param>
         public SearchOrganizationInformationViewModel(ILog logger, IMapper mapper, IRestQuery query)
         {
             this.logger = logger;
@@ -50,12 +49,57 @@ namespace AltinnDesktopTool.ViewModel
             PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
             PubSub<bool>.AddEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
             PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
+        }
 
-            // Test loggers
-            //this.logger.Debug("Debug!");
-            //this.logger.Error("Error!");
-            //this.logger.Warn("Warn!");
-            //this.logger.Info("Info!");
+        /// <summary>
+        /// Occurs when a search has been started.
+        /// </summary>
+        public event PubSubEventHandler<bool> SearchStartedEventHandler;
+
+        /// <summary>
+        /// Occurs when the search in complete.
+        /// </summary>
+        public event PubSubEventHandler<ObservableCollection<OrganizationModel>> SearchResultRecievedEventHandler;
+
+        /// <summary>
+        /// Gets or sets the command to run when search is triggered.
+        /// </summary>
+        public RelayCommand<SearchOrganizationInformationModel> SearchCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the model used by the search view.
+        /// </summary>
+        public new SearchOrganizationInformationModel Model { get; set; }
+
+        /// <summary>
+        /// Event handler for when the environment has changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="args">An object that contains the name of the new configuration.</param>
+        public void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> args)
+        {
+            this.logger.Debug("Handling environment changed received event.");
+            IRestQueryConfig newConfig = ProxyConfigHelper.GetConfig(args.Item);
+
+            this.query = new RestQuery(newConfig, this.logger);
+
+            PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
+               new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));
+        }
+
+        private static SearchType IdentifySearchType(string searchText)
+        {
+            if (searchText.IndexOf("@", StringComparison.InvariantCulture) > 0)
+            {
+                return SearchType.EMail;
+            }
+
+            if (searchText.Length == 9 && searchText.All(char.IsDigit))
+            {
+                return SearchType.OrganizationNumber;
+            }
+
+            return SearchType.PhoneNumber;
         }
 
         private async void SearchCommandHandler(SearchOrganizationInformationModel obj)
@@ -91,28 +135,32 @@ namespace AltinnDesktopTool.ViewModel
                 {
                     case SearchType.EMail:
                         {
-                        obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.EMail + " " + searchText);
+                            obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.EMail + " " + searchText);
                             organizations = await this.GetOrganizations(searchType, searchText);
                             break;
                         }
+
                     case SearchType.PhoneNumber:
                         {
-                        obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.PhoneNumber + " " + searchText);
+                            obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.PhoneNumber + " " + searchText);
                             organizations = await this.GetOrganizations(searchType, searchText);
                             break;
                         }
+
                     case SearchType.OrganizationNumber:
                         {
-                        obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.OrganizationNumber + " " + searchText);
+                            obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.OrganizationNumber + " " + searchText);
                             Organization organization = await this.GetOrganizations(searchText);
                             organizations.Add(organization);
                             break;
                         }
+
                     case SearchType.Smart:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
             }
             catch (RestClientException rex)
             {
@@ -138,32 +186,6 @@ namespace AltinnDesktopTool.ViewModel
         private async Task<IList<Organization>> GetOrganizations(SearchType type, string searchText)
         {
             return await Task.Run(() => this.query.Get<Organization>(new KeyValuePair<string, string>(type.ToString(), searchText)));
-        }
-
-        private static SearchType IdentifySearchType(string searchText)
-        {
-            if (searchText.IndexOf("@", StringComparison.InvariantCulture) > 0)
-            {
-                return SearchType.EMail;
-            }
-
-            if (searchText.Length == 9 && searchText.All(char.IsDigit))
-            {
-                return SearchType.OrganizationNumber;
-            }
-
-            return SearchType.PhoneNumber;
-        }
-
-        public void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> args)
-        {
-            this.logger.Debug("Handling environment changed received event.");
-            IRestQueryConfig newConfig = ProxyConfigHelper.GetConfig(args.Item);
-
-            this.query = new RestQuery(newConfig, this.logger);
-
-            PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
-               new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));
         }
     }
 }

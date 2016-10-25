@@ -1,9 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.Helpers;
 using AltinnDesktopTool.Utils.PubSub;
+using AltinnDesktopTool.View;
 using AltinnDesktopTool.ViewModel;
 
 using AutoMapper;
@@ -54,6 +56,20 @@ namespace AltinnDesktopToolTest.ViewModel
             this.searchResult = null;
         }
 
+        #region Event handlers 
+
+        /// <summary>
+        /// Event handler used to pick up the result after a search.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="args">The event arguments with the new search result.</param>
+        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
+        {
+            this.searchResult = args.Item;
+        }
+
+        #endregion
+
         /// <summary>
         /// Scenario: 
         ///   Instantiate a new instance of SearchOrganizationInformationViewModel.
@@ -69,24 +85,15 @@ namespace AltinnDesktopToolTest.ViewModel
             // Arrange
             Mock<ILog> logger = new Mock<ILog>();
 
-            //logger.Setup(l => l.Error("Error!"));
-            //logger.Setup(l => l.Warn("Warn!"));
-            //logger.Setup(l => l.Info("Info!"));
-            //logger.Setup(l => l.Debug("Debug!"));
-
             Mock<IRestQuery> query = new Mock<IRestQuery>();
 
             // Act
             SearchOrganizationInformationViewModel target = new SearchOrganizationInformationViewModel(logger.Object, mapper, query.Object);
 
             // Assert
-            logger.VerifyAll();
-
             Assert.IsNotNull(target.Model);
             Assert.IsNotNull(target.SearchCommand);
         }
-
-        #region Event tests
 
         /// <summary>
         /// Scenario: 
@@ -100,6 +107,7 @@ namespace AltinnDesktopToolTest.ViewModel
         [TestCategory("ViewModel")]
         public void SearchOrganizationInformationViewModelTest_SendsEventWhenSearchResultIsRecieved()
         {
+            // Arrange
             PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
 
             SearchOrganizationInformationModel search = new SearchOrganizationInformationModel
@@ -110,24 +118,115 @@ namespace AltinnDesktopToolTest.ViewModel
 
             SearchOrganizationInformationViewModel target = GetViewModel();
 
+            // Act
             target.SearchCommand.Execute(search);
+            
+            // Wait for tasks to complete.
+            Thread.Sleep(100);
 
-            // Let  the other thread catch up.. 
-            Thread.Sleep(1000);
+            // Asserts
             Assert.IsNotNull(this.searchResult);
         }
 
-        #endregion
+        /// <summary>
+        /// Scenario: 
+        ///   Perform a search after a contact with specific email address.
+        /// Expected Result: 
+        ///   Search result is updated with a new list of organizations.
+        /// Success Criteria: 
+        ///   The rest query is performed with the parameter email and the search result is updated with new data.
+        /// </summary>
+        [TestMethod]
+        [TestCategory("ViewModel")]
+        public void SearchOrganizationInformationViewModelTest_EMailSearch_SearchResultIsUpdated()
+        {
+            // Arrange
+            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+
+            Mock<ILog> logger = new Mock<ILog>();
+
+            IList<Organization> orgs = new List<Organization>();
+            orgs.Add(new Organization());
+
+            Mock<IRestQuery> query = new Mock<IRestQuery>();
+            query.Setup(s => s.Get<Organization>(It.Is<KeyValuePair<string, string>>(pair => pair.Key == SearchType.EMail.ToString()))).Returns(orgs);
+
+            SearchOrganizationInformationModel search = new SearchOrganizationInformationModel
+            {
+                SearchType = SearchType.Smart,
+                SearchText = "ola.normann@post.no"
+            };
+
+            SearchOrganizationInformationViewModel target = new SearchOrganizationInformationViewModel(logger.Object, mapper, query.Object);
+
+            // Act
+            target.SearchCommand.Execute(search);
+
+            // Wait for tasks to complete.
+            Thread.Sleep(100);
+
+            // Assert
+            query.VerifyAll();
+
+            Assert.IsNotNull(this.searchResult);
+            Assert.IsNotNull(target.SearchCommand);
+            Assert.IsNotNull(target.Model);
+
+            Assert.IsTrue(search.LabelText.Contains(Resources.EMail) && search.LabelText.Contains(search.SearchText));
+        }
+
+        /// <summary>
+        /// Scenario: 
+        ///   Perform a search after a contact with specific phone number
+        /// Expected Result: 
+        ///   Search result is updated with a new list of organizations.
+        /// Success Criteria: 
+        ///   The rest query is performed with the parameter phone number and the search result is updated with new data.
+        /// </summary>
+        [TestMethod]
+        [TestCategory("ViewModel")]
+        public void SearchOrganizationInformationViewModelTest_PhoneNumberSearch_SearchResultIsUpdated()
+        {
+            // Arrange
+            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+
+            Mock<ILog> logger = new Mock<ILog>();
+
+            IList<Organization> orgs = new List<Organization>();
+            orgs.Add(new Organization());
+
+            Mock<IRestQuery> query = new Mock<IRestQuery>();
+            query.Setup(s => s.Get<Organization>(It.Is<KeyValuePair<string, string>>(pair => pair.Key == SearchType.PhoneNumber.ToString()))).Returns(orgs);
+
+            SearchOrganizationInformationModel search = new SearchOrganizationInformationModel
+            {
+                SearchType = SearchType.Smart,
+                SearchText = "47419641"
+            };
+
+            SearchOrganizationInformationViewModel target = new SearchOrganizationInformationViewModel(logger.Object, mapper, query.Object);
+
+            // Act
+            target.SearchCommand.Execute(search);
+
+            // Wait for tasks to complete.
+            Thread.Sleep(100);
+
+            // Assert
+            query.VerifyAll();
+
+            Assert.IsNotNull(this.searchResult);
+            Assert.IsNotNull(target.SearchCommand);
+            Assert.IsNotNull(target.Model);
+
+            Assert.IsTrue(search.LabelText.Contains(Resources.PhoneNumber) && search.LabelText.Contains(search.SearchText));
+        }
 
         #region Private Methods
 
         private static SearchOrganizationInformationViewModel GetViewModel()
         {
             Mock<ILog> logger = new Mock<ILog>();
-            logger.Setup(l => l.Error("Error!"));
-            logger.Setup(l => l.Warn("Warn!"));
-            logger.Setup(l => l.Info("Info!"));
-            logger.Setup(l => l.Debug("Debug!"));
 
             Organization org = new Organization();
 
@@ -137,11 +236,6 @@ namespace AltinnDesktopToolTest.ViewModel
             SearchOrganizationInformationViewModel target = new SearchOrganizationInformationViewModel(logger.Object, mapper, query.Object);
 
             return target;
-        }
-
-        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
-        {
-            this.searchResult = args.Item;
         }
 
         #endregion
