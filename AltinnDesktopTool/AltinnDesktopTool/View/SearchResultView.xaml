@@ -72,5 +72,6 @@
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
         <TextBlock FontWeight="Bold" HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{Binding Model.InfoText}"/>
+        <controls:ProgressRing IsActive="{Binding IsBusy}" />
     </Grid>
 </UserControl>

@@ -128,12 +128,6 @@
     <Compile Include="View\SearchResultView.xaml.cs">
       <DependentUpon>SearchResultView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Spinner\CircularProgressBar.xaml.cs">
-      <DependentUpon>CircularProgressBar.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\Spinner\LoadingPanel.xaml.cs">
-      <DependentUpon>LoadingPanel.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\Footer.xaml.cs">
       <DependentUpon>Footer.xaml</DependentUpon>
     </Compile>
@@ -169,14 +163,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SearchResultView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\Spinner\CircularProgressBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\Spinner\LoadingPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

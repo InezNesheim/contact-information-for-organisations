@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AltinnDesktopTool.Utils.PubSub;
 using RestClient.DTO;
 using log4net;
@@ -78,11 +77,12 @@ namespace AltinnDesktopTool.ViewModel
         public new SearchResultModel Model { get; set; }
 
         public RelayCommand<OrganizationModel> GetContactsCommand { get; set; }
-
+        
         public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
         {
             this.logger.Debug("Handling search result received event.");
             this.Model.ResultCollection = args.Item;
+            this.IsBusy = false;
         }
     }
 }
