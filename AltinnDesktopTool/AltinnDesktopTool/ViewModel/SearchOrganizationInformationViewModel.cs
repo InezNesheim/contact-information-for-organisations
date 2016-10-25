@@ -18,6 +18,9 @@ using RestClient.DTO;
 using RestClient.Resources;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+
+using AltinnDesktopTool.View;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -57,11 +60,17 @@ namespace AltinnDesktopTool.ViewModel
         {
             this.logger.Debug(this.GetType().FullName + " Searching for: " + obj.SearchText + ", " + obj.SearchType);
 
+            obj.LabelText = string.Empty;
+            obj.LabelBrush = Brushes.Green;
+
             // Removing all whitespaces from the search string.
             string searchText = new string(obj.SearchText.Where(c => !char.IsWhiteSpace(c)).ToArray());
 
             if (string.IsNullOrEmpty(searchText))
             {
+                obj.LabelText = Resources.SearchLabelEmptySearch;
+                obj.LabelBrush = Brushes.Red;
+
                 // Preventing an empty search. It takes a lot of time and the result is useless. 
                 return;
             }
@@ -78,16 +87,19 @@ namespace AltinnDesktopTool.ViewModel
                 {
                     case SearchType.EmailAddress:
                     {
+                        obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.EMail + " " + searchText);
                         organizations = await this.GetOrganizations("email", searchText);
                         break;
                     }
                     case SearchType.PhoneNumber:
                     {
+                        obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.PhoneNumber + " " + searchText);
                         organizations = await this.GetOrganizations("", searchText);
                         break;
                     }
                     case SearchType.OrganizationNumber:
                     {
+                        obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.OrganizationNumber + " " + searchText);
                         Organization organization = await this.GetOrganizations(searchText);
                         organizations.Add(organization);
                         break;
@@ -100,6 +112,9 @@ namespace AltinnDesktopTool.ViewModel
             }
             catch (RestClientException rex)
             {
+                obj.LabelText = Resources.SearchLabelErrorSearch;
+                obj.LabelBrush = Brushes.Red;
+
                 this.logger.Error("Exception from the RestClient", rex);
             }
 
@@ -146,7 +161,7 @@ namespace AltinnDesktopTool.ViewModel
         public void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> args)
         {
             this.logger.Debug("Handling environment changed received event.");
-            var newConfig = ProxyConfigHelper.GetConfig(args.Item);
+            IRestQueryConfig newConfig = ProxyConfigHelper.GetConfig(args.Item);
 
             this.query = new RestQuery(newConfig, this.logger);                                
             

@@ -70,6 +70,15 @@ namespace AltinnDesktopTool.View {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to e-post.
+        /// </summary>
+        public static string EMail {
+            get {
+                return ResourceManager.GetString("EMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Applikasjon for oppslag i kontaktinformasjon for virksomheter.
         /// </summary>
         public static string HeaderText {
@@ -153,6 +162,15 @@ namespace AltinnDesktopTool.View {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to organisasjonsnummer.
+        /// </summary>
+        public static string OrganizationNumber {
+            get {
+                return ResourceManager.GetString("OrganizationNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to E-post.
         /// </summary>
         public static string PersonalContactsGridColumnEmail {
@@ -198,11 +216,47 @@ namespace AltinnDesktopTool.View {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to mobilnummer.
+        /// </summary>
+        public static string PhoneNumber {
+            get {
+                return ResourceManager.GetString("PhoneNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Søk.
         /// </summary>
         public static string SearchButtonText {
             get {
                 return ResourceManager.GetString("SearchButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Det blir ikke utført noe søk når søketeksten er tom..
+        /// </summary>
+        public static string SearchLabelEmptySearch {
+            get {
+                return ResourceManager.GetString("SearchLabelEmptySearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Det oppstod en feil ved søk. Vennligst forsøk igjen..
+        /// </summary>
+        public static string SearchLabelErrorSearch {
+            get {
+                return ResourceManager.GetString("SearchLabelErrorSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Søker etter {0}.
+        /// </summary>
+        public static string SearchLabelResultat {
+            get {
+                return ResourceManager.GetString("SearchLabelResultat", resourceCulture);
             }
         }
     }
