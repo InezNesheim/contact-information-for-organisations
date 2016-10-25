@@ -18,7 +18,7 @@
         /// <summary>
         /// The search input is an email address.
         /// </summary>
-        EmailAddress = 2,
+        EMail = 2,
 
         /// <summary>
         /// The search input is an organization number.

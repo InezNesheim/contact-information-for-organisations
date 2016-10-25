@@ -120,6 +120,9 @@
   <data name="ApplicationName" xml:space="preserve">
     <value />
   </data>
+  <data name="EMail" xml:space="preserve">
+    <value>e-post</value>
+  </data>
   <data name="HeaderText" xml:space="preserve">
     <value>Applikasjon for oppslag i kontaktinformasjon for virksomheter</value>
   </data>
@@ -149,6 +152,9 @@ Kontakt Erlend Oksvoll (eok@brreg.no) ved spørsmål!</value>
   <data name="OrganizationGridColumnType" xml:space="preserve">
     <value>Type</value>
   </data>
+  <data name="OrganizationNumber" xml:space="preserve">
+    <value>organisasjonsnummer</value>
+  </data>
   <data name="PersonalContactsGridColumnEmail" xml:space="preserve">
     <value>E-post</value>
   </data>
@@ -164,7 +170,19 @@ Kontakt Erlend Oksvoll (eok@brreg.no) ved spørsmål!</value>
   <data name="PersonalContactsTitle" xml:space="preserve">
     <value>Personlige kontakter</value>
   </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>mobilnummer</value>
+  </data>
   <data name="SearchButtonText" xml:space="preserve">
     <value>Søk</value>
+  </data>
+  <data name="SearchLabelEmptySearch" xml:space="preserve">
+    <value>Det blir ikke utført noe søk når søketeksten er tom.</value>
+  </data>
+  <data name="SearchLabelErrorSearch" xml:space="preserve">
+    <value>Det oppstod en feil ved søk. Vennligst forsøk igjen.</value>
+  </data>
+  <data name="SearchLabelResultat" xml:space="preserve">
+    <value>Søker etter {0}</value>
   </data>
 </root>

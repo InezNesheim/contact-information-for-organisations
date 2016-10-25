@@ -12,10 +12,33 @@ namespace AltinnDesktopTool.Configuration
         private const string ConfigPath = "Configuration\\EnvironmentConfigurations.xml";
         private static List<EnvironmentConfiguration> configurationList;
 
+        private static EnvironmentConfiguration activeEnvironmentConfiguration;
+
         /// <summary>
         /// Returns the configuration settings
         /// </summary>
         public static List<EnvironmentConfiguration> EnvironmentConfigurations => configurationList ?? (configurationList = LoadEnvironmentConfigurations());
+
+        /// <summary>
+        /// Gets or sets active environment configuration. Default: prod
+        /// </summary>
+        public static EnvironmentConfiguration ActiveEnvironmentConfiguration
+        {
+            get
+            {
+                if (activeEnvironmentConfiguration == null)
+                {
+                    LoadEnvironmentConfigurations();
+                }
+
+                return activeEnvironmentConfiguration;
+            }
+
+            set
+            {
+                activeEnvironmentConfiguration = value;
+            }
+        }
 
         private static List<EnvironmentConfiguration> LoadEnvironmentConfigurations()
         {
@@ -31,7 +54,9 @@ namespace AltinnDesktopTool.Configuration
                                                                 ThumbPrint = config?.Element("thumbprint")?.Value,
                                                                 Timeout = ParseInt(config?.Element("timeout")?.Value)
                                                             };
-            return configs.ToList();
+            IEnumerable<EnvironmentConfiguration> environmentConfigurations = configs as IList<EnvironmentConfiguration> ?? configs.ToList();
+            activeEnvironmentConfiguration = environmentConfigurations.Single(c => c.Name == "PROD");
+            return environmentConfigurations.ToList();
         }
 
         private static int ParseInt(string value)

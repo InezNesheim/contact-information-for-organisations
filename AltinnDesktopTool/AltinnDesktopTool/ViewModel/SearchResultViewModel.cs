@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AltinnDesktopTool.Utils.PubSub;
 using RestClient.DTO;
 using log4net;
@@ -13,6 +12,9 @@ using GalaSoft.MvvmLight.Command;
 using AutoMapper;
 using RestClient;
 using RestClient.Resources;
+using System;
+
+using AltinnDesktopTool.Utils.Helpers;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -20,8 +22,8 @@ namespace AltinnDesktopTool.ViewModel
     {
         private readonly ILog logger;
         private readonly IMapper mapper;
-        private readonly IRestQuery restQuery;
         private HashSet<OrganizationModel> organizationModels = new HashSet<OrganizationModel>();
+        private IRestQuery restQuery;
 
         public new SearchResultModel Model { get; set; }
 
@@ -43,8 +45,9 @@ namespace AltinnDesktopTool.ViewModel
 
             this.Model = new SearchResultModel();
 
-            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent,
-                this.SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+            PubSub<bool>.RegisterEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
+            PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
 
 
             this.GetContactsCommand = new RelayCommand<OrganizationModel>(this.GetContactsCommandHandler);
@@ -53,6 +56,18 @@ namespace AltinnDesktopTool.ViewModel
             this.CopyToClipboardPlainTextCommand = new RelayCommand(this.CopyToClipboardPlainTextHandler);
             this.CopyToClipboardSemiColonSeparatedCommand = new RelayCommand(this.CopyToClipboardSemiColonSeparatedHandler);
             Expanded = true;
+        }
+
+        private void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> e)
+        {
+            this.logger.Debug("Handling environment changed received event.");            
+            this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
+        }
+
+        private void SearchStartedEventHandler(object sender, PubSubEventArgs<bool> e)
+        {
+            this.Model.IsBusy = true;
+            this.Model.ShowNoResultText = false;
         }
 
         private void GetContactsCommandHandler(OrganizationModel obj)
@@ -106,6 +121,12 @@ namespace AltinnDesktopTool.ViewModel
         {
             this.logger.Debug("Handling search result received event.");
             this.Model.ResultCollection = args.Item;
+            if (args.Item == null || args.Item.Count == 0) this.Model.ShowNoResultText = true;
+            else
+            {
+                this.Model.ShowNoResultText = false;
+            }
+            this.Model.IsBusy = false;
         }
 
         public void ItemCheckedHandler(OrganizationModel organizationModel)

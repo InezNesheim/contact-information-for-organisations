@@ -8,14 +8,9 @@
              xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
              xmlns:view="clr-namespace:AltinnDesktopTool.View"
-             xmlns:spinner="clr-namespace:AltinnDesktopTool.View.Spinner"
-             xmlns:converter="clr-namespace:AltinnDesktopTool.Utils.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="600"
              DataContext="{Binding SearchResultViewModel, Source={StaticResource ViewModelLocator}}">
-    <UserControl.Resources>
-        <converter:VisibilityToNullableBooleanConverter x:Key="VisibilityToNullableBooleanConverter"/>
-    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -98,7 +93,6 @@
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
         <TextBlock Grid.Row="0"  FontWeight="Bold" HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{Binding Model.InfoText}"/>
-
         <Border Grid.Row="1" Background="{DynamicResource AccentColorBrush2}" />
         <Button Grid.Row="1" Command="{Binding CopyToClipboardPlainTextCommand}" Width="50" Height="50" HorizontalAlignment="Right" Margin="0,15,40,15" Style="{DynamicResource AccentedSquareButtonStyle}" ToolTip="Copy to clipboard">
             <StackPanel Orientation="Horizontal">

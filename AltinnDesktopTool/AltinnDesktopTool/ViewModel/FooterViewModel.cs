@@ -1,84 +1,49 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Input;
+
+using AltinnDesktopTool.Configuration;
+using AltinnDesktopTool.Utils.PubSub;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
 namespace AltinnDesktopTool.ViewModel
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Windows;
-
-    using AltinnDesktopTool.Configuration;
-    using AltinnDesktopTool.Model;
-    using AltinnDesktopTool.Utils.Helpers;
-    using AltinnDesktopTool.Utils.PubSub;
-
-    using log4net;
-
-    using MahApps.Metro;
-
-    using Microsoft.Practices.ServiceLocation;
-
-    using RestClient;
-
     public class FooterViewModel : ViewModelBase
     {
-        private List<EnvironmentConfiguration> configItems;
-
-        private ObservableCollection<string> environmentNames = new ObservableCollection<string>();
-
-        private string selectedEnvironment;
-
-        public string SelectedEnvironment
-        {
-            get
-            {
-                return this.selectedEnvironment;
-            }
-            set
-            {
-                this.selectedEnvironment = value;
-            }
-        }
-
-        public ObservableCollection<string> EnvironmentNames
-        {
-            get
-            {
-                return this.environmentNames;
-            }
-            set
-            {
-                this.environmentNames = value;
-            }
-        }
-
-        public ICommand ChangeEnvironmentCommand { get; private set; }
+        /// <summary>
+        /// Environment changed event
+        /// </summary>
         public event PubSubEventHandler<string> EnvironmentChangedEventHandler;
 
+        public string SelectedEnvironment { get; set; }
 
+        public ObservableCollection<string> EnvironmentNames { get; set; } = new ObservableCollection<string>();
+
+        public ICommand ChangeEnvironmentCommand { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FooterViewModel"/> class.
+        /// ViewModel for Footer view
+        /// </summary>
         public FooterViewModel()
         {
-            ChangeEnvironmentCommand = new RelayCommand(ChangeEnvironmentHandler);
+            this.ChangeEnvironmentCommand = new RelayCommand(this.ChangeEnvironmentHandler);
 
-            configItems = EnvironmentConfigurationManager.EnvironmentConfigurations;
-            foreach (var environmentConfiguration in this.configItems)
-            {
-                EnvironmentNames.Add(environmentConfiguration.Name);
-            }
-
-            this.SelectedEnvironment = EnvironmentNames.Single(c => c == "PROD");
+            this.EnvironmentNames = new ObservableCollection<string>(EnvironmentConfigurationManager.EnvironmentConfigurations.Select(c => c.Name).ToList());
+            this.SelectedEnvironment = EnvironmentConfigurationManager.ActiveEnvironmentConfiguration.Name;
 
             PubSub<string>.AddEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
-
         }
 
+        /// <summary>
+        /// Event
+        /// </summary>
         public void ChangeEnvironmentHandler()
-        {            
-            PubSub<string>.RaiseEvent(EventNames.EnvironmentChangedEvent, this, new PubSubEventArgs<string>(this.selectedEnvironment));
+        {
+            EnvironmentConfigurationManager.ActiveEnvironmentConfiguration = EnvironmentConfigurationManager.EnvironmentConfigurations.Single(c => c.Name == this.SelectedEnvironment);
+            PubSub<string>.RaiseEvent(EventNames.EnvironmentChangedEvent, this, new PubSubEventArgs<string>(this.SelectedEnvironment));
         }
     }
 }

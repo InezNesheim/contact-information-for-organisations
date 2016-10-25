@@ -7,8 +7,8 @@ namespace AltinnDesktopTool.Utils.PubSub
     /// </summary>
     /// <typeparam name="T">The View Type</typeparam>
     /// <param name="sender">The Sender</param>
-    /// <param name="args">The Arguments</param>
-    public delegate void PubSubEventHandler<T>(object sender, PubSubEventArgs<T> args);
+    /// <param name="e">The Arguments</param>
+    public delegate void PubSubEventHandler<T>(object sender, PubSubEventArgs<T> e);
 
     /// <summary>
     /// Class to register and raise events between views

@@ -8,6 +8,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <viewModel:ViewModelLocator x:Key="ViewModelLocator" />
+            <BooleanToVisibilityConverter x:Key="BoolToVisability" />
 
             <ResourceDictionary.MergedDictionaries>
                 <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
@@ -21,4 +22,5 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
+    
 </Application>
