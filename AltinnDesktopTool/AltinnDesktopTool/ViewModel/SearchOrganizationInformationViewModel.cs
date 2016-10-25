@@ -33,6 +33,7 @@ namespace AltinnDesktopTool.ViewModel
         private readonly IMapper mapper;
         private IRestQuery query;
 
+        public event PubSubEventHandler<bool> SearchStartedEventHandler;
         public event PubSubEventHandler<ObservableCollection<OrganizationModel>> SearchResultRecievedEventHandler;
 
         public RelayCommand<SearchOrganizationInformationModel> SearchCommand { get; set; }
@@ -47,13 +48,14 @@ namespace AltinnDesktopTool.ViewModel
             this.SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(this.SearchCommandHandler);
 
             PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+            PubSub<bool>.AddEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
             PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
 
             // Test loggers
-            this.logger.Debug("Debug!");
-            this.logger.Error("Error!");
-            this.logger.Warn("Warn!");
-            this.logger.Info("Info!");
+            //this.logger.Debug("Debug!");
+            //this.logger.Error("Error!");
+            //this.logger.Warn("Warn!");
+            //this.logger.Info("Info!");
         }
 
         private async void SearchCommandHandler(SearchOrganizationInformationModel obj)
@@ -74,6 +76,8 @@ namespace AltinnDesktopTool.ViewModel
                 // Preventing an empty search. It takes a lot of time and the result is useless. 
                 return;
             }
+
+            PubSub<bool>.RaiseEvent(EventNames.SearchStartedEvent, this, new PubSubEventArgs<bool>(true));
 
             // After having removed the radio buttons where the user could select search type, search is always Smart, but the check
             // is kept in case the radio buttons comes back in a future release. For example as advanced search.
@@ -118,19 +122,12 @@ namespace AltinnDesktopTool.ViewModel
                 this.logger.Error("Exception from the RestClient", rex);
             }
 
-            Application.Current.Dispatcher.Invoke(
-                () =>
-                {
                     ObservableCollection<OrganizationModel> orgmodellist = organizations != null
                         ? this.mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations)
                         : new ObservableCollection<OrganizationModel>();
-                    PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
-                                                                               new PubSubEventArgs
-                                                                                   <ObservableCollection<OrganizationModel>>
-                                                                                   (
-                                                                                       orgmodellist));
                     
-                });
+            PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(
+                EventNames.SearchResultRecievedEvent, this, new PubSubEventArgs<ObservableCollection<OrganizationModel>>(orgmodellist));
         }
 
         private async Task<Organization> GetOrganizations(string searchText)
@@ -165,7 +162,6 @@ namespace AltinnDesktopTool.ViewModel
 
             this.query = new RestQuery(newConfig, this.logger);                                
             
-
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));
         }

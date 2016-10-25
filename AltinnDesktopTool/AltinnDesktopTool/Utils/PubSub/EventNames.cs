@@ -14,5 +14,11 @@
         /// Search event
         /// </summary>
         public static readonly string EnvironmentChangedEvent = "EnvironmentChangedEvent";
+
+        /// <summary>
+        /// Search event
+        /// </summary>
+        public static readonly string SearchStartedEvent = "SearchStartedEvent";
+
     }
 }

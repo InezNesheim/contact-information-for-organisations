@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading;
 
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.Helpers;
@@ -68,10 +69,10 @@ namespace AltinnDesktopToolTest.ViewModel
             // Arrange
             Mock<ILog> logger = new Mock<ILog>();
 
-            logger.Setup(l => l.Error("Error!"));
-            logger.Setup(l => l.Warn("Warn!"));
-            logger.Setup(l => l.Info("Info!"));
-            logger.Setup(l => l.Debug("Debug!"));
+            //logger.Setup(l => l.Error("Error!"));
+            //logger.Setup(l => l.Warn("Warn!"));
+            //logger.Setup(l => l.Info("Info!"));
+            //logger.Setup(l => l.Debug("Debug!"));
 
             Mock<IRestQuery> query = new Mock<IRestQuery>();
 
@@ -111,6 +112,8 @@ namespace AltinnDesktopToolTest.ViewModel
 
             target.SearchCommand.Execute(search);
 
+            // Let  the other thread catch up.. 
+            Thread.Sleep(1000);
             Assert.IsNotNull(this.searchResult);
         }
 
@@ -136,7 +139,7 @@ namespace AltinnDesktopToolTest.ViewModel
             return target;
         }
 
-        private void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
+        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
         {
             this.searchResult = args.Item;
         }
