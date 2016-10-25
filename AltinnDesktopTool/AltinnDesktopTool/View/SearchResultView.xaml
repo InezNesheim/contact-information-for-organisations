@@ -92,7 +92,8 @@
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
-        <TextBlock Grid.Row="0"  FontWeight="Bold" HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{Binding Model.InfoText}"/>
+        <TextBlock Grid.Row="0"  FontWeight="Bold" HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{Binding Model.InfoText}" Visibility="{Binding Path=Model.ShowNoResultText, Converter={StaticResource BoolToVisability}}"/>
+        <controls:ProgressRing IsActive="{Binding Model.IsBusy}" />
         <Border Grid.Row="1" Background="{DynamicResource AccentColorBrush2}" />
         <Button Grid.Row="1" Command="{Binding CopyToClipboardPlainTextCommand}" Width="50" Height="50" HorizontalAlignment="Right" Margin="0,15,40,15" Style="{DynamicResource AccentedSquareButtonStyle}" ToolTip="Copy to clipboard">
             <StackPanel Orientation="Horizontal">

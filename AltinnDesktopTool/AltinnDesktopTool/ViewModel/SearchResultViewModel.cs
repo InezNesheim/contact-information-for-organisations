@@ -34,7 +34,7 @@ namespace AltinnDesktopTool.ViewModel
         public ICommand CopyToClipboardSemiColonSeparatedCommand { get; private set; }
         public bool Expanded { get; set; }
 
-        public event PubSubEventHandler<string> EnvironmentChangedEventHandler;
+        //public event PubSubEventHandler<string> EnvironmentChangedEventHandler;
 
 
         public SearchResultViewModel(ILog logger, IMapper mapper, IRestQuery restQuery)
