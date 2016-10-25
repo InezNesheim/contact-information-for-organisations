@@ -157,10 +157,8 @@ namespace AltinnDesktopTool.ViewModel
 
         public void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> args)
         {
-            this.logger.Debug("Handling environment changed received event.");
-            IRestQueryConfig newConfig = ProxyConfigHelper.GetConfig(args.Item);
-
-            this.query = new RestQuery(newConfig, this.logger);
+            this.logger.Debug("Handling environment changed received event.");            
+            this.query = new RestQuery(ProxyConfigHelper.GetConfig(args.Item), this.logger);
 
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));

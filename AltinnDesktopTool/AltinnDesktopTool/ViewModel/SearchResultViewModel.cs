@@ -8,6 +8,9 @@ using GalaSoft.MvvmLight.Command;
 using AutoMapper;
 using RestClient;
 using RestClient.Resources;
+using System;
+
+using AltinnDesktopTool.Utils.Helpers;
 
 namespace AltinnDesktopTool.ViewModel
 {
@@ -15,7 +18,7 @@ namespace AltinnDesktopTool.ViewModel
     {
         private readonly ILog logger;
         private readonly IMapper mapper;
-        private readonly IRestQuery restQuery;
+        private IRestQuery restQuery;
 
         public SearchResultViewModel(ILog logger, IMapper mapper, IRestQuery restQuery)
         {
@@ -27,8 +30,15 @@ namespace AltinnDesktopTool.ViewModel
 
             PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
             PubSub<bool>.RegisterEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
+            PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
 
             this.GetContactsCommand = new RelayCommand<OrganizationModel>(this.GetContactsCommandHandler);
+        }
+
+        private void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> e)
+        {
+            this.logger.Debug("Handling environment changed received event.");            
+            this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
         }
 
         private void SearchStartedEventHandler(object sender, PubSubEventArgs<bool> e)
