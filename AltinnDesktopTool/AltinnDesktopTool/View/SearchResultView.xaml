@@ -70,7 +70,7 @@
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>
-        <TextBlock FontWeight="Bold" HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{Binding Model.InfoText}"/>
+        <TextBlock FontWeight="Bold" HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{Binding Model.InfoText}"  Visibility="{Binding Path=Model.ShowNoResultText, Converter={StaticResource BoolToVisability}}"/>
         <controls:ProgressRing IsActive="{Binding Model.IsBusy}" />
     </Grid>
 </UserControl>

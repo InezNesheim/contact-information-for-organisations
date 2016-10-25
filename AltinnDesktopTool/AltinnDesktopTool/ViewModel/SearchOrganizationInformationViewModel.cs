@@ -89,25 +89,25 @@ namespace AltinnDesktopTool.ViewModel
             {
                 switch (searchType)
                 {
-                    case SearchType.EmailAddress:
-                    {
+                    case SearchType.EMail:
+                        {
                         obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.EMail + " " + searchText);
-                        organizations = await this.GetOrganizations("email", searchText);
-                        break;
-                    }
+                            organizations = await this.GetOrganizations(searchType, searchText);
+                            break;
+                        }
                     case SearchType.PhoneNumber:
-                    {
+                        {
                         obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.PhoneNumber + " " + searchText);
-                        organizations = await this.GetOrganizations("", searchText);
-                        break;
-                    }
+                            organizations = await this.GetOrganizations(searchType, searchText);
+                            break;
+                        }
                     case SearchType.OrganizationNumber:
-                    {
+                        {
                         obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.OrganizationNumber + " " + searchText);
-                        Organization organization = await this.GetOrganizations(searchText);
-                        organizations.Add(organization);
-                        break;
-                    }
+                            Organization organization = await this.GetOrganizations(searchText);
+                            organizations.Add(organization);
+                            break;
+                        }
                     case SearchType.Smart:
                         break;
                     default:
@@ -122,10 +122,10 @@ namespace AltinnDesktopTool.ViewModel
                 this.logger.Error("Exception from the RestClient", rex);
             }
 
-                    ObservableCollection<OrganizationModel> orgmodellist = organizations != null
-                        ? this.mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations)
-                        : new ObservableCollection<OrganizationModel>();
-                    
+            ObservableCollection<OrganizationModel> orgmodellist = organizations != null
+                         ? this.mapper.Map<ICollection<Organization>, ObservableCollection<OrganizationModel>>(organizations)
+                         : new ObservableCollection<OrganizationModel>();
+
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(
                 EventNames.SearchResultRecievedEvent, this, new PubSubEventArgs<ObservableCollection<OrganizationModel>>(orgmodellist));
         }
@@ -135,16 +135,16 @@ namespace AltinnDesktopTool.ViewModel
             return await Task.Run(() => this.query.Get<Organization>(searchText));
         }
 
-        private async Task<IList<Organization>> GetOrganizations(string type, string searchText)
+        private async Task<IList<Organization>> GetOrganizations(SearchType type, string searchText)
         {
-            return await Task.Run(() => this.query.Get<Organization>(new KeyValuePair<string, string>(type, searchText)));
+            return await Task.Run(() => this.query.Get<Organization>(new KeyValuePair<string, string>(type.ToString(), searchText)));
         }
 
         private static SearchType IdentifySearchType(string searchText)
         {
             if (searchText.IndexOf("@", StringComparison.InvariantCulture) > 0)
             {
-                return SearchType.EmailAddress;
+                return SearchType.EMail;
             }
 
             if (searchText.Length == 9 && searchText.All(char.IsDigit))
@@ -160,8 +160,8 @@ namespace AltinnDesktopTool.ViewModel
             this.logger.Debug("Handling environment changed received event.");
             IRestQueryConfig newConfig = ProxyConfigHelper.GetConfig(args.Item);
 
-            this.query = new RestQuery(newConfig, this.logger);                                
-            
+            this.query = new RestQuery(newConfig, this.logger);
+
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
                new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));
         }

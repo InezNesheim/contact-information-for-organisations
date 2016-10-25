@@ -14,6 +14,7 @@ namespace AltinnDesktopTool.Model
         private string infoText = string.Empty;
 
         private bool initRun = true;
+        private bool showNoResultText;
 
         public bool EmptyMessageVisibility
         {
@@ -54,6 +55,16 @@ namespace AltinnDesktopTool.Model
                 {
                     this.initRun = false;
                 }
+            }
+        }
+
+        public bool ShowNoResultText
+        {
+            get { return this.showNoResultText; }
+            set
+            {
+                this.showNoResultText = value;
+                this.RaisePropertyChanged(() => this.ShowNoResultText);
             }
         }
     }
