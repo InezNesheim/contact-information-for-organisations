@@ -122,7 +122,7 @@ namespace AltinnDesktopToolTest.ViewModel
             target.SearchCommand.Execute(search);
             
             // Wait for tasks to complete.
-            Thread.Sleep(100);
+            Thread.Sleep(1000);
 
             // Asserts
             Assert.IsNotNull(this.searchResult);
@@ -163,7 +163,7 @@ namespace AltinnDesktopToolTest.ViewModel
             target.SearchCommand.Execute(search);
 
             // Wait for tasks to complete.
-            Thread.Sleep(100);
+            Thread.Sleep(1000);
 
             // Assert
             query.VerifyAll();
@@ -210,7 +210,7 @@ namespace AltinnDesktopToolTest.ViewModel
             target.SearchCommand.Execute(search);
 
             // Wait for tasks to complete.
-            Thread.Sleep(100);
+            Thread.Sleep(1000);
 
             // Assert
             query.VerifyAll();
