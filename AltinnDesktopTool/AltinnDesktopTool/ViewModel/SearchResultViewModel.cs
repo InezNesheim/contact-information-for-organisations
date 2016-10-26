@@ -67,7 +67,7 @@ namespace AltinnDesktopTool.ViewModel
         private void SearchStartedEventHandler(object sender, PubSubEventArgs<bool> e)
         {
             this.Model.IsBusy = true;
-            this.Model.ShowNoResultText = false;
+            this.Model.EmptyMessageVisibility = false;
         }
 
         private void GetContactsCommandHandler(OrganizationModel obj)
@@ -121,11 +121,6 @@ namespace AltinnDesktopTool.ViewModel
         {
             this.logger.Debug("Handling search result received event.");
             this.Model.ResultCollection = args.Item;
-            if (args.Item == null || args.Item.Count == 0) this.Model.ShowNoResultText = true;
-            else
-            {
-                this.Model.ShowNoResultText = false;
-            }
             this.Model.IsBusy = false;
         }
 
