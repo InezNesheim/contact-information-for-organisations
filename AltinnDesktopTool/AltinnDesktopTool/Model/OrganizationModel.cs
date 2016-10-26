@@ -37,11 +37,6 @@ namespace AltinnDesktopTool.Model
         public string PersonalContacts { get; set; }
 
         /// <summary>
-        /// Used to check whether an item is selected or not. Used to copy to clipboard.
-        /// </summary>
-        public bool IsSelected { get; set; }
-
-        /// <summary>
         /// Collection of Official Contacts, populate this to automatically update view
         /// </summary>
         public ObservableCollection<OfficialContactModel> OfficalContactsCollection

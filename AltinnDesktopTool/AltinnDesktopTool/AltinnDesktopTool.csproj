@@ -98,7 +98,6 @@
     <Compile Include="Model\PersonalContactModel.cs" />
     <Compile Include="Model\SearchResultModel.cs" />
     <Compile Include="Model\SearchType.cs" />
-    <Compile Include="Utils\Converters\VisibilityToNullableBooleanConverter.cs" />
     <Compile Include="Utils\Helpers\AutomapperHelper.cs" />
     <Compile Include="Utils\Helpers\ProxyConfigHelper.cs" />
     <Compile Include="Utils\PubSub\EventNames.cs" />
