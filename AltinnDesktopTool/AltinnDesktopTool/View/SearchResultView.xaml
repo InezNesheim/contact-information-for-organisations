@@ -20,7 +20,7 @@
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="OrganizationGrid" IsReadOnly="True" ItemsSource="{Binding Model.ResultCollection}" Margin="10" GridLinesVisibility="All" AlternationCount="2" AutoGenerateColumns="False" BorderThickness="0" SelectionMode="Single" SelectionUnit="FullRow">
+        <DataGrid x:Name="OrganizationGrid" IsReadOnly="True" ItemsSource="{Binding Model.ResultCollection}" Margin="10,10,10,20" GridLinesVisibility="All" AlternationCount="2" AutoGenerateColumns="False" BorderThickness="0" SelectionMode="Single" SelectionUnit="FullRow">
 
             <DataGrid.Columns>
 
@@ -31,7 +31,7 @@
                 <DataGridTemplateColumn Header="Velg">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox Name="checkBox" PreviewMouseDown="UIElement_OnPreviewMouseDown">
+                            <CheckBox Name="checkBox" PreviewMouseDown="UIElement_OnPreviewMouseDown" HorizontalAlignment="Center">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Checked">
                                         <i:InvokeCommandAction Command="{Binding DataContext.ItemChecked, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding}"/>
@@ -94,10 +94,21 @@
         </DataGrid>
         <TextBlock Grid.Row="0"  FontWeight="Bold" HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{Binding Model.InfoText}" Visibility="{Binding Path=Model.ShowNoResultText, Converter={StaticResource BoolToVisability}}"/>
         <controls:ProgressRing IsActive="{Binding Model.IsBusy}" />
-        <Border Grid.Row="1" Background="{DynamicResource AccentColorBrush2}" />
-        <Button Grid.Row="1" Command="{Binding CopyToClipboardPlainTextCommand}" Width="50" Height="50" HorizontalAlignment="Right" Margin="0,15,40,15" Style="{DynamicResource AccentedSquareButtonStyle}" ToolTip="Copy to clipboard">
+        <Border Grid.Row="1" Margin="0,0,0,0" Background="{DynamicResource AccentColorBrush2}" />
+        <Button Grid.Row="1" Command="{Binding CopyToClipboardSemiColonSeparatedCommand}" Width="50" Height="50" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,40,0" Style="{DynamicResource AccentedSquareButtonStyle}">
             <StackPanel Orientation="Horizontal">
-                <Rectangle x:Name="headerLogo" Width="40" Height="40"
+                <Rectangle x:Name="rectButtonCopyExcel" Width="40" Height="40" 
+               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                     Visual="{DynamicResource appbar_page_excel}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </StackPanel>
+        </Button>
+        <Button Grid.Row="1" Command="{Binding CopyToClipboardPlainTextCommand}" Width="50" Height="50" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,110,0" Style="{DynamicResource AccentedSquareButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle x:Name="rectButtonCopy" Width="40" Height="40" 
                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill"
