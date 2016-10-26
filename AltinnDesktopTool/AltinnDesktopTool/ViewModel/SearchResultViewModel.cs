@@ -31,7 +31,7 @@ namespace AltinnDesktopTool.ViewModel
         public RelayCommand<OrganizationModel> ItemChecked { get; set; }
         public RelayCommand<OrganizationModel> ItemUnchecked { get; set; }
         public ICommand CopyToClipboardPlainTextCommand { get; private set; }
-        public ICommand CopyToClipboardSemiColonSeparatedCommand { get; private set; }                
+        public ICommand CopyToClipboardExcelFormatCommand { get; private set; }
 
         public SearchResultViewModel(ILog logger, IMapper mapper, IRestQuery restQuery)
         {
@@ -45,17 +45,16 @@ namespace AltinnDesktopTool.ViewModel
             PubSub<bool>.RegisterEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
             PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
 
-
             this.GetContactsCommand = new RelayCommand<OrganizationModel>(this.GetContactsCommandHandler);
             this.ItemChecked = new RelayCommand<OrganizationModel>(this.ItemCheckedHandler);
             this.ItemUnchecked = new RelayCommand<OrganizationModel>(this.ItemUncheckedHandler);
             this.CopyToClipboardPlainTextCommand = new RelayCommand(this.CopyToClipboardPlainTextHandler);
-            this.CopyToClipboardSemiColonSeparatedCommand = new RelayCommand(this.CopyToClipboardSemiColonSeparatedHandler);            
+            this.CopyToClipboardExcelFormatCommand = new RelayCommand(this.CopyToClipboardExcelFormatHandler);
         }
 
         private void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> e)
         {
-            this.logger.Debug("Handling environment changed received event.");            
+            this.logger.Debug("Handling environment changed received event.");
             this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
             this.organizationModels = new HashSet<OrganizationModel>();
         }
@@ -110,9 +109,6 @@ namespace AltinnDesktopTool.ViewModel
                     personalContactDtoCollecton);
         }
 
-
-
-
         public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
         {
             this.logger.Debug("Handling search result received event.");
@@ -164,39 +160,29 @@ namespace AltinnDesktopTool.ViewModel
                         }
                     }
                 }
-
                 stringBuilder.Append(Environment.NewLine);
             }
 
             Clipboard.SetText(stringBuilder.ToString());
         }
 
-        public void CopyToClipboardSemiColonSeparatedHandler()
+        public void CopyToClipboardExcelFormatHandler()
         {
             StringBuilder stringBuilder = new StringBuilder();
             string separator = "\t";
 
             foreach (OrganizationModel organizationModel in this.organizationModels)
             {
-                stringBuilder.Append(organizationModel.Name + " " + organizationModel.Type + separator + organizationModel.OrganizationNumber + Environment.NewLine);
-
-                if (organizationModel.OfficalContactsCollection.Count > 0)
+                foreach (OfficialContactModel officialContactModel in organizationModel.OfficalContactsCollection)
                 {
-                    foreach (OfficialContactModel officialContactModel in organizationModel.OfficalContactsCollection)
-                    {
-                        if (!string.IsNullOrEmpty(officialContactModel.EmailAddress) && !string.IsNullOrEmpty(officialContactModel.MobileNumber))
-                        {
-                            string mobilNumber = officialContactModel.MobileNumber;
-                            if (officialContactModel.MobileNumber.StartsWith("0")) mobilNumber = "=" + "\"" + mobilNumber + "\"";
-
-                            stringBuilder.Append(officialContactModel.EmailAddress + separator + mobilNumber + Environment.NewLine);
-                        }
-                    }
+                    stringBuilder.Append(organizationModel.Name + " " + organizationModel.Type + separator + organizationModel.OrganizationNumber + separator);
+                    string mobilNumber = !string.IsNullOrEmpty(officialContactModel.MobileNumber) ? officialContactModel.MobileNumber : string.Empty;
+                    if (mobilNumber.StartsWith("0")) mobilNumber = "=" + "\"" + mobilNumber + "\"";
+                    stringBuilder.Append(officialContactModel.EmailAddress + separator + mobilNumber + Environment.NewLine);
                 }
 
                 stringBuilder.AppendLine();
             }
-
             Clipboard.SetText(stringBuilder.ToString());
         }
     }
