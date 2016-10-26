@@ -24,11 +24,11 @@
 
             <DataGrid.Columns>
 
-                <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnName}" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnOrganizationNumber}" Binding="{Binding OrganizationNumber}"/>
-                <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnType}" Binding="{Binding Type}"/>
+                <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnName}" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnOrganizationNumber}" Binding="{Binding OrganizationNumber}" Width="200"/>
+                <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnType}" Binding="{Binding Type}" Width="60"/>
 
-                <DataGridTemplateColumn Header="Velg">
+                <DataGridTemplateColumn Header="Velg" Width="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox Name="checkBox" PreviewMouseDown="UIElement_OnPreviewMouseDown" HorizontalAlignment="Center">
