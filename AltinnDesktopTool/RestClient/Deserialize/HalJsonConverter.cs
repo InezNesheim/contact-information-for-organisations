@@ -1,10 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestClient.DTO;
-using System;
 
 namespace RestClient.Deserialize
 {
+    /// <summary>
+    /// Converter class for HAL+Json format
+    /// </summary>
     public class HalJsonConverter : JsonConverter
     {
         /// <summary>
@@ -24,39 +30,42 @@ namespace RestClient.Deserialize
         /// <param name="writer">The JSON writer</param>
         /// <param name="value">Value to be written</param>
         /// <param name="serializer">The JSON serializer</param>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <exception cref="NotImplementedException">Not implemented</exception>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Reads haljsonResource from JSON
+        /// Reads HalJsonResource from JSON
         /// </summary>
         /// <param name="reader">The JSON reader</param>
-        /// <param name="objectType">The type (child of HalJsonReader)</param>
+        /// <param name="objectType">The type (child of HalJsonResource)</param>
         /// <param name="existingValue">The existing value</param>
         /// <param name="serializer">The JSON serializer</param>
         /// <returns>The read object</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var obj = JToken.ReadFrom(reader);
-            var ret = JsonConvert.DeserializeObject(obj.ToString(), objectType, new JsonConverter[] { });
+            JToken obj = JToken.ReadFrom(reader);
+            object ret = JsonConvert.DeserializeObject(obj.ToString(), objectType, new JsonConverter[] { });
 
             //TODO:: deserialize _embedded
 
             // Deserialize _links
-            if (obj["_links"] == null || !obj["_links"].HasValues) return ret;
-            using (var enumeratorEmbedded = ((JObject)obj["_links"]).GetEnumerator())
+            if (obj["_links"] == null || !obj["_links"].HasValues)
+            {
+                return ret;
+            }
+
+            using (IEnumerator<KeyValuePair<string, JToken>> enumeratorEmbedded = ((JObject)obj["_links"]).GetEnumerator())
             {
                 while (enumeratorEmbedded.MoveNext())
                 {
-                    var rel = enumeratorEmbedded.Current.Key;
+                    string rel = enumeratorEmbedded.Current.Key;
 
-                    foreach (var property in objectType.GetProperties())
+                    foreach (PropertyInfo property in objectType.GetProperties())
                     {
-                        var attribute = property.Name.Equals(rel, StringComparison.InvariantCultureIgnoreCase) ;
+                        bool attribute = property.Name.Equals(rel, StringComparison.InvariantCultureIgnoreCase);
 
                         if (attribute)
                         {
@@ -65,6 +74,7 @@ namespace RestClient.Deserialize
                     }
                 }
             }
+
             return ret;
         }
 

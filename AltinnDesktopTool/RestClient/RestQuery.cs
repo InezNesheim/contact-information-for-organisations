@@ -282,7 +282,7 @@ namespace RestClient
         private IRestQueryController GetControllerByType(Type t)
         {
             IRestQueryController controller = null;
-            foreach (var item in this.controllers)
+            foreach (RestQueryControllerAttribute item in this.controllers)
             {
                 if (item.SupportedType == t)
                 {
@@ -352,7 +352,7 @@ namespace RestClient
                 try
                 {
                     Type[] typearr = ass.GetTypes();
-                    foreach (var type in typearr)
+                    foreach (Type type in typearr)
                     {
                         if (!type.IsClass)
                         {

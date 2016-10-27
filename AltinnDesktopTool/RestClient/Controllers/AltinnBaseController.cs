@@ -17,14 +17,14 @@ namespace RestClient.Controllers
         public T Get<T>(string id) where T : HalJsonResource
         {
             string url = $"{this.Context.ControllerBaseAddress}/{id}?ForceEIAuthentication";
-            var result = this.Context.RestClient.Get(url);
+            string result = this.Context.RestClient.Get(url);
             return result != null ? Deserializer.DeserializeHalJsonResource<T>(result) : null;
         }
 
         public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
             string url = $"{this.Context.ControllerBaseAddress}?ForceEIAuthentication&{filter.Key}={filter.Value}";
-            var result = this.Context.RestClient.Get(url);
+            string result = this.Context.RestClient.Get(url);
             return result != null ? Deserializer.DeserializeHalJsonResourceList<T>(result) : null;
         }
 
@@ -32,7 +32,7 @@ namespace RestClient.Controllers
         {
             url += url.IndexOf("?",StringComparison.InvariantCulture) > 0 ? "&" : "?";
             url += "ForceEIAuthentication";
-            var result = this.Context.RestClient.Get(url);
+            string result = this.Context.RestClient.Get(url);
             return result != null ? Deserializer.DeserializeHalJsonResourceList<T>(result) : null;
         }
     }

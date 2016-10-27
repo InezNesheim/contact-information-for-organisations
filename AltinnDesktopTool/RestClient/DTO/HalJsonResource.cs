@@ -7,9 +7,12 @@ namespace RestClient.DTO
     /// </summary>
     public class HalJsonResource
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HalJsonResource"/> class
+        /// </summary>
         public HalJsonResource()
         {
-            var t = this.GetType();
+            Type t = this.GetType();
             if (t.IsDefined(typeof(PluralNameAttribute), false) == false)
             {
                 throw new InvalidOperationException("Missing Plural name attribute on HalJsonResource class!");
@@ -23,8 +26,15 @@ namespace RestClient.DTO
     [AttributeUsage(AttributeTargets.Class)]
     public class PluralNameAttribute : Attribute
     {
+        /// <summary>
+        /// Gets the plural name
+        /// </summary>
         public readonly string PluralName;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PluralNameAttribute"/> class
+        /// </summary>
+        /// <param name="pluralName">Plural name to be set</param>
         public PluralNameAttribute(string pluralName)
         {
             this.PluralName = pluralName;

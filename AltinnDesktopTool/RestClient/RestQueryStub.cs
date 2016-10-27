@@ -36,7 +36,7 @@ namespace RestClient
         /// <returns></returns>
         public T Get<T>(string id) where T : HalJsonResource
         {
-            var org = Activator.CreateInstance<T>();
+            T org = Activator.CreateInstance<T>();
 
             switch (id)
             {
@@ -66,10 +66,10 @@ namespace RestClient
         /// <returns>List</returns>
         public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
-            var org1 = Activator.CreateInstance<T>();
-            var org2 = Activator.CreateInstance<T>();
-            var org3 = Activator.CreateInstance<T>();
-            var org4 = Activator.CreateInstance<T>();
+            T org1 = Activator.CreateInstance<T>();
+            T org2 = Activator.CreateInstance<T>();
+            T org3 = Activator.CreateInstance<T>();
+            T org4 = Activator.CreateInstance<T>();
 
             CreateOrg1(org1);
             CreateOrg2(org2);
@@ -84,11 +84,11 @@ namespace RestClient
 
         public IList<T> GetByLink<T>(string url) where T: HalJsonResource
         {
-            var contact1 = Activator.CreateInstance<T>();
-            var contact2 = Activator.CreateInstance<T>();
-            var contact3 = Activator.CreateInstance<T>();
+            T contact1 = Activator.CreateInstance<T>();
+            T contact2 = Activator.CreateInstance<T>();
+            T contact3 = Activator.CreateInstance<T>();
 
-            var list = new List<T>()
+            List<T> list = new List<T>()
             {
                 contact1, contact2, contact3
             };
