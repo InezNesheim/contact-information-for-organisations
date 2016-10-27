@@ -182,7 +182,5 @@ namespace AltinnDesktopTool.ViewModel
             }
             Clipboard.SetText(stringBuilder.ToString());
         }
-
-        
     }
 }
