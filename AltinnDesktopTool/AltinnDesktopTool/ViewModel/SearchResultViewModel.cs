@@ -22,11 +22,10 @@ namespace AltinnDesktopTool.ViewModel
     {
         private readonly ILog logger;
         private readonly IMapper mapper;
-        private HashSet<OrganizationModel> organizationModels = new HashSet<OrganizationModel>();
+        private List<OrganizationModel> organizationModels = new List<OrganizationModel>();
         private IRestQuery restQuery;
 
         public new SearchResultModel Model { get; set; }
-
         public RelayCommand<OrganizationModel> GetContactsCommand { get; set; }
         public RelayCommand<OrganizationModel> ItemChecked { get; set; }
         public RelayCommand<OrganizationModel> ItemUnchecked { get; set; }
@@ -51,12 +50,11 @@ namespace AltinnDesktopTool.ViewModel
             this.CopyToClipboardPlainTextCommand = new RelayCommand(this.CopyToClipboardPlainTextHandler);
             this.CopyToClipboardExcelFormatCommand = new RelayCommand(this.CopyToClipboardExcelFormatHandler);
         }
-
         private void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> e)
         {
             this.logger.Debug("Handling environment changed received event.");
             this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
-            this.organizationModels = new HashSet<OrganizationModel>();
+            this.organizationModels = new List<OrganizationModel>();
         }
 
         private void SearchStartedEventHandler(object sender, PubSubEventArgs<bool> e)
@@ -113,7 +111,7 @@ namespace AltinnDesktopTool.ViewModel
         {
             this.logger.Debug("Handling search result received event.");
             this.Model.ResultCollection = args.Item;
-            this.organizationModels = new HashSet<OrganizationModel>();
+            this.organizationModels = new List<OrganizationModel>();
             this.Model.IsBusy = false;
         }
 
@@ -162,7 +160,6 @@ namespace AltinnDesktopTool.ViewModel
                 }
                 stringBuilder.Append(Environment.NewLine);
             }
-
             Clipboard.SetText(stringBuilder.ToString());
         }
 
@@ -185,5 +182,7 @@ namespace AltinnDesktopTool.ViewModel
             }
             Clipboard.SetText(stringBuilder.ToString());
         }
+
+        
     }
 }

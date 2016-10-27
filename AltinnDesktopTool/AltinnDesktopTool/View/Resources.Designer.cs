@@ -259,5 +259,14 @@ namespace AltinnDesktopTool.View {
                 return ResourceManager.GetString("SearchLabelResultat", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Velg alle.
+        /// </summary>
+        public static string SelectAll {
+            get {
+                return ResourceManager.GetString("SelectAll", resourceCulture);
+            }
+        }
     }
 }
