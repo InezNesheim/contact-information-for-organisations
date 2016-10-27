@@ -1,23 +1,27 @@
-﻿using System.Collections.Generic;
-using AltinnDesktopTool.Utils.PubSub;
-using RestClient.DTO;
-using log4net;
-using AltinnDesktopTool.Model;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
 
-using GalaSoft.MvvmLight.Command;
-using AutoMapper;
-using RestClient;
-using RestClient.Resources;
-using System;
-
+using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.Helpers;
+using AltinnDesktopTool.Utils.PubSub;
+
+using AutoMapper;
+using GalaSoft.MvvmLight.Command;
+using log4net;
+
+using RestClient;
+using RestClient.DTO;
+using RestClient.Resources;
 
 namespace AltinnDesktopTool.ViewModel
 {
+    /// <summary>
+    /// ViewModel for SearchResult view
+    /// </summary>
     public sealed class SearchResultViewModel : AltinnViewModelBase
     {
         private readonly ILog logger;
@@ -32,6 +36,12 @@ namespace AltinnDesktopTool.ViewModel
         public ICommand CopyToClipboardPlainTextCommand { get; private set; }
         public ICommand CopyToClipboardExcelFormatCommand { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the SearchResultViewModel class.
+        /// </summary>
+        /// <param name="logger">The logger to be used by the instance.</param>
+        /// <param name="mapper">The AutoMapper instance to use by the view model.</param>
+        /// <param name="restQuery">The query proxy to use in the actual context.</param>
         public SearchResultViewModel(ILog logger, IMapper mapper, IRestQuery restQuery)
         {
             this.logger = logger;

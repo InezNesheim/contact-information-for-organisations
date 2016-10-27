@@ -17,8 +17,7 @@ namespace AltinnDesktopTool.ViewModel
     {
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
-        // ReSharper disable once EmptyConstructor
+        /// </summary>        
         public MainViewModel()
         {            
             PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);

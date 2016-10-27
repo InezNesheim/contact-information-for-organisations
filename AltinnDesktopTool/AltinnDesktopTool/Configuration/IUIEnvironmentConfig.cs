@@ -1,19 +1,17 @@
 ﻿namespace AltinnDesktopTool.Configuration
 {
-    //TODO: define UI settings
-
     /// <summary>
     /// Configuration for User Interface
     /// </summary>
     public interface IUiEnvironmentConfig
     {
         /// <summary>
-        /// Name of environment
+        /// Gets or sets the Name of environment
         /// </summary>
         string Name { get; set; }
 
         /// <summary>
-        /// Name of theme selected for this enviorenment
+        /// Gets or sets the Name of theme selected for this environment
         /// </summary>
         string ThemeName { get; set; }
     }

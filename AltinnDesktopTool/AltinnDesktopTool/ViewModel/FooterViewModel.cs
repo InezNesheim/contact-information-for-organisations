@@ -10,19 +10,11 @@ using GalaSoft.MvvmLight.Command;
 
 namespace AltinnDesktopTool.ViewModel
 {
+    /// <summary>
+    /// ViewModel class, container for Environment change related components
+    /// </summary>
     public class FooterViewModel : ViewModelBase
-    {
-        /// <summary>
-        /// Environment changed event
-        /// </summary>
-        public event PubSubEventHandler<string> EnvironmentChangedEventHandler;
-
-        public string SelectedEnvironment { get; set; }
-
-        public ObservableCollection<string> EnvironmentNames { get; set; } = new ObservableCollection<string>();
-
-        public ICommand ChangeEnvironmentCommand { get; private set; }
-
+    {                
         /// <summary>
         /// Initializes a new instance of the <see cref="FooterViewModel"/> class.
         /// ViewModel for Footer view
@@ -38,7 +30,27 @@ namespace AltinnDesktopTool.ViewModel
         }
 
         /// <summary>
-        /// Event
+        /// Environment changed event
+        /// </summary>
+        public event PubSubEventHandler<string> EnvironmentChangedEventHandler;
+
+        /// <summary>
+        /// Gets or sets the Selected environment name
+        /// </summary>
+        public string SelectedEnvironment { get; set; }
+
+        /// <summary>
+        /// Gets or sets the available environment names
+        /// </summary>
+        public ObservableCollection<string> EnvironmentNames { get; set; }
+
+        /// <summary>
+        /// Gets a command which will define a behavior on Change environment event
+        /// </summary>
+        public ICommand ChangeEnvironmentCommand { get; private set; }        
+
+        /// <summary>
+        /// Event handler for the ChangeEnvironment command. Sets the active environment configuration and raises EnvironmentChanged event.
         /// </summary>
         public void ChangeEnvironmentHandler()
         {

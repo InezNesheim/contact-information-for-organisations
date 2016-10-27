@@ -14,24 +14,12 @@ namespace AltinnDesktopTool.Model
     /// </summary>
     public class ModelBase : ObservableObject, INotifyDataErrorInfo
     {
-        public bool IsBusy
-        {
-            get { return this.isBusy; }
-            set
-            {
-                this.isBusy = value;
-                this.RaisePropertyChanged(() => this.IsBusy);
-            }
-        }
-
         /// <summary>
         /// Dictionary of ValidationErrors
         /// </summary>
-        public readonly Dictionary<string, ICollection<string>> ValidationErrors = new Dictionary<string, ICollection<string>>();
+        public readonly Dictionary<string, ICollection<string>> ValidationErrors = new Dictionary<string, ICollection<string>>();        
 
         private bool isBusy;
-
-        #region INotifyDataErrorInfo members
 
         /// <summary>
         /// Event handler for change of errors.
@@ -43,7 +31,22 @@ namespace AltinnDesktopTool.Model
         /// </summary>
         public bool HasErrors => this.ValidationErrors.Count > 0;
 
-        #endregion
+        /// <summary>
+        /// Gets or sets a value indicating whether there is a background operation running
+        /// </summary>
+        public bool IsBusy
+        {
+            get
+            {
+                return this.isBusy;
+            }
+
+            set
+            {
+                this.isBusy = value;
+                this.RaisePropertyChanged(() => this.IsBusy);
+            }
+        }
 
         /// <summary>
         /// Get the error messages for a property

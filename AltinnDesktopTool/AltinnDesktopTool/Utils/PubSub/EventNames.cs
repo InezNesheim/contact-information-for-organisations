@@ -19,6 +19,5 @@
         /// Search event
         /// </summary>
         public static readonly string SearchStartedEvent = "SearchStartedEvent";
-
     }
 }

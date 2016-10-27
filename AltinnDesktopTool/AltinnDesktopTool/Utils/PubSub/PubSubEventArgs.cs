@@ -23,6 +23,5 @@ namespace AltinnDesktopTool.Utils.PubSub
         /// Gets or sets the argument item
         /// </summary>
         public T Item { get; set; }
-
     }
 }

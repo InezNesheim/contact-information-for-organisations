@@ -10,6 +10,9 @@ namespace AltinnDesktopTool.View
     /// </summary>
     public partial class SearchResultView
     {
+        /// <summary>
+        /// Initializes a new instance of the SearchResultView class.
+        /// </summary>
         public SearchResultView()
         {
             this.InitializeComponent();

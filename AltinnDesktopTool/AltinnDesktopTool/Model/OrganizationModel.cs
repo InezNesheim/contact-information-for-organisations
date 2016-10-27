@@ -12,36 +12,40 @@ namespace AltinnDesktopTool.Model
         private ObservableCollection<PersonalContactModel> personalContactsCollection;
 
         /// <summary>
-        /// Organization Name (as mapped from DTO)
+        /// Gets or sets the Organization Name (as mapped from DTO)
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Organization Number (as mapped from DTO)
+        /// Gets or sets the Organization Number (as mapped from DTO)
         /// </summary>
         public string OrganizationNumber { get; set; }
 
         /// <summary>
-        /// Organization Type (AS, ANS etc) (as mapped from DTO)
+        /// Gets or sets the Organization Type (AS, ANS etc) (as mapped from DTO)
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// Link to official contacts (as mapped from DTO)
+        /// Gets or sets the Link to official contacts (as mapped from DTO)
         /// </summary>
         public string OfficialContacts { get; set; }
 
         /// <summary>
-        /// Link to personal contacts (as mapped from DTO)
+        /// Gets or sets the Link to personal contacts (as mapped from DTO)
         /// </summary>
         public string PersonalContacts { get; set; }
 
         /// <summary>
-        /// Collection of Official Contacts, populate this to automatically update view
+        /// Gets or sets the Collection of Official Contacts, populate this to automatically update view
         /// </summary>
         public ObservableCollection<OfficialContactModel> OfficalContactsCollection
         {
-            get { return this.officalContactsCollection; }
+            get
+            {
+                return this.officalContactsCollection;
+            }
+
             set
             {
                 this.officalContactsCollection = value;
@@ -50,21 +54,20 @@ namespace AltinnDesktopTool.Model
         }
 
         /// <summary>
-        /// Collection of Personal Contacts, populate this to automatically update view
+        /// Gets or sets the Collection of Personal Contacts, populate this to automatically update view
         /// </summary>
         public ObservableCollection<PersonalContactModel> PersonalContactsCollection
         {
-            get { return this.personalContactsCollection; }
+            get
+            {
+                return this.personalContactsCollection;
+            }
+
             set
             {
                 this.personalContactsCollection = value;
                 this.RaisePropertyChanged();
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0} {2} ({1})", this.Name, this.OrganizationNumber, this.Type);
         }
     }
 }

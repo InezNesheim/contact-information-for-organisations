@@ -8,7 +8,9 @@ namespace AltinnDesktopTool.View
     /// </summary>
     public partial class MainWindow
     {
-
+        /// <summary>
+        /// Initializes a new instance of the MainWindow class.
+        /// </summary>
         public MainWindow()
         {
             this.InitializeComponent();

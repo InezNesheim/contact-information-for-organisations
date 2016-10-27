@@ -5,6 +5,9 @@
     /// </summary>
     public partial class TopView
     {
+        /// <summary>
+        /// Initializes a new instance of the TopView class.
+        /// </summary>
         public TopView()
         {
             this.InitializeComponent();
