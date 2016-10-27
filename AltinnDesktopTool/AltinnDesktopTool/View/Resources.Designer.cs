@@ -70,6 +70,24 @@ namespace AltinnDesktopTool.View {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kopier tekst.
+        /// </summary>
+        public static string CopyPlainTextTooltip {
+            get {
+                return ResourceManager.GetString("CopyPlainTextTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kopier til excel.
+        /// </summary>
+        public static string CopyToExcelTooltip {
+            get {
+                return ResourceManager.GetString("CopyToExcelTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to e-post.
         /// </summary>
         public static string EMail {
@@ -257,6 +275,15 @@ namespace AltinnDesktopTool.View {
         public static string SearchLabelResultat {
             get {
                 return ResourceManager.GetString("SearchLabelResultat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Velg alle.
+        /// </summary>
+        public static string SelectAll {
+            get {
+                return ResourceManager.GetString("SelectAll", resourceCulture);
             }
         }
     }

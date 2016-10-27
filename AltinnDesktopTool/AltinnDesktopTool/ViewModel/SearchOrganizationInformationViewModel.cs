@@ -81,8 +81,7 @@ namespace AltinnDesktopTool.ViewModel
             this.logger.Debug("Handling environment changed received event.");
             this.query = new RestQuery(ProxyConfigHelper.GetConfig(args.Item), this.logger);
 
-            PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(EventNames.SearchResultRecievedEvent, this,
-               new PubSubEventArgs<ObservableCollection<OrganizationModel>>(new ObservableCollection<OrganizationModel>()));
+            this.SearchCommand.Execute(this.Model);
         }
 
         private static SearchType IdentifySearchType(string searchText)
