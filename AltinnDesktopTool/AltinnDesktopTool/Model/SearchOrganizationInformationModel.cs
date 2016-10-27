@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Windows.Media;
 
+using AltinnDesktopTool.Properties;
+
 namespace AltinnDesktopTool.Model
 {
-    using AltinnDesktopTool.Properties;
-
     /// <summary>
     /// This model holds the data required to perform a search and details about the label that displays the result of the search.
     /// </summary>
@@ -19,7 +19,11 @@ namespace AltinnDesktopTool.Model
         /// </summary>
         public string LabelText
         {
-            get { return this.labelText; }
+            get
+            {
+                return this.labelText; 
+            }
+
             set
             {
                 this.labelText = value;
@@ -32,7 +36,11 @@ namespace AltinnDesktopTool.Model
         /// </summary>
         public Brush LabelBrush
         {
-            get { return this.labelBrush; }
+            get
+            {
+                return this.labelBrush;
+            }
+
             set
             {
                 this.labelBrush = value;
@@ -41,23 +49,26 @@ namespace AltinnDesktopTool.Model
         }
 
         /// <summary>
-        /// The Search Text as entered by the user
+        /// Gets or sets the search text.
         /// </summary>
         [Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "SearchOrganizationInformationModel_SearchText_You_must_enter_a_string_")]
         public string SearchText
         {
-            get { return this.searchText; }
+            get
+            {
+                return this.searchText; 
+            }
+
             set
             {
                 this.searchText = value;
                 this.RaisePropertyChanged(() => this.SearchText);
-                //this.RaisePropertyChanged("SearchText");
                 this.ValidateModelProperty(value, "SearchText");
             }
         }
 
         /// <summary>
-        /// Indicates type of input
+        /// Gets or sets the search type indicating what the user is searching for.
         /// </summary>
         public SearchType SearchType { get; set; }
     }

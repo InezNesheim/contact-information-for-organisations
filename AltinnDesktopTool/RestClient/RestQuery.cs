@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+
 using log4net;
+
 using RestClient.Controllers;
 using RestClient.DTO;
-using System.Reflection;
 using RestClient.Resources;
 
 namespace RestClient
 {
-
     /// <summary>
     /// The Rest Query class implements IRestQuery. 
     /// </summary>
@@ -16,7 +17,6 @@ namespace RestClient
     /// It is a generic implementation passing queries to IRestQueryControllers to perform query by interpreting 
     /// the url and pass this to the server using the AltinnRestClient.
     /// The Controllers are identified by the  [RestQueryController] attribute and must implement IRestQueryController.
-    /// 
     /// Exception Handling:
     /// RestQuery will catch any Exception from Controller, log them and rethrow.
     /// All Exceptions thrown by RestQuery are logged, meaning the caller does not need to log exceptions from RestQuery.
@@ -25,20 +25,62 @@ namespace RestClient
     public class RestQuery : IRestQuery
     {
         #region private declarations
+
         private const string AuthenticateUri = "organizations?ForceEIAuthentication";
         private const string ControllerExceptionText = "The controller threw an Exception";
         private const string ControllerNotFoundForTypeException = "No Controller for type {0}";
         private const string ControllerNotFoundForUrl = "No Controller for url {0}";
-        private IRestQueryConfig restQueryConfig;
+
         private readonly ILog log;
         private readonly AltinnRestClient restClient;
-        private bool isAuthenticated;
         private readonly List<RestQueryControllerAttribute> controllers = new List<RestQueryControllerAttribute>();
-        #endregion
-        
 
+        private bool isAuthenticated;
+        private IRestQueryConfig restQueryConfig;
+
+        #endregion
+
+        #region constructors
+
+        /// <summary>
+        /// Initializes a new instance of the RestQuery class by injecting the configuration and log.
+        /// </summary>
+        /// <param name="restQueryConfig">The configuration needed for connecting</param>
+        /// <param name="log">Optional log4net log instance</param>
+        /// <remarks>
+        /// The configuration is mandatory, whereas the log is not not mandatory.
+        /// </remarks>
+        public RestQuery(IRestQueryConfig restQueryConfig, ILog log = null)
+        {
+            this.restQueryConfig = restQueryConfig;
+            this.log = log;
+            this.restClient = new AltinnRestClient(restQueryConfig.BaseAddress, restQueryConfig.ApiKey, restQueryConfig.ThumbPrint);
+
+            if (restQueryConfig.Timeout > 0)
+            {
+                this.restClient.Timeout = restQueryConfig.Timeout;
+            }
+
+            this.InitControllers();
+        }
+
+        #endregion
+
+        #region Private enums
+
+        private enum LogLevel
+        {
+            Debug = 0,
+            Error,
+            Warning,
+            Info,
+            Fatal,
+        }
+
+        #endregion
 
         #region public properties
+
         /// <summary>
         /// Gets or sets the configuration as required by the RestQuery.
         /// </summary>
@@ -51,60 +93,47 @@ namespace RestClient
             {
                 return this.restQueryConfig;
             }
+
             set
             {
                 this.restQueryConfig = value;
                 this.restClient.BaseAddress = this.restQueryConfig.BaseAddress;
                 this.restClient.ApiKey = this.restQueryConfig.ApiKey;
                 this.restClient.Thumbprint = this.restQueryConfig.ThumbPrint;
+
                 if (this.restQueryConfig.Timeout > 0)
+                {
                     this.restClient.Timeout = this.restQueryConfig.Timeout;
+                }
             }
         }
+
         #endregion
-
-
-
-        #region constructors
-        /// <summary>
-        /// Constructs the RestQuery by injecting the configuration and log.
-        /// </summary>
-        /// <param name="restQueryConfig">The configuration needed for connecting</param>
-        /// <param name="log">Optional log4net log instance</param>
-        /// <remarks>
-        /// The configuration is mandatory, whereas the log is not not mandatory.
-        /// </remarks>
-        public RestQuery(IRestQueryConfig restQueryConfig, ILog log = null)
-        {
-            this.restQueryConfig = restQueryConfig;
-            this.log = log;
-            this.restClient = new AltinnRestClient(restQueryConfig.BaseAddress, restQueryConfig.ApiKey, restQueryConfig.ThumbPrint);
-            if (restQueryConfig.Timeout > 0)
-                this.restClient.Timeout = restQueryConfig.Timeout;
-            this.InitControllers();
-        }
-        #endregion
-
-
 
         #region IRestQuery implementation
+
         /// <summary>
         /// Fetches an object by providing and id.
         /// </summary>
+        /// <typeparam name="T">The object type being retrieved.</typeparam>
+        /// <param name="id">The id of the resource to retrieve.</param>
         /// <exception cref="RestClientException">
-        /// Any Exception from the controller is logged and rethrown as RestClientException with InnerException being the caught Exception.
+        /// Any Exception from the controller is logged and thrown as RestClientException with InnerException being the caught Exception.
         /// A RestClientException is also thrown when the controller could not be found supporting type T.
         /// </exception>
+        /// <returns>An object of the type of resource that was requested.</returns>
         public T Get<T>(string id) where T : HalJsonResource
         {
             this.EnsureAuthenticated();
-            var controller = this.GetControllerByType(typeof(T));
+            IRestQueryController controller = this.GetControllerByType(typeof(T));
+
             if (controller == null)
             {
-                var err = string.Format(ControllerNotFoundForTypeException, typeof(T));
+                string err = string.Format(ControllerNotFoundForTypeException, typeof(T));
                 this.Log(err, LogLevel.Error);
                 throw new RestClientException(err);
             }
+
             try
             {
                 return controller.Get<T>(id);
@@ -112,31 +141,39 @@ namespace RestClient
             catch (Exception ex)
             {
                 this.Log(ControllerExceptionText, LogLevel.Error, ex);
+
                 if (ex is RestClientException)
+                {
                     throw;
-                else
-                    throw new RestClientException(ControllerExceptionText, ex);
+                }
+
+                throw new RestClientException(ControllerExceptionText, ex);
             }
         }
-
 
         /// <summary>
         /// Search for a list of objects by filtering on a given name value pair.
         /// </summary>
+        /// <typeparam name="T">The object type being retrieved.</typeparam>
+        /// <param name="filter">The name and the value of the search parameter to be used in the search.</param>
         /// <exception cref="RestClientException">
-        /// Any Exception from the controller is logged and rethrown as RestClientException with InnerException being the caught Exception.
+        /// Any Exception from the controller is logged and thrown as RestClientException with InnerException being the caught Exception.
         /// A RestClientException is also thrown when the controller could not be found supporting type T.
         /// </exception>
+        /// <returns>A list of the identified elements matching the search criteria.</returns>
         public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
             this.EnsureAuthenticated();
-            var controller = this.GetControllerByType(typeof(T));
+            IRestQueryController controller = this.GetControllerByType(typeof(T));
+
             if (controller == null)
             {
-                var err = string.Format(ControllerNotFoundForTypeException, typeof(T));
+                string err = string.Format(ControllerNotFoundForTypeException, typeof(T));
                 this.Log(err, LogLevel.Error);
+
                 throw new RestClientException(err);
             }
+
             try
             {
                 return controller.Get<T>(filter);
@@ -144,31 +181,38 @@ namespace RestClient
             catch (Exception ex)
             {
                 this.Log(ControllerExceptionText, LogLevel.Error, ex);
+
                 if (ex is RestClientException)
+                {
                     throw;
-                else
-                    throw new RestClientException(ControllerExceptionText, ex);
+                }
+
+                throw new RestClientException(ControllerExceptionText, ex);
             }
         }
-
 
         /// <summary>
         /// Fetches a list of objects by a given link (url).
         /// </summary>
+        /// <typeparam name="T">The type that is expected to be found at the url.</typeparam>
+        /// <param name="url">The url to the specific resource to get.</param>
         /// <exception cref="RestClientException">
-        /// Any Exception from the controller is logged and rethrown as RestClientException with InnerException being the caught Exception.
+        /// Any Exception from the controller is logged and thrown as RestClientException with InnerException being the caught Exception.
         /// A RestClientException is also thrown when the controller could not be found supporting type T.
         /// </exception>
+        /// <returns>A list of elements of the specified type.</returns>
         public IList<T> GetByLink<T>(string url) where T : HalJsonResource
         {
             this.EnsureAuthenticated();
-            var controller = this.GetControllerByUrl(url);
+            IRestQueryController controller = this.GetControllerByUrl(url);
+
             if (controller == null)
             {
-                var err = string.Format(ControllerNotFoundForUrl, url);
+                string err = string.Format(ControllerNotFoundForUrl, url);
                 this.Log(err, LogLevel.Error);
                 throw new RestClientException(err);
             }
+
             try
             {
                 return controller.GetByLink<T>(url);
@@ -176,15 +220,17 @@ namespace RestClient
             catch (Exception ex)
             {
                 this.Log(ControllerExceptionText, LogLevel.Error, ex);
+
                 if (ex is RestClientException)
+                {
                     throw;
-                else
-                    throw new RestClientException(ControllerExceptionText, ex);
+                }
+
+                throw new RestClientException(ControllerExceptionText, ex);
             }
         }
+
         #endregion
-
-
 
         #region private implementation
 
@@ -196,7 +242,11 @@ namespace RestClient
         /// </remarks>
         private void EnsureAuthenticated()
         {
-            if (this.isAuthenticated) return;
+            if (this.isAuthenticated)
+            {
+                return;
+            }
+
             try
             {
                 this.restClient.Get(AuthenticateUri);
@@ -205,14 +255,15 @@ namespace RestClient
             catch
             {
             }
+
             this.isAuthenticated = true;
         }
 
         /// <summary>
-        /// Generates a controller context to be passed to the controller
+        /// Generates a controller context to be passed to the controller.
         /// </summary>
-        /// <param name="attr">The controller's class attribute</param>
-        /// <returns>The Controller Contect to be passed to the controller</returns>
+        /// <param name="attr">The controller's class attribute.</param>
+        /// <returns>The ControllerContext to be passed to the controller.</returns>
         private ControllerContext GetControllerContext(RestQueryControllerAttribute attr)
         {
             return new ControllerContext()
@@ -240,6 +291,7 @@ namespace RestClient
                     break;
                 }
             }
+
             return controller;
         }
 
@@ -248,12 +300,13 @@ namespace RestClient
         /// The controller part is the first word after the base address.
         /// It takes into account that the url may contain the base address.
         /// </summary>
-        /// <param name="url">Either a full address inkcluding base address or a url part starting with controller name.</param>
+        /// <param name="url">Either a full address including base address or a url part starting with controller name.</param>
         /// <returns>The controller, initiated with context</returns>
         private IRestQueryController GetControllerByUrl(string url)
         {
             IRestQueryController controller = null;
-            var u = url;
+            string u = url;
+
             if (u.StartsWith(this.restQueryConfig.BaseAddress, StringComparison.InvariantCultureIgnoreCase))
             {
                 u = u.Substring(this.restQueryConfig.BaseAddress.Length);
@@ -261,18 +314,24 @@ namespace RestClient
 
             // It should start with controller name, but if it wrongly starts with / that / is removed
             if (u.StartsWith("/") && u.Length > 1)
+            {
                 u = u.Substring(1);
+            }
 
-            var name = u;
-            var index = u.IndexOfAny(new[] { '/', '?', '$' });
+            string name = u;
+            int index = u.IndexOfAny(new[] { '/', '?', '$' });
             if (index > 0)
             {
                 name = u.Substring(0, index);
             }
 
-            foreach (var item in this.controllers)
+            foreach (RestQueryControllerAttribute item in this.controllers)
             {
-                if (!item.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) continue;
+                if (!item.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    continue;
+                }
+
                 controller = (IRestQueryController)Activator.CreateInstance(item.ControllerType);
                 controller.Context = this.GetControllerContext(item);
                 break;
@@ -281,28 +340,41 @@ namespace RestClient
             return controller;
         }
 
-
         /// <summary>
         /// Initiate the controller list. Use reflection to capture controllers and add them to the dictionary.
         /// A Controller must have the class attribute RestQueryController.
         /// </summary>
         private void InitControllers()
         {
-            var assarr = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var ass in assarr)
+            Assembly[] assarr = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly ass in assarr)
             {
                 try
                 {
-                    var typearr = ass.GetTypes();
+                    Type[] typearr = ass.GetTypes();
                     foreach (var type in typearr)
                     {
-                        if (!type.IsClass) continue;
-                        var attrArr = type.GetCustomAttributes();
-                        if (attrArr == null) continue;
-                        foreach (var attr in attrArr)
+                        if (!type.IsClass)
                         {
-                            var item = attr as RestQueryControllerAttribute;
-                            if (item == null) continue;
+                            continue;
+                        }
+
+                        IEnumerable<Attribute> attrArr = type.GetCustomAttributes();
+
+                        if (attrArr == null)
+                        {
+                            continue;
+                        }
+
+                        foreach (Attribute attr in attrArr)
+                        {
+                            RestQueryControllerAttribute item = attr as RestQueryControllerAttribute;
+
+                            if (item == null)
+                            {
+                                continue;
+                            }
+
                             item.ControllerType = type;
                             this.controllers.Add(item);
                         }
@@ -316,7 +388,6 @@ namespace RestClient
             }
         }
 
-
         /// <summary>
         /// Local logging which takes into account whether _log object is defined or not
         /// </summary>
@@ -325,10 +396,14 @@ namespace RestClient
         /// <param name="ex">Optional exception</param>
         private void Log(string text,  LogLevel level, Exception ex = null)
         {
-            if (this.log == null) return;
+            if (this.log == null)
+            {
+                return;
+            }
+
             try
             {
-                switch(level)
+                switch (level)
                 {
                     case LogLevel.Debug:
                         this.log.Debug(text);
@@ -347,21 +422,14 @@ namespace RestClient
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(level), level, null);
-                }                        
+                }
             }
             // ReSharper disable once EmptyGeneralCatchClause
-            catch { }
+            catch
+            {
+            }
         }
 
-        public enum LogLevel
-        {
-            Debug = 0,
-            Error,
-            Warning,
-            Info,
-            Fatal,
-        }
         #endregion
     }
-
 }
