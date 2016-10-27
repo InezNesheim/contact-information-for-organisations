@@ -21,22 +21,33 @@
         </Grid.RowDefinitions>
 
         <DataGrid x:Name="OrganizationGrid" IsReadOnly="True" ItemsSource="{Binding Model.ResultCollection}" Margin="10,10,10,20" GridLinesVisibility="All" AlternationCount="2" AutoGenerateColumns="False" BorderThickness="0" SelectionMode="Single" SelectionUnit="FullRow">
-
             <DataGrid.Columns>
 
                 <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnName}" Binding="{Binding Name}" Width="*"/>
                 <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnOrganizationNumber}" Binding="{Binding OrganizationNumber}" Width="200"/>
                 <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnType}" Binding="{Binding Type}" Width="60"/>
 
-                <DataGridTemplateColumn Header="Velg" Width="60">
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <CheckBox ToolTip="{x:Static view:Resources.SelectAll}" x:Name="headerCheckBox" />
+                    </DataGridTemplateColumn.Header>
+
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MetroDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox Name="checkBox" PreviewMouseDown="UIElement_OnPreviewMouseDown" HorizontalAlignment="Center">
+                            <CheckBox PreviewMouseDown="UIElement_OnPreviewMouseDown" HorizontalAlignment="Center"
+                      IsChecked="{Binding IsChecked, ElementName=headerCheckBox, 
+                                          Mode=OneWay}" >
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Checked">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.ItemChecked, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding}"/>
+                                        <i:InvokeCommandAction Command="{Binding DataContext.ItemChecked, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding}" />
                                     </i:EventTrigger>
-                                    
+
                                     <i:EventTrigger EventName="Unchecked">
                                         <i:InvokeCommandAction Command="{Binding DataContext.ItemUnchecked, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding}"/>
                                     </i:EventTrigger>
@@ -119,9 +130,31 @@
         </Button>
 
     </Grid>
-
-
 </UserControl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

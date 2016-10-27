@@ -185,4 +185,7 @@ Kontakt Erlend Oksvoll (eok@brreg.no) ved spørsmål!</value>
   <data name="SearchLabelResultat" xml:space="preserve">
     <value>Søker etter {0}</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Velg alle</value>
+  </data>
 </root>
