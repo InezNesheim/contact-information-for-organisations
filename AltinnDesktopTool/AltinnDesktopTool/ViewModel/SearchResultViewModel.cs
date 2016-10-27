@@ -29,13 +29,6 @@ namespace AltinnDesktopTool.ViewModel
         private List<OrganizationModel> organizationModels = new List<OrganizationModel>();
         private IRestQuery restQuery;
 
-        public new SearchResultModel Model { get; set; }
-        public RelayCommand<OrganizationModel> GetContactsCommand { get; set; }
-        public RelayCommand<OrganizationModel> ItemChecked { get; set; }
-        public RelayCommand<OrganizationModel> ItemUnchecked { get; set; }
-        public ICommand CopyToClipboardPlainTextCommand { get; private set; }
-        public ICommand CopyToClipboardExcelFormatCommand { get; private set; }
-
         /// <summary>
         /// Initializes a new instance of the SearchResultViewModel class.
         /// </summary>
@@ -60,63 +53,42 @@ namespace AltinnDesktopTool.ViewModel
             this.CopyToClipboardPlainTextCommand = new RelayCommand(this.CopyToClipboardPlainTextHandler);
             this.CopyToClipboardExcelFormatCommand = new RelayCommand(this.CopyToClipboardExcelFormatHandler);
         }
-        private void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> e)
-        {
-            this.logger.Debug("Handling environment changed received event.");
-            this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
-            this.organizationModels = new List<OrganizationModel>();
-        }
 
-        private void SearchStartedEventHandler(object sender, PubSubEventArgs<bool> e)
-        {
-            this.Model.IsBusy = true;
-            this.Model.EmptyMessageVisibility = false;
-        }
+        /// <summary>
+        /// Gets or sets the SearchResult model
+        /// </summary>
+        public new SearchResultModel Model { get; set; }
 
-        private void GetContactsCommandHandler(OrganizationModel obj)
-        {
-            if (obj == null)
-            {
-                return;
-            }
+        /// <summary>
+        /// Gets the GetContacts command
+        /// </summary>
+        public RelayCommand<OrganizationModel> GetContactsCommand { get; private set; }
 
-            if (obj.OfficalContactsCollection == null && !string.IsNullOrEmpty(obj.OfficialContacts))
-            {
-                IList<OfficialContact> officialContactDtoCollection = new List<OfficialContact>();
-                try
-                {
-                    officialContactDtoCollection = this.restQuery.GetByLink<OfficialContact>(obj.OfficialContacts);
-                }
-                catch (RestClientException rex)
-                {
-                    this.logger.Error("Exception from the RestClient", rex);
-                }
+        /// <summary>
+        /// Gets the ItemChecked command
+        /// </summary>
+        public RelayCommand<OrganizationModel> ItemChecked { get; private set; }
 
-                obj.OfficalContactsCollection =
-                    this.mapper.Map<ICollection<OfficialContact>, ObservableCollection<OfficialContactModel>>(
-                        officialContactDtoCollection);
-            }
+        /// <summary>
+        /// Gets the ItemUnchecked command
+        /// </summary>
+        public RelayCommand<OrganizationModel> ItemUnchecked { get; private set; }
 
-            if (obj.PersonalContactsCollection != null || string.IsNullOrEmpty(obj.PersonalContacts))
-            {
-                return;
-            }
+        /// <summary>
+        /// Gets the CopyToClipboardPlainText command
+        /// </summary>
+        public ICommand CopyToClipboardPlainTextCommand { get; private set; }
 
-            IList<PersonalContact> personalContactDtoCollecton = new List<PersonalContact>();
-            try
-            {
-                personalContactDtoCollecton = this.restQuery.GetByLink<PersonalContact>(obj.PersonalContacts);
-            }
-            catch (RestClientException rex)
-            {
-                this.logger.Error("Exception from the RestClient", rex);
-            }
+        /// <summary>
+        /// Gets the CopyToClipboardExcelFormat command
+        /// </summary>
+        public ICommand CopyToClipboardExcelFormatCommand { get; private set; }        
 
-            obj.PersonalContactsCollection =
-                this.mapper.Map<ICollection<PersonalContact>, ObservableCollection<PersonalContactModel>>(
-                    personalContactDtoCollecton);
-        }
-
+        /// <summary>
+        /// Handler for SearchResultReceived event
+        /// </summary>        
+        /// <param name="sender">Sender object - not used in this context</param>
+        /// <param name="args">Result collection</param>
         public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
         {
             this.logger.Debug("Handling search result received event.");
@@ -125,18 +97,29 @@ namespace AltinnDesktopTool.ViewModel
             this.Model.IsBusy = false;
         }
 
+        /// <summary>
+        /// Handler for Item checked event
+        /// </summary>
+        /// <param name="organizationModel">OrganizationModel connected to the checked item</param>
         public void ItemCheckedHandler(OrganizationModel organizationModel)
         {
             this.GetContactsCommandHandler(organizationModel);
             this.organizationModels.Add(organizationModel);
         }
 
+        /// <summary>
+        /// Handler for item unchecked event
+        /// </summary>
+        /// <param name="organizationModel">OrganizationModel connected to the unchecked item</param>
         public void ItemUncheckedHandler(OrganizationModel organizationModel)
         {
             this.GetContactsCommandHandler(organizationModel);
             this.organizationModels.Remove(organizationModel);
         }
 
+        /// <summary>
+        /// Copy to clipboard in plain text logic
+        /// </summary>
         public void CopyToClipboardPlainTextHandler()
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -168,11 +151,16 @@ namespace AltinnDesktopTool.ViewModel
                         }
                     }
                 }
+
                 stringBuilder.Append(Environment.NewLine);
             }
+
             Clipboard.SetText(stringBuilder.ToString());
         }
 
+        /// <summary>
+        /// Copy to clipboard in excel format logic
+        /// </summary>
         public void CopyToClipboardExcelFormatHandler()
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -183,14 +171,79 @@ namespace AltinnDesktopTool.ViewModel
                 foreach (OfficialContactModel officialContactModel in organizationModel.OfficalContactsCollection)
                 {
                     stringBuilder.Append(organizationModel.Name + " " + organizationModel.Type + separator + organizationModel.OrganizationNumber + separator);
+
                     string mobilNumber = !string.IsNullOrEmpty(officialContactModel.MobileNumber) ? officialContactModel.MobileNumber : string.Empty;
-                    if (mobilNumber.StartsWith("0")) mobilNumber = "=" + "\"" + mobilNumber + "\"";
+                    if (mobilNumber.StartsWith("0"))
+                    {
+                        mobilNumber = "=" + "\"" + mobilNumber + "\"";
+                    }
+
                     stringBuilder.Append(officialContactModel.EmailAddress + separator + mobilNumber + Environment.NewLine);
                 }
 
                 stringBuilder.AppendLine();
             }
+
             Clipboard.SetText(stringBuilder.ToString());
+        }
+
+        private void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> e)
+        {
+            this.logger.Debug("Handling environment changed received event.");
+            this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
+            this.organizationModels = new List<OrganizationModel>();
+        }
+
+        private void SearchStartedEventHandler(object sender, PubSubEventArgs<bool> e)
+        {
+            this.Model.IsBusy = true;
+            this.Model.EmptyMessageVisibility = false;
+        }
+
+        private void GetContactsCommandHandler(OrganizationModel obj)
+        {
+            if (obj == null)
+            {
+                return;
+            }
+
+            if (obj.OfficalContactsCollection == null && !string.IsNullOrEmpty(obj.OfficialContacts))
+            {
+                IList<OfficialContact> officialContactDtoCollection = new List<OfficialContact>();
+
+                try
+                {
+                    officialContactDtoCollection = this.restQuery.GetByLink<OfficialContact>(obj.OfficialContacts);
+                }
+                catch (RestClientException rex)
+                {
+                    this.logger.Error("Exception from the RestClient", rex);
+                }
+
+                obj.OfficalContactsCollection =
+                    this.mapper.Map<ICollection<OfficialContact>, ObservableCollection<OfficialContactModel>>(
+                        officialContactDtoCollection);
+            }
+
+            if (obj.PersonalContactsCollection != null || string.IsNullOrEmpty(obj.PersonalContacts))
+            {
+                return;
+            }
+
+            IList<PersonalContact> personalContactDtoCollecton = new List<PersonalContact>();
+
+            try
+            {
+                personalContactDtoCollecton = this.restQuery.GetByLink<PersonalContact>(obj.PersonalContacts);
+            }
+            catch (RestClientException rex)
+            {
+                this.logger.Error("Exception from the RestClient", rex);
+            }
+
+            obj.PersonalContactsCollection =
+                this.mapper.Map<ICollection<PersonalContact>, ObservableCollection<PersonalContactModel>>(
+                    personalContactDtoCollecton);
         }
     }
 }
