@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 
@@ -11,7 +12,7 @@ namespace RestClient
     /// </summary>
     /// <remarks>
     /// Used internally by RestClient and the Controllers to communicate with Altinn REST Server interface.
-    /// Will only requst "hal+json" as response format from the Server.
+    /// Will only request <code>hal+json</code> as response format from the Server.
     /// </remarks>
     public class AltinnRestClient : IDisposable
     {
@@ -32,10 +33,9 @@ namespace RestClient
         /// Gets or sets the base address of the API being used by this client.
         /// </summary>
         /// <remarks>
-        /// When the url is like: "http://host/x/y/organizations/orgno"
+        /// When the url is like: <code>http://host/x/y/organizations/orgno</code>
         /// and organizations is the name of the controller, then the base address must be:
-        /// http://host/x/y
-        /// And without the ending /
+        /// <code>http://host/x/y</code> And without the ending /
         /// The BaseAddress may be changed, in which case AltinnRestClient will reconnect to new host on next call.
         /// </remarks>
         public string BaseAddress
@@ -119,7 +119,7 @@ namespace RestClient
         #region constructors
 
         /// <summary>
-        /// Constructor providing the required properties
+        /// Initializes a new instance of the AltinnRestClient class with a base address, api key and sertificate thumbprint.
         /// </summary>
         /// <param name="baseAddress">The base url for the API being used by the client.</param>
         /// <param name="apiKey">The ApiKey for the specific application using the client.</param>
@@ -146,10 +146,20 @@ namespace RestClient
         public string Get(string uriPart)
         {
             this.EnsureHandler();
+
             HttpResponseMessage responseMessage = this.httpClient.GetAsync(uriPart, HttpCompletionOption.ResponseContentRead).Result;
             responseMessage.EnsureSuccessStatusCode();
 
             return IsJsonResult(responseMessage) ? responseMessage.Content.ReadAsStringAsync().Result : null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -158,12 +168,6 @@ namespace RestClient
             {
                 this.InvalidateHandler();
             }
-        }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         #endregion
@@ -232,6 +236,7 @@ namespace RestClient
             this.httpClient.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
             this.httpClient.DefaultRequestHeaders.Add("Accept", AcceptedType);
             this.httpClient.DefaultRequestHeaders.Add("ApiKey", this.apikey);
+
 
             if (this.timeout > 0)
             {
