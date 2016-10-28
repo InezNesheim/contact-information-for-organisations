@@ -261,11 +261,47 @@ namespace AltinnDesktopTool.View {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to API nøkkelen som benyttes har ikke rettigheter til å utføre søk..
+        /// </summary>
+        public static string SearchLabelErrorForbidden {
+            get {
+                return ResourceManager.GetString("SearchLabelErrorForbidden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Det oppstod en ukjent feil under søket. .
+        /// </summary>
+        public static string SearchLabelErrorGeneralError {
+            get {
+                return ResourceManager.GetString("SearchLabelErrorGeneralError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Søket ga en feilmelding som indikerer at organisasjonen ikke finnes..
+        /// </summary>
+        public static string SearchLabelErrorOrganizationNotFound {
+            get {
+                return ResourceManager.GetString("SearchLabelErrorOrganizationNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Det oppstod en feil ved søk. Vennligst forsøk igjen..
         /// </summary>
         public static string SearchLabelErrorSearch {
             get {
                 return ResourceManager.GetString("SearchLabelErrorSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Det oppstod en feil relatert til autorisasjon. Forsøk igjen..
+        /// </summary>
+        public static string SearchLabelErrorUnauthorized {
+            get {
+                return ResourceManager.GetString("SearchLabelErrorUnauthorized", resourceCulture);
             }
         }
         

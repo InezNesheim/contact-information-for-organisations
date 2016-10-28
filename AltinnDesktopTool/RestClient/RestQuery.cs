@@ -126,6 +126,7 @@ namespace RestClient
         public T Get<T>(string id) where T : HalJsonResource
         {
             this.EnsureAuthenticated();
+
             IRestQueryController controller = this.GetControllerByType(typeof(T));
 
             if (controller == null)
@@ -165,6 +166,7 @@ namespace RestClient
         public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
             this.EnsureAuthenticated();
+
             IRestQueryController controller = this.GetControllerByType(typeof(T));
 
             if (controller == null)
@@ -205,6 +207,7 @@ namespace RestClient
         public IList<T> GetByLink<T>(string url) where T : HalJsonResource
         {
             this.EnsureAuthenticated();
+
             IRestQueryController controller = this.GetControllerByUrl(url);
 
             if (controller == null)
@@ -239,7 +242,8 @@ namespace RestClient
         /// Ensures that this client is authenticated at the server side.
         /// </summary>
         /// <remarks>
-        /// This has to be performed by catching exceptions due to an error as server always returns 401 error.
+        /// This extra call is preformed to avoid an issue with an <code>iRule</code> in BigIP. The current version of the rule can prevent
+        /// the enterprise certificate from reaching the REST API authorization logic and result in status code 401.
         /// </remarks>
         private void EnsureAuthenticated()
         {
@@ -271,7 +275,7 @@ namespace RestClient
             {
                 Log = this.log,
                 RestClient = this.restClient,
-                ControllerBaseAddress = $"{this.restQueryConfig.BaseAddress}/{attr.Name}"
+                ControllerBaseAddress = $"{this.restQueryConfig.BaseAddress}{attr.Name}"
             };
         }
 

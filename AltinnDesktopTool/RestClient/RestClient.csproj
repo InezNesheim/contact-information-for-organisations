@@ -63,6 +63,7 @@
     <Compile Include="IRestQueryConfig.cs" />
     <Compile Include="DTO\PersonalContact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\RestClientErrorCodes.cs" />
     <Compile Include="Resources\RestClientException.cs" />
     <Compile Include="Deserialize\Deserializer.cs" />
     <Compile Include="RestQuery.cs" />

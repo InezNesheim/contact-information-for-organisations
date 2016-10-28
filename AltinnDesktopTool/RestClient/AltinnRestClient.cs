@@ -19,7 +19,9 @@ namespace RestClient
         #region private declarations
 
         private const string AcceptedType = "application/hal+json";
+
         private HttpClient httpClient;
+
         private string baseAddress;
         private string apikey;
         private string thumbprint;
@@ -53,9 +55,8 @@ namespace RestClient
         /// Gets or sets the base address of the API being used by this client.
         /// </summary>
         /// <remarks>
-        /// When the url is like: <code>http://host/x/y/organizations/orgno</code>
-        /// and organizations is the name of the controller, then the base address must be:
-        /// <code>http://host/x/y</code> And without the ending /
+        /// When the url is like: <code>https://host/x/y/organizations/orgno</code> and organizations is the name of the controller,
+        /// then the base address must be <code>https://host/x/y/</code> including the ending '/'.
         /// The BaseAddress may be changed, in which case AltinnRestClient will reconnect to new host on next call.
         /// </remarks>
         public string BaseAddress
@@ -155,7 +156,7 @@ namespace RestClient
         }
 
         #endregion
-    
+
         #region public and protected methods
 
         /// <summary>
@@ -171,7 +172,11 @@ namespace RestClient
             this.EnsureHandler();
 
             HttpResponseMessage responseMessage = this.httpClient.GetAsync(uriPart, HttpCompletionOption.ResponseContentRead).Result;
-            responseMessage.EnsureSuccessStatusCode();
+
+            if (responseMessage.StatusCode != HttpStatusCode.OK)
+            {
+                throw new RestClientException(responseMessage.ReasonPhrase, GetErrorCode(responseMessage.StatusCode));
+            }
 
             return IsJsonResult(responseMessage) ? responseMessage.Content.ReadAsStringAsync().Result : null;
         }
@@ -205,6 +210,25 @@ namespace RestClient
         {
             string conttype = responseMessage.Content.Headers.ContentType.ToString();
             return conttype.StartsWith(AcceptedType, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private static string GetErrorCode(HttpStatusCode statusCode)
+        {
+            switch (statusCode)
+            {
+                case HttpStatusCode.BadRequest:
+                    return RestClientErrorCodes.RemoteApiReturnedStatusBadRequest;
+                case HttpStatusCode.Unauthorized:
+                    return RestClientErrorCodes.RemoteApiReturnedStatusUnauthorized;
+                case HttpStatusCode.Forbidden:
+                    return RestClientErrorCodes.RemoteApiReturnedStatusForbidden;
+                case HttpStatusCode.NotFound:
+                    return RestClientErrorCodes.RemoteApiReturnedStatusNotFound;
+                case HttpStatusCode.InternalServerError:
+                    return RestClientErrorCodes.RemoteApiReturnedStatusInternalServerError;
+                default:
+                    return RestClientErrorCodes.RestClientUnableToHandleResponse;
+            }
         }
 
         private void InvalidateHandler()

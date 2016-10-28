@@ -185,8 +185,20 @@ Kontakt Erlend Oksvoll (eok@brreg.no) ved spørsmål!</value>
   <data name="SearchLabelEmptySearch" xml:space="preserve">
     <value>Det blir ikke utført noe søk når søketeksten er tom.</value>
   </data>
+  <data name="SearchLabelErrorForbidden" xml:space="preserve">
+    <value>API nøkkelen som benyttes har ikke rettigheter til å utføre søk.</value>
+  </data>
+  <data name="SearchLabelErrorGeneralError" xml:space="preserve">
+    <value>Det oppstod en ukjent feil under søket. </value>
+  </data>
+  <data name="SearchLabelErrorOrganizationNotFound" xml:space="preserve">
+    <value>Søket ga en feilmelding som indikerer at organisasjonen ikke finnes.</value>
+  </data>
   <data name="SearchLabelErrorSearch" xml:space="preserve">
     <value>Det oppstod en feil ved søk. Vennligst forsøk igjen.</value>
+  </data>
+  <data name="SearchLabelErrorUnauthorized" xml:space="preserve">
+    <value>Det oppstod en feil relatert til autorisasjon. Forsøk igjen.</value>
   </data>
   <data name="SearchLabelResultat" xml:space="preserve">
     <value>Søker etter {0}</value>

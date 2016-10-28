@@ -151,10 +151,30 @@ namespace AltinnDesktopTool.ViewModel
             }
             catch (RestClientException rex)
             {
-                obj.LabelText = Resources.SearchLabelErrorSearch;
+                this.logger.Error("Exception from the RestClient", rex);
+
                 obj.LabelBrush = Brushes.Red;
 
-                this.logger.Error("Exception from the RestClient", rex);
+                switch (rex.ErrorCode)
+                {
+                    case RestClientErrorCodes.RemoteApiReturnedStatusBadRequest:
+                        obj.LabelText = searchType == SearchType.OrganizationNumber
+                            ? Resources.SearchLabelErrorOrganizationNotFound
+                            : Resources.SearchLabelErrorGeneralError;
+                        break;
+                    case RestClientErrorCodes.RemoteApiReturnedStatusUnauthorized:
+                        obj.LabelText = Resources.SearchLabelErrorUnauthorized;
+                        break;
+                    case RestClientErrorCodes.RemoteApiReturnedStatusForbidden:
+                        obj.LabelText = Resources.SearchLabelErrorForbidden;
+                        break;
+                    case RestClientErrorCodes.RemoteApiReturnedStatusNotFound:
+                        obj.LabelText = Resources.SearchLabelErrorOrganizationNotFound;
+                        break;
+                    default:
+                        obj.LabelText = Resources.SearchLabelErrorGeneralError;
+                        break;
+                }
             }
 
             ObservableCollection<OrganizationModel> orgmodellist = organizations != null

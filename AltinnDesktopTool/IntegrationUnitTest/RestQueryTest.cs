@@ -9,7 +9,7 @@ namespace IntegrationUnitTest
     {
         private readonly IRestQueryConfig config = new ConfigForTest
         {
-            BaseAddress = "https://tt02.altinn.basefarm.net/api/serviceowner",
+            BaseAddress = "https://tt02.altinn.basefarm.net/api/serviceowner/",
             ApiKey = "7FB6140D-B194-4BF6-B3C8-257094FBF8C4",
             ThumbPrint = "5d15d6e888632370e0223b779c4e0f0d9d45ded0",
             IgnoreSslErrors = false
