@@ -43,7 +43,7 @@ namespace AltinnDesktopTool.ViewModel
 
             this.Model = new SearchResultModel();
 
-            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultReceivedEvent, this.SearchResultReceivedEventHandler);
             PubSub<bool>.RegisterEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
             PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
 
@@ -89,7 +89,7 @@ namespace AltinnDesktopTool.ViewModel
         /// </summary>        
         /// <param name="sender">Sender object - not used in this context</param>
         /// <param name="args">Result collection</param>
-        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
+        public void SearchResultReceivedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
         {
             this.logger.Debug("Handling search result received event.");
             this.Model.ResultCollection = args.Item;

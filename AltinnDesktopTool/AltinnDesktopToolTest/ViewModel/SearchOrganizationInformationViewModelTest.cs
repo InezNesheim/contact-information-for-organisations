@@ -63,7 +63,7 @@ namespace AltinnDesktopToolTest.ViewModel
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="args">The event arguments with the new search result.</param>
-        public void SearchResultRecievedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
+        public void SearchResultReceivedEventHandler(object sender, PubSubEventArgs<ObservableCollection<OrganizationModel>> args)
         {
             this.searchResult = args.Item;
         }
@@ -105,10 +105,10 @@ namespace AltinnDesktopToolTest.ViewModel
         /// </summary>
         [TestMethod]
         [TestCategory("ViewModel")]
-        public void SearchOrganizationInformationViewModelTest_SendsEventWhenSearchResultIsRecieved()
+        public void SearchOrganizationInformationViewModelTest_SendsEventWhenSearchResultIsReceived()
         {
             // Arrange
-            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultReceivedEvent, this.SearchResultReceivedEventHandler);
 
             SearchOrganizationInformationModel search = new SearchOrganizationInformationModel
             {
@@ -141,7 +141,7 @@ namespace AltinnDesktopToolTest.ViewModel
         public void SearchOrganizationInformationViewModelTest_EMailSearch_SearchResultIsUpdated()
         {
             // Arrange
-            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultReceivedEvent, this.SearchResultReceivedEventHandler);
 
             Mock<ILog> logger = new Mock<ILog>();
 
@@ -188,7 +188,7 @@ namespace AltinnDesktopToolTest.ViewModel
         public void SearchOrganizationInformationViewModelTest_PhoneNumberSearch_SearchResultIsUpdated()
         {
             // Arrange
-            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultReceivedEvent, this.SearchResultReceivedEventHandler);
 
             Mock<ILog> logger = new Mock<ILog>();
 

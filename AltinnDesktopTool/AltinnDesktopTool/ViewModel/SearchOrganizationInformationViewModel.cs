@@ -46,7 +46,7 @@ namespace AltinnDesktopTool.ViewModel
             this.Model = new SearchOrganizationInformationModel();
             this.SearchCommand = new RelayCommand<SearchOrganizationInformationModel>(this.SearchCommandHandler);
 
-            PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultRecievedEvent, this.SearchResultRecievedEventHandler);
+            PubSub<ObservableCollection<OrganizationModel>>.AddEvent(EventNames.SearchResultReceivedEvent, this.SearchResultReceivedEventHandler);
             PubSub<bool>.AddEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
             PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
         }
@@ -59,7 +59,7 @@ namespace AltinnDesktopTool.ViewModel
         /// <summary>
         /// Occurs when the search in complete.
         /// </summary>
-        public event PubSubEventHandler<ObservableCollection<OrganizationModel>> SearchResultRecievedEventHandler;
+        public event PubSubEventHandler<ObservableCollection<OrganizationModel>> SearchResultReceivedEventHandler;
 
         /// <summary>
         /// Gets or sets the command to run when search is triggered.
@@ -140,7 +140,7 @@ namespace AltinnDesktopTool.ViewModel
                         break;
                     case SearchType.OrganizationNumber:
                         obj.LabelText = string.Format(Resources.SearchLabelResultat, Resources.OrganizationNumber + " " + searchText);
-                        Organization organization = await this.GetOrganizations(searchText);
+                        Organization organization = await this.GetOrganization(searchText);
                         organizations.Add(organization);
                         break;
                     case SearchType.Smart:
@@ -162,12 +162,12 @@ namespace AltinnDesktopTool.ViewModel
                          : new ObservableCollection<OrganizationModel>();
 
             PubSub<ObservableCollection<OrganizationModel>>.RaiseEvent(
-                EventNames.SearchResultRecievedEvent, this, new PubSubEventArgs<ObservableCollection<OrganizationModel>>(orgmodellist));
+                EventNames.SearchResultReceivedEvent, this, new PubSubEventArgs<ObservableCollection<OrganizationModel>>(orgmodellist));
         }
 
-        private async Task<Organization> GetOrganizations(string searchText)
+        private async Task<Organization> GetOrganization(string orgnb)
         {
-            return await Task.Run(() => this.query.Get<Organization>(searchText));
+            return await Task.Run(() => this.query.Get<Organization>(orgnb));
         }
 
         private async Task<IList<Organization>> GetOrganizations(SearchType type, string searchText)

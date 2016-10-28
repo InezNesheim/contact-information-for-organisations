@@ -8,7 +8,7 @@
         /// <summary>
         /// Search event
         /// </summary>
-        public static readonly string SearchResultRecievedEvent = "SearchResultRecievedEvent";
+        public static readonly string SearchResultReceivedEvent = "SearchResultReceivedEvent";
 
         /// <summary>
         /// Search event
