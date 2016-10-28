@@ -30,7 +30,12 @@ namespace AltinnDesktopTool.Configuration
         /// <summary>
         /// Gets or sets the certificate thumbprint for the environment that this configuration is connected to.
         /// </summary>
-        public string ThumbPrint { get; set; }        
+        public string ThumbPrint { get; set; }
+
+        /// <summary>
+        /// Gets or sets the IgnoreSsl for the environment that this configuration is connected to.
+        /// </summary>
+        public bool IgnoreSslErrors { get; set; }
 
         /// <summary>
         /// Gets or sets the timeout for the REST api call for the environment that this configuration is connected to.

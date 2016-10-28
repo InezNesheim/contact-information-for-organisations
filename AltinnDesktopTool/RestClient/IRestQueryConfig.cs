@@ -27,6 +27,11 @@
         string ThumbPrint { get; set; }
 
         /// <summary>
+        /// Configuration needed for ST environment
+        /// </summary>
+        bool IgnoreSslErrors { get; set; }
+
+        /// <summary>
         /// An optional timeout related to the server request
         /// </summary>
         int Timeout { get; set; }
