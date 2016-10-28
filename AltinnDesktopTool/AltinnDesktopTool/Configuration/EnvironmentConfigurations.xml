@@ -6,6 +6,7 @@
     <apiKey>7FB6140D-B194-4BF6-B3C8-257094FBF8C4</apiKey>
     <baseAddress>https://tt02.altinn.basefarm.net/api/serviceowner</baseAddress>
     <thumbprint>5d15d6e888632370e0223b779c4e0f0d9d45ded0</thumbprint>
+    <ignoreSslErrors>false</ignoreSslErrors>
     <timeout>30</timeout>
   </EnvironmentConfiguration>
   <EnvironmentConfiguration>
@@ -14,6 +15,7 @@
     <apiKey>7B645E0F-D283-49A8-B9D2-F98D20CEF862</apiKey>
     <baseAddress>https://www.altinn.no/api/serviceowner</baseAddress>
     <thumbprint>5d15d6e888632370e0223b779c4e0f0d9d45ded0</thumbprint>
+    <ignoreSslErrors>false</ignoreSslErrors>
     <timeout>30</timeout>
   </EnvironmentConfiguration>
   <EnvironmentConfiguration>
@@ -22,6 +24,7 @@
     <apiKey>5ADBA618-1CE3-4069-BC26-55045C61E210</apiKey>
     <baseAddress>https://at07.altinn.basefarm.net/api/serviceowner</baseAddress>
     <thumbprint>5d15d6e888632370e0223b779c4e0f0d9d45ded0</thumbprint>
+    <ignoreSslErrors>false</ignoreSslErrors>
     <timeout>30</timeout>
   </EnvironmentConfiguration>
   <EnvironmentConfiguration>
@@ -30,6 +33,16 @@
     <apiKey>A7665831-8F80-4408-B90D-D521478FEA53</apiKey>
     <baseAddress>https://at08.altinn.basefarm.net/api/serviceowner</baseAddress>
     <thumbprint>5d15d6e888632370e0223b779c4e0f0d9d45ded0</thumbprint>
+    <ignoreSslErrors>false</ignoreSslErrors>
+    <timeout>30</timeout>
+  </EnvironmentConfiguration>
+  <EnvironmentConfiguration>
+    <name>ST02</name>
+    <themeName>Orange</themeName>
+    <apiKey>6D11BFEF-3C4E-4571-BFED-26B4E95B02D0</apiKey>
+    <baseAddress>https://st02.altinn.basefarm.net/api/serviceowner</baseAddress>
+    <thumbprint>5d15d6e888632370e0223b779c4e0f0d9d45ded0</thumbprint>
+    <ignoreSslErrors>true</ignoreSslErrors>
     <timeout>30</timeout>
   </EnvironmentConfiguration>
 </EnvironmentConfigurations>

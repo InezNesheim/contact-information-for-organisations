@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -52,6 +53,7 @@ namespace AltinnDesktopTool.Configuration
                                                                 ApiKey = config?.Element("apiKey")?.Value,
                                                                 BaseAddress = config?.Element("baseAddress")?.Value,
                                                                 ThumbPrint = config?.Element("thumbprint")?.Value,
+                                                                IgnoreSslErrors = ParseBool(config?.Element("ignoreSslErrors")?.Value),
                                                                 Timeout = ParseInt(config?.Element("timeout")?.Value)
                                                             };
             IEnumerable<EnvironmentConfiguration> environmentConfigurations = configs as IList<EnvironmentConfiguration> ?? configs.ToList();
@@ -63,6 +65,12 @@ namespace AltinnDesktopTool.Configuration
         {
             int ret;
             return value == null ? 0 : int.TryParse(value, out ret) ? ret : 0;
+        }
+
+        private static bool ParseBool(string value)
+        {
+            bool ret;
+            return value != null && (bool.TryParse(value, out ret) && ret);
         }
     }
 }
