@@ -54,7 +54,8 @@ namespace RestClient
         {
             this.restQueryConfig = restQueryConfig;
             this.log = log;
-            this.restClient = new AltinnRestClient(restQueryConfig.BaseAddress, restQueryConfig.ApiKey, restQueryConfig.ThumbPrint);
+            this.restClient = new AltinnRestClient(restQueryConfig.BaseAddress, restQueryConfig.ApiKey, restQueryConfig.ThumbPrint,
+                                                   restQueryConfig.IgnoreSslErrors);
 
             if (restQueryConfig.Timeout > 0)
             {

@@ -22,8 +22,28 @@ namespace RestClient
         private HttpClient httpClient;
         private string baseAddress;
         private string apikey;
-        private int timeout;
         private string thumbprint;
+        private bool ignoreSslErrors;
+        private int timeout;
+
+        #endregion
+
+        #region constructors
+
+        /// <summary>
+        /// Initializes a new instance of the AltinnRestClient class with a base address, api key and certificate thumbprint.
+        /// </summary>
+        /// <param name="baseAddress">The base url for the API being used by the client.</param>
+        /// <param name="apiKey">The ApiKey for the specific application using the client.</param>
+        /// <param name="certificateThumbprint">The thumbprint for the enterprise certificate for the service owner.</param>
+        /// <param name="ignoreSslErrors">Controls whether the client should ignore errors related to SSL.</param>
+        public AltinnRestClient(string baseAddress, string apiKey, string certificateThumbprint, bool ignoreSslErrors)
+        {
+            this.baseAddress = baseAddress;
+            this.apikey = apiKey;
+            this.thumbprint = certificateThumbprint;
+            this.ignoreSslErrors = ignoreSslErrors;
+        }
 
         #endregion
 
@@ -114,21 +134,24 @@ namespace RestClient
             }
         }
 
-        #endregion
-
-        #region constructors
-
         /// <summary>
-        /// Initializes a new instance of the AltinnRestClient class with a base address, api key and sertificate thumbprint.
+        /// Gets or sets a value indicating whether the client should ignore SSL errors.
         /// </summary>
-        /// <param name="baseAddress">The base url for the API being used by the client.</param>
-        /// <param name="apiKey">The ApiKey for the specific application using the client.</param>
-        /// <param name="certificateThumbprint">The thumbprint for the enterprise certificate for the service owner.</param>
-        public AltinnRestClient(string baseAddress, string apiKey, string certificateThumbprint)
+        /// <remarks>
+        /// This is needed in environments where the SSL certificates has expired or there is a problem with the trust chain.
+        /// </remarks>
+        public bool IgnoreSslErrors
         {
-            this.baseAddress = baseAddress;
-            this.apikey = apiKey;
-            this.thumbprint = certificateThumbprint;
+            get
+            {
+                return this.ignoreSslErrors;
+            }
+
+            set
+            {
+                this.ignoreSslErrors = value;
+                this.InvalidateHandler();
+            }
         }
 
         #endregion
@@ -154,7 +177,7 @@ namespace RestClient
         }
 
         /// <summary>
-        /// 
+        /// Releases all resources used by the AltinnRestClient.
         /// </summary>
         public void Dispose()
         {
@@ -162,6 +185,10 @@ namespace RestClient
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Releases all resources used by the AltinnRestClient.
+        /// </summary>
+        /// <param name="disposing">A value indicating whether the object is being disposed.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -173,6 +200,13 @@ namespace RestClient
         #endregion
 
         #region private implementation
+
+        private static bool IsJsonResult(HttpResponseMessage responseMessage)
+        {
+            string conttype = responseMessage.Content.Headers.ContentType.ToString();
+            return conttype.StartsWith(AcceptedType, StringComparison.InvariantCultureIgnoreCase);
+        }
+
         private void InvalidateHandler()
         {
             if (this.httpClient != null)
@@ -190,12 +224,6 @@ namespace RestClient
             }
 
             this.InitHttpClient();
-        }
-
-        private static bool IsJsonResult(HttpResponseMessage responseMessage)
-        {
-            string conttype = responseMessage.Content.Headers.ContentType.ToString();
-            return conttype.StartsWith(AcceptedType, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private void InitHttpClient()
@@ -237,6 +265,14 @@ namespace RestClient
             this.httpClient.DefaultRequestHeaders.Add("Accept", AcceptedType);
             this.httpClient.DefaultRequestHeaders.Add("ApiKey", this.apikey);
 
+            if (this.ignoreSslErrors)
+            {
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            }
+            else
+            {
+                ServicePointManager.ServerCertificateValidationCallback = null;
+            }
 
             if (this.timeout > 0)
             {

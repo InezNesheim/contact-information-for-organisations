@@ -7,11 +7,12 @@ namespace IntegrationUnitTest
     [TestClass]
     public class RestQueryTest
     {
-        private readonly IRestQueryConfig config = new ConfigForTest()
+        private readonly IRestQueryConfig config = new ConfigForTest
         {
             BaseAddress = "https://tt02.altinn.basefarm.net/api/serviceowner",
             ApiKey = "7FB6140D-B194-4BF6-B3C8-257094FBF8C4",
             ThumbPrint = "5d15d6e888632370e0223b779c4e0f0d9d45ded0",
+            IgnoreSslErrors = false
         };
 
         [TestMethod]
@@ -24,12 +25,10 @@ namespace IntegrationUnitTest
             Assert.IsTrue(!string.IsNullOrEmpty(org.Name));
         }
 
-
         [TestMethod]
         [DataRow("eok@brreg.no")]
         [DataRow("erlend.oksvoll@brreg.no")]
         [DataRow("aen@brreg.no")]
-
         public void GetOrgnizationsByEmailTest(string email)
         {
             IRestQuery query = new RestQuery(this.config);
@@ -37,7 +36,6 @@ namespace IntegrationUnitTest
             Assert.IsNotNull(orglist);
             Assert.IsTrue(orglist.Count > 0 && !string.IsNullOrEmpty(orglist[0].Name));
         }
-
 
         [TestMethod]
         [DataRow("https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451/personalcontacts")]
@@ -49,7 +47,6 @@ namespace IntegrationUnitTest
             Assert.IsTrue(list.Count > 0);
         }
 
-
         [TestMethod]
         [DataRow("https://tt02.altinn.basefarm.net/api/serviceowner/organizations/910021451/officialcontacts")]
         public void GetOfficialContactsTest(string link)
@@ -59,10 +56,7 @@ namespace IntegrationUnitTest
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
         }
-
-
     }
-
 
     public class ConfigForTest : IRestQueryConfig
     {
@@ -71,6 +65,8 @@ namespace IntegrationUnitTest
         public string BaseAddress { get; set; }
 
         public string ThumbPrint { get; set; }
+
+        public bool IgnoreSslErrors { get; set; }
 
         public int Timeout { get; set; }
     }

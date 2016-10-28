@@ -16,12 +16,12 @@ namespace IntegrationUnitTest
         [TestMethod]
         public void GetClientTest()
         {
-            var client = new AltinnRestClient(Baseaddress, Apikey, Thumbprint);
+            AltinnRestClient client = new AltinnRestClient(Baseaddress, Apikey, Thumbprint, false);
 
             // Authenticate
             // NOTE: Altinn returns 401 even if it is validated.
             const string Orgno = "910021451";
-            var uriPart = "api/serviceowner/organizations?ForceEIAuthentication";
+            string uriPart = "api/serviceowner/organizations?ForceEIAuthentication";
             try
             {
                 client.Get(uriPart);
@@ -33,7 +33,7 @@ namespace IntegrationUnitTest
 
             // Get by orgno
             uriPart = "api/serviceowner/organizations/" + Orgno;
-            var result = "N/A";
+            string result = "N/A";
             try
             {
                 result = client.Get(uriPart);
