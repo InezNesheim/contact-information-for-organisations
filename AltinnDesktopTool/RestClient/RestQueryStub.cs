@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using RestClient.DTO;
 using System.Reflection;
+
+using RestClient.DTO;
 
 namespace RestClient
 {
-
+    /// <summary>
+    /// The RestQueryStub class is an implementation of the IRestQuery interface. The purpose of this class is to act as a stand in
+    /// for the actual RestQuery during development of a program using this library.
+    /// </summary>
     public class RestQueryStub : IRestQuery
     {
         private static readonly PropertyInfo PropOrgName = typeof(Organization).GetProperty("Name");
@@ -29,11 +33,12 @@ namespace RestClient
         private static readonly PropertyInfo PropPersContSocialSecurityNumber = typeof(PersonalContact).GetProperty("SocialSecurityNumber");
 
         /// <summary>
-        /// Supports only Organization in this Stub
+        /// Fetches a object by a given link (url).
+        /// This is useful where a link is returned in a previous call.
         /// </summary>
-        /// <typeparam name="T">Must be organization</typeparam>
-        /// <param name="id">Organization Number</param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of object to be retrieved.</typeparam>
+        /// <param name="id">The id of the object to retrieve</param>
+        /// <returns>An object, possibly null if none found</returns>
         public T Get<T>(string id) where T : HalJsonResource
         {
             T org = Activator.CreateInstance<T>();
@@ -57,13 +62,14 @@ namespace RestClient
             return org;
         }
 
-
         /// <summary>
-        /// Returns a list of organizations
+        /// Search for a list of objects by filtering on a given name value pair.
+        /// The possible values name value pairs depends on the controller being called.
+        /// The controller is identified by the type T.
         /// </summary>
-        /// <typeparam name="T">Must be Organization</typeparam>
-        /// <param name="filter"></param>
-        /// <returns>List</returns>
+        /// <typeparam name="T">The type of objects to be retrieved. This also determines the controller to call.</typeparam>
+        /// <param name="filter">The name value pair filter</param>
+        /// <returns>A list of objects, empty or null if none found</returns>
         public IList<T> Get<T>(KeyValuePair<string, string> filter) where T : HalJsonResource
         {
             T org1 = Activator.CreateInstance<T>();
@@ -82,7 +88,16 @@ namespace RestClient
             };
         }
 
-        public IList<T> GetByLink<T>(string url) where T: HalJsonResource
+        /// <summary>
+        /// Fetches a list of objects from the given URL location.
+        /// </summary>
+        /// <typeparam name="T">The type of data object (DTO) which must be a subclass of <see cref="HalJsonResource"/> to be returned.</typeparam>
+        /// <param name="url">The url to send to Altinn.</param>
+        /// <returns>The found object or null if not found.</returns>
+        /// <remarks>
+        /// Controller is identified by the controller having [RestQueryController(SupportedType=T)] defined with a matching T type.
+        /// </remarks>
+        public IList<T> GetByLink<T>(string url) where T : HalJsonResource
         {
             T contact1 = Activator.CreateInstance<T>();
             T contact2 = Activator.CreateInstance<T>();
@@ -164,6 +179,7 @@ namespace RestClient
             PropOffContPhone.SetValue(offcont, "12121414");
             PropOffContPhoneChanged.SetValue(offcont, new DateTime(2012, 11, 11));
         }
+
         private void CreateOffContact3(object offcont)
         {
             PropOffContEmail.SetValue(offcont, "espen@gmail.com");
@@ -193,6 +209,7 @@ namespace RestClient
             PropPersContSocialSecurityNumber.SetValue(cont, "11106700992");
             PropPersContName.SetValue(cont, "DRAGE TARALD");
         }
+
         private void CreatePersContact3(object cont)
         {
             PropPersContEmail.SetValue(cont, "donald-duck@gmail.com");

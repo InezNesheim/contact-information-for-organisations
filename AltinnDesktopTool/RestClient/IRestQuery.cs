@@ -10,11 +10,11 @@ namespace RestClient
     public interface IRestQuery
     {
         /// <summary>
-        /// Fetches an object by providing and id.
+        /// Fetches a list of objects from the given URL location.
         /// </summary>
-        /// <typeparam name="T">The type of data object (DTO) which must be a subclass of <see cref="HalJsonResource"/> to be returned</typeparam>
-        /// <param name="url">The url to send to Altinn</param>
-        /// <returns>The found object or null if not found</returns>
+        /// <typeparam name="T">The type of data object (DTO) which must be a subclass of <see cref="HalJsonResource"/> to be returned.</typeparam>
+        /// <param name="url">The url to send to Altinn.</param>
+        /// <returns>The found object or null if not found.</returns>
         /// <remarks>
         /// Controller is identified by the controller having [RestQueryController(SupportedType=T)] defined with a matching T type.
         /// </remarks>

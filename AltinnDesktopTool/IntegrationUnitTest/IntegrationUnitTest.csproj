@@ -58,7 +58,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="AltinnRestClient.UnitTest.cs" />
+    <Compile Include="AltinnRestClientTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestQueryTest.cs" />
   </ItemGroup>

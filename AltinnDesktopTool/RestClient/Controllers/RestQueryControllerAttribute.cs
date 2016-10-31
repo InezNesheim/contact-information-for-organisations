@@ -2,7 +2,6 @@
 
 namespace RestClient.Controllers
 {
-
     /// <summary>
     /// Each class implementing IRestQueryController must have this attribute to identify it as a RestQueryController and define its name.
     /// The name will be used as part of the URL to identify the controller.
@@ -11,26 +10,36 @@ namespace RestClient.Controllers
     public class RestQueryControllerAttribute : Attribute
     {
         /// <summary>
-        /// Name identifying the controller
+        /// Initializes a new instance of the RestQueryControllerAttribute class with name and type set to null.
         /// </summary>
-        public string Name { get; set; }
+        public RestQueryControllerAttribute()
+        {
+        }
 
         /// <summary>
-        /// This defines the supported type for this controller.
+        /// Initializes a new instance of the RestQueryControllerAttribute class with a given name and supported type.
         /// </summary>
-        public Type SupportedType { get; set; }
-
-        internal Type ControllerType { get; set; }
-
+        /// <param name="name">The name of the controller.</param>
+        /// <param name="supportedType">The type supported by the controller.</param>
         public RestQueryControllerAttribute(string name, Type supportedType)
         {
             this.Name = name;
             this.SupportedType = supportedType;
         }
 
-        public RestQueryControllerAttribute()
-        {
-        }
+        /// <summary>
+        /// Gets or sets the name identifying the controller
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the supported type for a controller.
+        /// </summary>
+        public Type SupportedType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the controller type.
+        /// </summary>
+        internal Type ControllerType { get; set; }
     }
 }
-

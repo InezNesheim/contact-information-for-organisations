@@ -1,11 +1,16 @@
 ﻿using System;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using RestClient;
 
 namespace IntegrationUnitTest
 {
+    /// <summary>
+    /// Test class for unit tests of the AltinnRestClient class.
+    /// </summary>
     [TestClass]
-    public class UnitTest1
+    public class AltinnRestClientTest
     {
         private const string Baseaddress = "https://tt02.altinn.basefarm.net/";
 
@@ -13,9 +18,18 @@ namespace IntegrationUnitTest
 
         private const string Thumbprint = "5d15d6e888632370e0223b779c4e0f0d9d45ded0";
 
+        /// <summary>
+        /// Scenario: 
+        ///   Perform a Get request without any inputs.
+        /// Expected Result: 
+        ///   A long list of organizations.
+        /// Success Criteria: 
+        ///   There are no exceptions.
+        /// </summary>
         [TestMethod]
-        public void GetClientTest()
+        public void GetTest_RequestUnfiltered_ListOfOrganizations()
         {
+            // Arrange
             AltinnRestClient client = new AltinnRestClient(Baseaddress, Apikey, Thumbprint, false);
 
             // Authenticate

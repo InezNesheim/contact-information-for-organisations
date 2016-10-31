@@ -1,7 +1,6 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace AltinnDesktopTool.View
 {
@@ -23,11 +22,11 @@ namespace AltinnDesktopTool.View
             CheckBox checkBox = (CheckBox)sender;
             if (checkBox.IsChecked ?? false)
             {
-                checkBox.SetCurrentValue(CheckBox.IsCheckedProperty, false);
+                checkBox.SetCurrentValue(ToggleButton.IsCheckedProperty, false);
             }
             else
             {
-                checkBox.SetCurrentValue(CheckBox.IsCheckedProperty, true);
+                checkBox.SetCurrentValue(ToggleButton.IsCheckedProperty, true);
             }
 
             e.Handled = true;

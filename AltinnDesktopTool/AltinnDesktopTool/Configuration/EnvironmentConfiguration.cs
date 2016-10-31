@@ -33,7 +33,7 @@ namespace AltinnDesktopTool.Configuration
         public string ThumbPrint { get; set; }
 
         /// <summary>
-        /// Gets or sets the IgnoreSsl for the environment that this configuration is connected to.
+        /// Gets or sets a value indicating whether the client should ignore SSL errors.
         /// </summary>
         public bool IgnoreSslErrors { get; set; }
 

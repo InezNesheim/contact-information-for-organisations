@@ -1,13 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RestClient.DTO;
+﻿using System.Collections.Generic;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using RestClient.Deserialize;
+using RestClient.DTO;
 
 namespace RestClient.Test
 {
+    /// <summary>
+    /// Test class for unit tests of the <see cref="Deserializer"/> class.
+    /// </summary>
     [TestClass]
-    public class DataUnitTest
+    public class DeserializerTest
     {
-
         private const string Orgdata =
 @"
 {
@@ -98,7 +103,7 @@ namespace RestClient.Test
     }
 ";
 
-        private const string Perscontacts =
+        private const string PersonalContacts =
 @"
 {
 	""_links"": {
@@ -140,7 +145,7 @@ namespace RestClient.Test
 }
 ";
 
-        private const string Officialcontacts =
+        private const string OfficialContacts =
 @"
 {
 	""_links"": {
@@ -165,36 +170,79 @@ namespace RestClient.Test
 }
 ";
 
-
+        /// <summary>
+        /// Scenario: 
+        ///   Deserialize a <code>hal+json</code> formatted string into a list of organizations.
+        /// Expected Result: 
+        ///   A populated list of organizations.
+        /// Success Criteria: 
+        ///   The list of organizations has the correct number of entries.
+        /// </summary>
         [TestMethod]
-        public void OrganizationsSerializerTest()
+        public void DeserializeHalJsonResourceListTest_DeserializeOrganizationList()
         {
-            //var result = Util.Deserializer.DeserializeOrganizations(organizations);
-            var result = Deserializer.DeserializeHalJsonResourceList<Organization>(Organizations);
+            // Arrange
+            // Act
+            List<Organization> result = Deserializer.DeserializeHalJsonResourceList<Organization>(Organizations);
+
+            // Assert
             Assert.AreEqual(3, result.Count);
         }
 
+        /// <summary>
+        /// Scenario: 
+        ///   Deserialize a <code>hal+json</code> formatted string into an organization.
+        /// Expected Result: 
+        ///   A new instance of the Organization class populated with data from the JSON.
+        /// Success Criteria: 
+        ///   The result is not null.
+        /// </summary>
         [TestMethod]
-        public void OrganizationSerializerTest()
+        public void DeserializeHalJsonResourceTest_DeserializeOrganization()
         {
-            //var result = Util.Deserializer.DeserializeOrganizations(organizations);
-            var result = Deserializer.DeserializeHalJsonResource<Organization>(Orgdata);
+            // Arrange
+            // Act
+            Organization result = Deserializer.DeserializeHalJsonResource<Organization>(Orgdata);
+
+            // Assert
             Assert.IsNotNull(result);
         }
 
+        /// <summary>
+        /// Scenario: 
+        ///   Deserialize a <code>hal+json</code> formatted string into a list of <see cref="PersonalContact"/> instances.
+        /// Expected Result: 
+        ///   A populated list of personal contacts.
+        /// Success Criteria: 
+        ///   The list of personal contacts has the correct number of entries.
+        /// </summary>
         [TestMethod]
-        public void PersonalContactsSerializerTest()
+        public void DeserializeHalJsonResourceListTest_DeserializePersonalContactList()
         {
-            //var result = Util.Deserializer.DeserializeOrganizations(organizations);
-            var result = Deserializer.DeserializeHalJsonResourceList<PersonalContact>(Perscontacts);
+            // Arrange
+            // Act
+            List<PersonalContact> result = Deserializer.DeserializeHalJsonResourceList<PersonalContact>(PersonalContacts);
+
+            // Assert
             Assert.AreEqual(2, result.Count);
         }
 
+        /// <summary>
+        /// Scenario: 
+        ///   Deserialize a <code>hal+json</code> formatted string into a list of <see cref="OfficialContact"/> instances.
+        /// Expected Result: 
+        ///   A populated list of official contacts.
+        /// Success Criteria: 
+        ///   The list of official contacts has the correct number of entries.
+        /// </summary>
         [TestMethod]
-        public void OfficialContactsSerializerTest()
+        public void DeserializeHalJsonResourceListTest_DeserializeOfficialContactList()
         {
-            //var result = Util.Deserializer.DeserializeOrganizations(organizations);
-            var result = Deserializer.DeserializeHalJsonResourceList<OfficialContact>(Officialcontacts);
+            // Arrange
+            // Act
+            List<OfficialContact> result = Deserializer.DeserializeHalJsonResourceList<OfficialContact>(OfficialContacts);
+
+            // Assert
             Assert.AreEqual(2, result.Count);
         }
     }

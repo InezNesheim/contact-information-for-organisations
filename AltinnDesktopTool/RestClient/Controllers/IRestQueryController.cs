@@ -1,13 +1,12 @@
 ﻿namespace RestClient.Controllers
 {
-
     /// <summary>
-    /// The controller interface. Inherits the IRestQuery by adding the ControllerContext.
+    /// Interface representing the controller. Inherits the IRestQuery and adds the ControllerContext.
     /// </summary>
     public interface IRestQueryController : IRestQuery
     {
         /// <summary>
-        /// Contains the required data for the Controller.
+        /// Gets or sets the controller context.
         /// </summary>
         ControllerContext Context { get; set; }
     }
