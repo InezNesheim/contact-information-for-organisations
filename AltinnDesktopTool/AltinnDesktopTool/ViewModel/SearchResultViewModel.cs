@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -120,7 +121,8 @@ namespace AltinnDesktopTool.ViewModel
         public void ItemCheckedHandler(OrganizationModel organizationModel)
         {
             this.GetContactsCommandHandler(organizationModel);
-            this.organizations.Add(organizationModel);
+            if (this.Model.ResultCollection.Any(x => x.OrganizationNumber == organizationModel.OrganizationNumber))
+                this.organizations.Add(organizationModel);
         }
 
         /// <summary>
@@ -212,6 +214,8 @@ namespace AltinnDesktopTool.ViewModel
             this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
             this.organizations = new List<OrganizationModel>();
             this.SelectAllChecked = false;
+            this.Model.ResultCollection = new ObservableCollection<OrganizationModel>();
+            this.Model.EmptyMessageVisibility = false;
         }
 
         private void SearchStartedEventHandler(object sender, PubSubEventArgs<bool> e)
