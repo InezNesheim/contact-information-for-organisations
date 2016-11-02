@@ -70,9 +70,11 @@ namespace AltinnDesktopToolTest.ViewModel
             {
                 Name = "LER OG HEREFOSS",
                 Type = "AS",
+                IsSelected = true,
                 OrganizationNumber = "910570919",
                 OfficialContacts = "https://www.altinn.no/api/serviceowner/organizations/910570919/officialcontacts"
             };
+            searchResultViewModel.Model.ResultCollection.Add(organizationModel);
 
             ObservableCollection<OfficialContact> officialContacts = new ObservableCollection<OfficialContact>
             {
@@ -93,8 +95,6 @@ namespace AltinnDesktopToolTest.ViewModel
             };
 
             query.Setup(s => s.GetByLink<OfficialContact>(It.Is<string>(url => url == organizationModel.OfficialContacts))).Returns(officialContacts);
-
-            searchResultViewModel.ItemCheckedHandler(organizationModel);
 
             // Act
             searchResultViewModel.CopyToClipboardExcelFormatHandler();

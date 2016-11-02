@@ -28,7 +28,7 @@ namespace AltinnDesktopTool.ViewModel
         }
 
         /// <summary>
-        /// Gets and sets Closing window command
+        /// Gets or sets Closing window command
         /// </summary>
         public RelayCommand<CancelEventArgs> ClosingWindowCommand { get; set; }
 

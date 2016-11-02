@@ -10,6 +10,7 @@ namespace AltinnDesktopTool.Model
         private ObservableCollection<OfficialContactModel> officalContactsCollection;
 
         private ObservableCollection<PersonalContactModel> personalContactsCollection;
+        private bool isSelected;
 
         /// <summary>
         /// Gets or sets the Organization Name (as mapped from DTO)
@@ -67,6 +68,23 @@ namespace AltinnDesktopTool.Model
             {
                 this.personalContactsCollection = value;
                 this.RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether an item is selected
+        /// </summary>
+        public bool IsSelected
+        {
+            get
+            {
+                return this.isSelected;
+            }
+
+            set
+            {
+                this.isSelected = value;
+                this.RaisePropertyChanged(() => this.IsSelected);
             }
         }
     }

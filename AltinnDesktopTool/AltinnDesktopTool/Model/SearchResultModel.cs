@@ -12,6 +12,7 @@ namespace AltinnDesktopTool.Model
         private bool emptyMessageVisibility;
 
         private string infoText = string.Empty;
+        private bool selectAllChecked;
 
         /// <summary>
         /// Gets or sets a value indicating whether the Info text is visible in the result grid
@@ -63,6 +64,26 @@ namespace AltinnDesktopTool.Model
                 this.resultCollection = value;
                 this.RaisePropertyChanged(() => this.ResultCollection);
                 this.EmptyMessageVisibility = (this.resultCollection == null) || (this.resultCollection.Count == 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether all items are checked or not
+        /// </summary>
+        public bool SelectAllChecked
+        {
+            get
+            {
+                return this.selectAllChecked;
+            }
+
+            set
+            {
+                this.selectAllChecked = value;
+                foreach (OrganizationModel organizationModel in this.resultCollection)
+                {
+                    organizationModel.IsSelected = value;
+                }
             }
         }
     }
