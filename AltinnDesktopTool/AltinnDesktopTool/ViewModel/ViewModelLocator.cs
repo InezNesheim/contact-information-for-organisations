@@ -13,6 +13,7 @@
 */
 
 using AltinnDesktopTool.Utils.Helpers;
+using AltinnDesktopTool.Utils.PubSub;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
@@ -85,7 +86,7 @@ namespace AltinnDesktopTool.ViewModel
         /// </summary>
         public static void Cleanup()
         {
-            // TODO Clear the ViewModels
+            PubSub<object>.ClearEvents();
         }
     }
 }

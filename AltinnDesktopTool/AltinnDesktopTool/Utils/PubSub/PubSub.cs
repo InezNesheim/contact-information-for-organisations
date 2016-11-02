@@ -16,7 +16,7 @@ namespace AltinnDesktopTool.Utils.PubSub
     /// <typeparam name="T">The View Type</typeparam>
     public static class PubSub<T>
     {
-        private static readonly Dictionary<string, PubSubEventHandler<T>> Events =
+        private static Dictionary<string, PubSubEventHandler<T>> events =
                 new Dictionary<string, PubSubEventHandler<T>>();
 
         /// <summary>
@@ -26,9 +26,9 @@ namespace AltinnDesktopTool.Utils.PubSub
         /// <param name="handler">The event handler</param>
         public static void AddEvent(string name, PubSubEventHandler<T> handler)
         {
-            if (!Events.ContainsKey(name))
+            if (!events.ContainsKey(name))
             {
-                Events.Add(name, handler);
+                events.Add(name, handler);
             }
         }
 
@@ -40,9 +40,9 @@ namespace AltinnDesktopTool.Utils.PubSub
         /// <param name="args">The arguments</param>
         public static void RaiseEvent(string name, object sender, PubSubEventArgs<T> args)
         {
-            if (Events.ContainsKey(name) && Events[name] != null)
+            if (events.ContainsKey(name) && events[name] != null)
             {
-                Events[name](sender, args);
+                events[name](sender, args);
             }
         }
 
@@ -53,14 +53,22 @@ namespace AltinnDesktopTool.Utils.PubSub
         /// <param name="handler">The event handler</param>
         public static void RegisterEvent(string name, PubSubEventHandler<T> handler)
         {
-            if (Events.ContainsKey(name))
+            if (events.ContainsKey(name))
             {
-                Events[name] += handler;
+                events[name] += handler;
             }
             else
             {
-                Events.Add(name, handler);
+                events.Add(name, handler);
             }
+        }
+
+        /// <summary>
+        /// Clears the registered events
+        /// </summary>
+        public static void ClearEvents()
+        {
+            events = new Dictionary<string, PubSubEventHandler<T>>();
         }
     }
 }

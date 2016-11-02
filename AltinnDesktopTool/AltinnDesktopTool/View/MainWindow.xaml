@@ -6,6 +6,8 @@
         mc:Ignorable="d"
         xmlns:view="clr-namespace:AltinnDesktopTool.View"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:command="http://www.galasoft.ch/mvvmlight"
         Title="{x:Static view:Resources.ApplicationName}" Height="400.648" Width="400.559" MinWidth="460"
         GlowBrush="{DynamicResource AccentColorBrush}"
         ResizeMode="CanResizeWithGrip"
@@ -14,6 +16,11 @@
     <Window.Resources>
         <ResourceDictionary></ResourceDictionary>
     </Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <command:EventToCommand Command="{Binding ClosingWindowCommand}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
