@@ -8,6 +8,7 @@
              xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
              xmlns:view="clr-namespace:AltinnDesktopTool.View"
+             xmlns:helpers="clr-namespace:AltinnDesktopTool.Utils.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="600"
              DataContext="{Binding SearchResultViewModel, Source={StaticResource ViewModelLocator}}">
@@ -21,6 +22,12 @@
         </Grid.RowDefinitions>
 
         <DataGrid x:Name="OrganizationGrid" IsReadOnly="True" ItemsSource="{Binding Model.ResultCollection}" Margin="10,10,10,20" GridLinesVisibility="All" AlternationCount="2" AutoGenerateColumns="False" BorderThickness="0" SelectionMode="Single" SelectionUnit="FullRow">
+            
+            <DataGrid.Resources>
+                <!--            This is nessecary for the SelectAll checkbox to receive the correct DataContext-->
+                <helpers:BindingProxy x:Key="proxy" Data="{Binding}" />
+            </DataGrid.Resources>
+
             <DataGrid.Columns>
 
                 <DataGridTextColumn Header="{x:Static view:Resources.OrganizationGridColumnName}" Binding="{Binding Name}" Width="*"/>
@@ -29,7 +36,7 @@
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.Header>
-                        <CheckBox ToolTip="{x:Static view:Resources.SelectAll}" x:Name="headerCheckBox" />
+                        <CheckBox IsChecked="{Binding Data.SelectAllChecked, Source={StaticResource proxy}}" ToolTip="{x:Static view:Resources.SelectAll}" x:Name="HeaderCheckBox" />
                     </DataGridTemplateColumn.Header>
 
                     <DataGridTemplateColumn.HeaderStyle>
@@ -41,7 +48,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox PreviewMouseDown="UIElement_OnPreviewMouseDown" HorizontalAlignment="Center"
-                      IsChecked="{Binding IsChecked, ElementName=headerCheckBox, 
+                      IsChecked="{Binding IsChecked, ElementName=HeaderCheckBox, 
                                           Mode=OneWay}" >
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Checked">
@@ -128,7 +135,6 @@
                 </Rectangle>
             </StackPanel>
         </Button>
-
     </Grid>
 </UserControl>
 

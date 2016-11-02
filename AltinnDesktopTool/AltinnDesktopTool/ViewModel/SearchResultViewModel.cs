@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -26,8 +27,9 @@ namespace AltinnDesktopTool.ViewModel
     {
         private readonly ILog logger;
         private readonly IMapper mapper;
-        private List<OrganizationModel> organizationModels = new List<OrganizationModel>();
+        private List<OrganizationModel> organizations = new List<OrganizationModel>();
         private IRestQuery restQuery;
+        private bool selectAllChecked;
 
         /// <summary>
         /// Initializes a new instance of the SearchResultViewModel class.
@@ -52,6 +54,20 @@ namespace AltinnDesktopTool.ViewModel
             this.ItemUnchecked = new RelayCommand<OrganizationModel>(this.ItemUncheckedHandler);
             this.CopyToClipboardPlainTextCommand = new RelayCommand(this.CopyToClipboardPlainTextHandler);
             this.CopyToClipboardExcelFormatCommand = new RelayCommand(this.CopyToClipboardExcelFormatHandler);
+        }
+
+        public bool SelectAllChecked
+        {
+            get { return this.selectAllChecked; }
+            set
+            {
+                this.selectAllChecked = value;
+                if (!value)
+                {
+                    this.organizations = new List<OrganizationModel>();
+                }
+                this.RaisePropertyChanged(() => this.SelectAllChecked);
+            }
         }
 
         /// <summary>
@@ -82,7 +98,7 @@ namespace AltinnDesktopTool.ViewModel
         /// <summary>
         /// Gets the CopyToClipboardExcelFormat command
         /// </summary>
-        public ICommand CopyToClipboardExcelFormatCommand { get; private set; }        
+        public ICommand CopyToClipboardExcelFormatCommand { get; private set; }
 
         /// <summary>
         /// Handler for SearchResultReceived event
@@ -93,7 +109,7 @@ namespace AltinnDesktopTool.ViewModel
         {
             this.logger.Debug("Handling search result received event.");
             this.Model.ResultCollection = args.Item;
-            this.organizationModels = new List<OrganizationModel>();
+            this.organizations = new List<OrganizationModel>();
             this.Model.IsBusy = false;
         }
 
@@ -104,7 +120,7 @@ namespace AltinnDesktopTool.ViewModel
         public void ItemCheckedHandler(OrganizationModel organizationModel)
         {
             this.GetContactsCommandHandler(organizationModel);
-            this.organizationModels.Add(organizationModel);
+            this.organizations.Add(organizationModel);
         }
 
         /// <summary>
@@ -114,7 +130,7 @@ namespace AltinnDesktopTool.ViewModel
         public void ItemUncheckedHandler(OrganizationModel organizationModel)
         {
             this.GetContactsCommandHandler(organizationModel);
-            this.organizationModels.Remove(organizationModel);
+            this.organizations.Remove(organizationModel);
         }
 
         /// <summary>
@@ -123,7 +139,7 @@ namespace AltinnDesktopTool.ViewModel
         public void CopyToClipboardPlainTextHandler()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (OrganizationModel organizationModel in this.organizationModels)
+            foreach (OrganizationModel organizationModel in this.organizations)
             {
                 stringBuilder.Append(organizationModel.Name + " " + organizationModel.Type + " " + organizationModel.OrganizationNumber + Environment.NewLine);
 
@@ -166,7 +182,7 @@ namespace AltinnDesktopTool.ViewModel
             StringBuilder stringBuilder = new StringBuilder();
             string separator = "\t";
 
-            foreach (OrganizationModel organizationModel in this.organizationModels)
+            foreach (OrganizationModel organizationModel in this.organizations)
             {
                 foreach (OfficialContactModel officialContactModel in organizationModel.OfficalContactsCollection)
                 {
@@ -181,7 +197,10 @@ namespace AltinnDesktopTool.ViewModel
                     stringBuilder.Append(officialContactModel.EmailAddress + separator + mobilNumber + Environment.NewLine);
                 }
 
-                stringBuilder.AppendLine();
+                if (organizationModel.OfficalContactsCollection.Count != 0)
+                {
+                    stringBuilder.AppendLine();
+                }
             }
 
             Clipboard.SetText(stringBuilder.ToString());
@@ -191,7 +210,8 @@ namespace AltinnDesktopTool.ViewModel
         {
             this.logger.Debug("Handling environment changed received event.");
             this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
-            this.organizationModels = new List<OrganizationModel>();
+            this.organizations = new List<OrganizationModel>();
+            this.SelectAllChecked = false;
         }
 
         private void SearchStartedEventHandler(object sender, PubSubEventArgs<bool> e)
