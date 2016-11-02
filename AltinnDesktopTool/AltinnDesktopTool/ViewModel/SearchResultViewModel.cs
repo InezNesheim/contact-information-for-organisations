@@ -46,6 +46,8 @@ namespace AltinnDesktopTool.ViewModel
             PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultReceivedEvent, this.SearchResultReceivedEventHandler);
             PubSub<bool>.RegisterEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
             PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
+            PubSub<OrganizationModel>.RegisterEvent(EventNames.OrganizationSelectedChangedEvent, this.OrganizationSelectedChangedEventHandler);
+            PubSub<SearchResultModel>.RegisterEvent(EventNames.OrganizationSelectedAllChangedEvent, this.OrganizationSelectedAllChangedEventHandler);
 
             this.GetContactsCommand = new RelayCommand<OrganizationModel>(this.GetContactsCommandHandler);
             this.CopyToClipboardPlainTextCommand = new RelayCommand(this.CopyToClipboardPlainTextHandler);
@@ -160,12 +162,35 @@ namespace AltinnDesktopTool.ViewModel
             Clipboard.SetText(stringBuilder.ToString());
         }
 
+        private void OrganizationSelectedAllChangedEventHandler(object sender, PubSubEventArgs<SearchResultModel> e)
+        {
+            int selectedCount = this.Model.ResultCollection.Select(x => x.IsSelected).Count();
+            if (selectedCount != this.Model.ResultCollection.Count)
+            {
+                return;
+            }
+            //// Set all items to the same selected value 
+            foreach (OrganizationModel organizationModel in this.Model.ResultCollection)
+            {
+                organizationModel.SetIsSelected(this.Model.SelectAllChecked);
+            }
+        }
+
         private void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> e)
         {
             this.logger.Debug("Handling environment changed received event.");
             this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
             this.Model.ResultCollection = new ObservableCollection<OrganizationModel>();
             this.Model.EmptyMessageVisibility = false;
+        }
+
+        private void OrganizationSelectedChangedEventHandler(object sender, PubSubEventArgs<OrganizationModel> e)
+        {
+            int selectedCount = this.Model.ResultCollection.Select(x => x.IsSelected).Count();
+            if ((selectedCount != this.Model.ResultCollection.Count) || !e.Item.IsSelected)
+            {
+                this.Model.SetSelectAllChecked(false);
+            }
         }
 
         private IEnumerable<OrganizationModel> GetOrganizationsWithContacts(IEnumerable<OrganizationModel> orgs)

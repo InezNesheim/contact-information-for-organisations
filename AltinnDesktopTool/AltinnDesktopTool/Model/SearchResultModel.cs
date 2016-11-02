@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 
+using AltinnDesktopTool.Utils.PubSub;
+
 namespace AltinnDesktopTool.Model
 {
     /// <summary>
@@ -80,11 +82,19 @@ namespace AltinnDesktopTool.Model
             set
             {
                 this.selectAllChecked = value;
-                foreach (OrganizationModel organizationModel in this.resultCollection)
-                {
-                    organizationModel.IsSelected = value;
-                }
+                this.RaisePropertyChanged(() => this.SelectAllChecked);
+                PubSub<SearchResultModel>.RaiseEvent(EventNames.OrganizationSelectedAllChangedEvent, this, new PubSubEventArgs<SearchResultModel>(this));
             }
+        }
+
+        /// <summary>
+        /// Sets SelectAllChecked
+        /// </summary>
+        /// <param name="value">boolean value</param>
+        public void SetSelectAllChecked(bool value)
+        {
+            this.selectAllChecked = false;
+            this.RaisePropertyChanged(() => this.SelectAllChecked);
         }
     }
 }

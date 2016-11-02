@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 
+using AltinnDesktopTool.Utils.PubSub;
+
 namespace AltinnDesktopTool.Model
 {
     /// <summary>
@@ -85,7 +87,18 @@ namespace AltinnDesktopTool.Model
             {
                 this.isSelected = value;
                 this.RaisePropertyChanged(() => this.IsSelected);
+                PubSub<OrganizationModel>.RaiseEvent(EventNames.OrganizationSelectedChangedEvent, this, new PubSubEventArgs<OrganizationModel>(this));
             }
+        }
+
+        /// <summary>
+        /// Sets IsSelected
+        /// </summary>
+        /// <param name="value">boolean value</param>
+        public void SetIsSelected(bool value)
+        {
+            this.isSelected = value;
+            this.RaisePropertyChanged(() => this.IsSelected);
         }
     }
 }
