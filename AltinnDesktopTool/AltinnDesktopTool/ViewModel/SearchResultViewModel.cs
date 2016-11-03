@@ -183,6 +183,7 @@ namespace AltinnDesktopTool.ViewModel
             this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
             this.Model.ResultCollection = new ObservableCollection<OrganizationModel>();
             this.Model.EmptyMessageVisibility = false;
+            this.Model.SelectAllChecked = false;
         }
 
         private void OrganizationSelectedChangedEventHandler(object sender, PubSubEventArgs<OrganizationModel> e)
