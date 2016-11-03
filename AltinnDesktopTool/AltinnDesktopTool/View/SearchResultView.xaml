@@ -63,13 +63,6 @@
                 <DataTemplate>
                     <Border BorderThickness="1" Padding="10">
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{x:Static view:Resources.OfficialContactsTitle}"/>
-                            <DataGrid x:Name="OfficialContactsGrid" ItemsSource="{Binding OfficalContactsCollection}" GridLinesVisibility="All" IsReadOnly="True" SelectionUnit="FullRow" AutoGenerateColumns="False">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="{x:Static view:Resources.OfficialContactsGridColumnEmail}" Binding="{Binding EmailAddress}"/>
-                                    <DataGridTextColumn Header="{x:Static view:Resources.OfficialContactsGridColumnMobile}" Binding="{Binding MobileNumber}"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
                             <TextBlock Text="{x:Static view:Resources.PersonalContactsTitle}"/>
                             <DataGrid x:Name="PersonalContactsGrid" ItemsSource="{Binding PersonalContactsCollection}" GridLinesVisibility="All" IsReadOnly="True" SelectionUnit="FullRow" AutoGenerateColumns="False">
                                 <DataGrid.Columns>
@@ -77,6 +70,13 @@
                                     <DataGridTextColumn Header="{x:Static view:Resources.PersonalContactsGridColumnSsn}" Binding="{Binding SocialSecurityNumber}"/>
                                     <DataGridTextColumn Header="{x:Static view:Resources.PersonalContactsGridColumnMobile}" Binding="{Binding MobileNumber}"/>
                                     <DataGridTextColumn Header="{x:Static view:Resources.PersonalContactsGridColumnEmail}" Binding="{Binding EmailAddress}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <TextBlock Text="{x:Static view:Resources.OfficialContactsTitle}"/>
+                            <DataGrid x:Name="OfficialContactsGrid" ItemsSource="{Binding OfficalContactsCollection}" GridLinesVisibility="All" IsReadOnly="True" SelectionUnit="FullRow" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="{x:Static view:Resources.OfficialContactsGridColumnEmail}" Binding="{Binding EmailAddress}"/>
+                                    <DataGridTextColumn Header="{x:Static view:Resources.OfficialContactsGridColumnMobile}" Binding="{Binding MobileNumber}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
