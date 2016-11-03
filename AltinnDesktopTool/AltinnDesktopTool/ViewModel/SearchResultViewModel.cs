@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -8,6 +9,7 @@ using System.Windows.Input;
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.Helpers;
 using AltinnDesktopTool.Utils.PubSub;
+using AltinnDesktopTool.View;
 
 using AutoMapper;
 using GalaSoft.MvvmLight.Command;
@@ -26,7 +28,6 @@ namespace AltinnDesktopTool.ViewModel
     {
         private readonly ILog logger;
         private readonly IMapper mapper;
-        private List<OrganizationModel> organizationModels = new List<OrganizationModel>();
         private IRestQuery restQuery;
 
         /// <summary>
@@ -41,15 +42,15 @@ namespace AltinnDesktopTool.ViewModel
             this.mapper = mapper;
             this.restQuery = restQuery;
 
-            this.Model = new SearchResultModel();
+            this.Model = new SearchResultModel { ResultCollection = new ObservableCollection<OrganizationModel>() };
 
             PubSub<ObservableCollection<OrganizationModel>>.RegisterEvent(EventNames.SearchResultReceivedEvent, this.SearchResultReceivedEventHandler);
             PubSub<bool>.RegisterEvent(EventNames.SearchStartedEvent, this.SearchStartedEventHandler);
             PubSub<string>.RegisterEvent(EventNames.EnvironmentChangedEvent, this.EnvironmentChangedEventHandler);
+            PubSub<OrganizationModel>.RegisterEvent(EventNames.OrganizationSelectedChangedEvent, this.OrganizationSelectedChangedEventHandler);
+            PubSub<SearchResultModel>.RegisterEvent(EventNames.OrganizationSelectedAllChangedEvent, this.OrganizationSelectedAllChangedEventHandler);
 
             this.GetContactsCommand = new RelayCommand<OrganizationModel>(this.GetContactsCommandHandler);
-            this.ItemChecked = new RelayCommand<OrganizationModel>(this.ItemCheckedHandler);
-            this.ItemUnchecked = new RelayCommand<OrganizationModel>(this.ItemUncheckedHandler);
             this.CopyToClipboardPlainTextCommand = new RelayCommand(this.CopyToClipboardPlainTextHandler);
             this.CopyToClipboardExcelFormatCommand = new RelayCommand(this.CopyToClipboardExcelFormatHandler);
         }
@@ -65,16 +66,6 @@ namespace AltinnDesktopTool.ViewModel
         public RelayCommand<OrganizationModel> GetContactsCommand { get; private set; }
 
         /// <summary>
-        /// Gets the ItemChecked command
-        /// </summary>
-        public RelayCommand<OrganizationModel> ItemChecked { get; private set; }
-
-        /// <summary>
-        /// Gets the ItemUnchecked command
-        /// </summary>
-        public RelayCommand<OrganizationModel> ItemUnchecked { get; private set; }
-
-        /// <summary>
         /// Gets the CopyToClipboardPlainText command
         /// </summary>
         public ICommand CopyToClipboardPlainTextCommand { get; private set; }
@@ -82,7 +73,7 @@ namespace AltinnDesktopTool.ViewModel
         /// <summary>
         /// Gets the CopyToClipboardExcelFormat command
         /// </summary>
-        public ICommand CopyToClipboardExcelFormatCommand { get; private set; }        
+        public ICommand CopyToClipboardExcelFormatCommand { get; private set; }
 
         /// <summary>
         /// Handler for SearchResultReceived event
@@ -93,28 +84,7 @@ namespace AltinnDesktopTool.ViewModel
         {
             this.logger.Debug("Handling search result received event.");
             this.Model.ResultCollection = args.Item;
-            this.organizationModels = new List<OrganizationModel>();
             this.Model.IsBusy = false;
-        }
-
-        /// <summary>
-        /// Handler for Item checked event
-        /// </summary>
-        /// <param name="organizationModel">OrganizationModel connected to the checked item</param>
-        public void ItemCheckedHandler(OrganizationModel organizationModel)
-        {
-            this.GetContactsCommandHandler(organizationModel);
-            this.organizationModels.Add(organizationModel);
-        }
-
-        /// <summary>
-        /// Handler for item unchecked event
-        /// </summary>
-        /// <param name="organizationModel">OrganizationModel connected to the unchecked item</param>
-        public void ItemUncheckedHandler(OrganizationModel organizationModel)
-        {
-            this.GetContactsCommandHandler(organizationModel);
-            this.organizationModels.Remove(organizationModel);
         }
 
         /// <summary>
@@ -123,13 +93,15 @@ namespace AltinnDesktopTool.ViewModel
         public void CopyToClipboardPlainTextHandler()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (OrganizationModel organizationModel in this.organizationModels)
+            IEnumerable<OrganizationModel> organizationsWithContacts = this.GetOrganizationsWithContacts(this.Model.ResultCollection.Where(x => x.IsSelected));
+
+            foreach (OrganizationModel organizationModel in organizationsWithContacts)
             {
                 stringBuilder.Append(organizationModel.Name + " " + organizationModel.Type + " " + organizationModel.OrganizationNumber + Environment.NewLine);
 
                 if (organizationModel.OfficalContactsCollection.Count > 0)
                 {
-                    stringBuilder.Append("Offisielle kontakter:" + Environment.NewLine);
+                    stringBuilder.Append(Resources.OfficialContactsTitle + ":" + Environment.NewLine);
 
                     foreach (OfficialContactModel officialContactModel in organizationModel.OfficalContactsCollection)
                     {
@@ -166,7 +138,8 @@ namespace AltinnDesktopTool.ViewModel
             StringBuilder stringBuilder = new StringBuilder();
             string separator = "\t";
 
-            foreach (OrganizationModel organizationModel in this.organizationModels)
+            IEnumerable<OrganizationModel> organizationsWithContacts = this.GetOrganizationsWithContacts(this.Model.ResultCollection.Where(x => x.IsSelected));
+            foreach (OrganizationModel organizationModel in organizationsWithContacts)
             {
                 foreach (OfficialContactModel officialContactModel in organizationModel.OfficalContactsCollection)
                 {
@@ -181,17 +154,56 @@ namespace AltinnDesktopTool.ViewModel
                     stringBuilder.Append(officialContactModel.EmailAddress + separator + mobilNumber + Environment.NewLine);
                 }
 
-                stringBuilder.AppendLine();
+                if (organizationModel.OfficalContactsCollection.Count != 0)
+                {
+                    stringBuilder.AppendLine();
+                }
             }
 
             Clipboard.SetText(stringBuilder.ToString());
+        }
+
+        private void OrganizationSelectedAllChangedEventHandler(object sender, PubSubEventArgs<SearchResultModel> e)
+        {
+            int selectedCount = this.Model.ResultCollection.Select(x => x.IsSelected).Count();
+            if (selectedCount != this.Model.ResultCollection.Count)
+            {
+                return;
+            }
+            //// Set all items to the same selected value 
+            foreach (OrganizationModel organizationModel in this.Model.ResultCollection)
+            {
+                organizationModel.SetIsSelected(this.Model.SelectAllChecked);
+            }
         }
 
         private void EnvironmentChangedEventHandler(object sender, PubSubEventArgs<string> e)
         {
             this.logger.Debug("Handling environment changed received event.");
             this.restQuery = new RestQuery(ProxyConfigHelper.GetConfig(e.Item), this.logger);
-            this.organizationModels = new List<OrganizationModel>();
+            this.Model.ResultCollection = new ObservableCollection<OrganizationModel>();
+            this.Model.EmptyMessageVisibility = false;
+            this.Model.SelectAllChecked = false;
+        }
+
+        private void OrganizationSelectedChangedEventHandler(object sender, PubSubEventArgs<OrganizationModel> e)
+        {
+            int selectedCount = this.Model.ResultCollection.Select(x => x.IsSelected).Count();
+            if ((selectedCount != this.Model.ResultCollection.Count) || !e.Item.IsSelected)
+            {
+                this.Model.SetSelectAllChecked(false);
+            }
+        }
+
+        private IEnumerable<OrganizationModel> GetOrganizationsWithContacts(IEnumerable<OrganizationModel> orgs)
+        {
+            IEnumerable<OrganizationModel> organizationsWithContacts = orgs as IList<OrganizationModel> ?? orgs.ToList();
+            foreach (OrganizationModel organizationModel in organizationsWithContacts)
+            {
+                this.GetContactsCommandHandler(organizationModel);
+            }
+
+            return organizationsWithContacts;
         }
 
         private void SearchStartedEventHandler(object sender, PubSubEventArgs<bool> e)

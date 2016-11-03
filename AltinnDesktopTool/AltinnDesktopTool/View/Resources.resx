@@ -121,10 +121,10 @@
     <value />
   </data>
   <data name="CopyPlainTextTooltip" xml:space="preserve">
-    <value>Kopier tekst</value>
+    <value>Kopier til tekstformat</value>
   </data>
   <data name="CopyToExcelTooltip" xml:space="preserve">
-    <value>Kopier til excel</value>
+    <value>Kopier til excelformat</value>
   </data>
   <data name="EMail" xml:space="preserve">
     <value>e-post</value>
@@ -147,7 +147,7 @@ Kontakt Erlend Oksvoll (eok@brreg.no) ved spørsmål!</value>
     <value>Mobilnummer</value>
   </data>
   <data name="OfficialContactsTitle" xml:space="preserve">
-    <value>Offisielle kontakter</value>
+    <value>Felles kontaktinformasjon</value>
   </data>
   <data name="OrganizationGridColumnName" xml:space="preserve">
     <value>Navn</value>
@@ -174,7 +174,7 @@ Kontakt Erlend Oksvoll (eok@brreg.no) ved spørsmål!</value>
     <value>Fødselsnummer</value>
   </data>
   <data name="PersonalContactsTitle" xml:space="preserve">
-    <value>Personlige kontakter</value>
+    <value>Din kontaktinformasjon</value>
   </data>
   <data name="PhoneNumber" xml:space="preserve">
     <value>mobilnummer</value>

@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 
+using AltinnDesktopTool.Utils.PubSub;
+
 namespace AltinnDesktopTool.Model
 {
     /// <summary>
@@ -12,6 +14,7 @@ namespace AltinnDesktopTool.Model
         private bool emptyMessageVisibility;
 
         private string infoText = string.Empty;
+        private bool selectAllChecked;
 
         /// <summary>
         /// Gets or sets a value indicating whether the Info text is visible in the result grid
@@ -64,6 +67,34 @@ namespace AltinnDesktopTool.Model
                 this.RaisePropertyChanged(() => this.ResultCollection);
                 this.EmptyMessageVisibility = (this.resultCollection == null) || (this.resultCollection.Count == 0);
             }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether all items are checked or not
+        /// </summary>
+        public bool SelectAllChecked
+        {
+            get
+            {
+                return this.selectAllChecked;
+            }
+
+            set
+            {
+                this.selectAllChecked = value;
+                this.RaisePropertyChanged(() => this.SelectAllChecked);
+                PubSub<SearchResultModel>.RaiseEvent(EventNames.OrganizationSelectedAllChangedEvent, this, new PubSubEventArgs<SearchResultModel>(this));
+            }
+        }
+
+        /// <summary>
+        /// Sets SelectAllChecked
+        /// </summary>
+        /// <param name="value">boolean value</param>
+        public void SetSelectAllChecked(bool value)
+        {
+            this.selectAllChecked = false;
+            this.RaisePropertyChanged(() => this.SelectAllChecked);
         }
     }
 }

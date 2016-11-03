@@ -11,13 +11,23 @@
         public static readonly string SearchResultReceivedEvent = "SearchResultReceivedEvent";
 
         /// <summary>
-        /// Search event
+        /// Environment Changed Event
         /// </summary>
         public static readonly string EnvironmentChangedEvent = "EnvironmentChangedEvent";
 
         /// <summary>
-        /// Search event
+        /// Search StartedEvent
         /// </summary>
         public static readonly string SearchStartedEvent = "SearchStartedEvent";
+
+        /// <summary>
+        /// Organization Selected Changed Event
+        /// </summary>
+        public static readonly string OrganizationSelectedChangedEvent = "OrganizationSelectedChangedEvent";
+        
+        /// <summary>
+        /// Organization Selected Changed All Event
+        /// </summary>
+        public static readonly string OrganizationSelectedAllChangedEvent = "OrganizationSelectedAllChangedEvent";
     }
 }

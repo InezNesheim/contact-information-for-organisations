@@ -70,7 +70,7 @@ namespace AltinnDesktopTool.View {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Kopier tekst.
+        ///   Looks up a localized string similar to Kopier til tekstformat.
         /// </summary>
         public static string CopyPlainTextTooltip {
             get {
@@ -79,7 +79,7 @@ namespace AltinnDesktopTool.View {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Kopier til excel.
+        ///   Looks up a localized string similar to Kopier til excelformat.
         /// </summary>
         public static string CopyToExcelTooltip {
             get {
@@ -144,7 +144,7 @@ namespace AltinnDesktopTool.View {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Offisielle kontakter.
+        ///   Looks up a localized string similar to Felles kontaktinformasjon.
         /// </summary>
         public static string OfficialContactsTitle {
             get {
@@ -225,7 +225,7 @@ namespace AltinnDesktopTool.View {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Personlige kontakter.
+        ///   Looks up a localized string similar to Din kontaktinformasjon.
         /// </summary>
         public static string PersonalContactsTitle {
             get {
