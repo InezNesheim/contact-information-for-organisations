@@ -1,18 +1,16 @@
 using System.ComponentModel;
+using System.Windows;
+
+using AltinnDesktopTool.Configuration;
+using AltinnDesktopTool.Utils.PubSub;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
+using MahApps.Metro;
+
 namespace AltinnDesktopTool.ViewModel
 {
-    using System.Windows;
-
-    using Configuration;
-
-    using MahApps.Metro;
-
-    using Utils.PubSub;
-
     /// <summary>
     /// ViewModel for MainView
     /// </summary>
@@ -28,7 +26,7 @@ namespace AltinnDesktopTool.ViewModel
         }
 
         /// <summary>
-        /// Gets and sets Closing window command
+        /// Gets or sets Closing window command
         /// </summary>
         public RelayCommand<CancelEventArgs> ClosingWindowCommand { get; set; }
 
