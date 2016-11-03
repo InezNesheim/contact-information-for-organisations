@@ -9,6 +9,7 @@ using System.Windows.Input;
 using AltinnDesktopTool.Model;
 using AltinnDesktopTool.Utils.Helpers;
 using AltinnDesktopTool.Utils.PubSub;
+using AltinnDesktopTool.View;
 
 using AutoMapper;
 using GalaSoft.MvvmLight.Command;
@@ -100,7 +101,7 @@ namespace AltinnDesktopTool.ViewModel
 
                 if (organizationModel.OfficalContactsCollection.Count > 0)
                 {
-                    stringBuilder.Append("Offisielle kontakter:" + Environment.NewLine);
+                    stringBuilder.Append(Resources.OfficialContactsTitle + ":" + Environment.NewLine);
 
                     foreach (OfficialContactModel officialContactModel in organizationModel.OfficalContactsCollection)
                     {
