@@ -30,7 +30,14 @@ namespace IntegrationUnitTest
         public void GetTest_RequestUnfiltered_ListOfOrganizations()
         {
             // Arrange
-            AltinnRestClient client = new AltinnRestClient(Baseaddress, Apikey, Thumbprint, false);
+            AltinnRestClient client = new AltinnRestClient
+            {
+                BaseAddress = Baseaddress,
+                ApiKey = Apikey,
+                Thumbprint = Thumbprint,
+                IgnoreSslErrors = false,
+                Timeout = 10
+            };
 
             // Authenticate
             // NOTE: Altinn returns 401 even if it is validated.

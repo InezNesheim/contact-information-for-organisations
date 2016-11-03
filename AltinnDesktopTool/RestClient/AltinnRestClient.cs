@@ -30,25 +30,6 @@ namespace RestClient
 
         #endregion
 
-        #region constructors
-
-        /// <summary>
-        /// Initializes a new instance of the AltinnRestClient class with a base address, api key and certificate thumbprint.
-        /// </summary>
-        /// <param name="baseAddress">The base url for the API being used by the client.</param>
-        /// <param name="apiKey">The ApiKey for the specific application using the client.</param>
-        /// <param name="certificateThumbprint">The thumbprint for the enterprise certificate for the service owner.</param>
-        /// <param name="ignoreSslErrors">Controls whether the client should ignore errors related to SSL.</param>
-        public AltinnRestClient(string baseAddress, string apiKey, string certificateThumbprint, bool ignoreSslErrors)
-        {
-            this.baseAddress = baseAddress;
-            this.apikey = apiKey;
-            this.thumbprint = certificateThumbprint;
-            this.ignoreSslErrors = ignoreSslErrors;
-        }
-
-        #endregion
-
         #region public properties
 
         /// <summary>
@@ -69,7 +50,7 @@ namespace RestClient
             set
             {
                 this.baseAddress = value;
-                this.InvalidateHandler();
+                this.InvalidateHttpClient();
             }
         }
 
@@ -90,7 +71,7 @@ namespace RestClient
             set
             {
                 this.apikey = value;
-                this.InvalidateHandler();
+                this.InvalidateHttpClient();
             }
         }
 
@@ -110,7 +91,7 @@ namespace RestClient
             set
             {
                 this.timeout = value;
-                this.InvalidateHandler();
+                this.InvalidateHttpClient();
             }
         }
 
@@ -131,7 +112,7 @@ namespace RestClient
             set
             {
                 this.thumbprint = value;
-                this.InvalidateHandler();
+                this.InvalidateHttpClient();
             }
         }
 
@@ -151,7 +132,7 @@ namespace RestClient
             set
             {
                 this.ignoreSslErrors = value;
-                this.InvalidateHandler();
+                this.InvalidateHttpClient();
             }
         }
 
@@ -169,7 +150,7 @@ namespace RestClient
         /// </remarks>
         public string Get(string uriPart)
         {
-            this.EnsureHandler();
+            this.EnsureHttpClient();
 
             HttpResponseMessage responseMessage = this.httpClient.GetAsync(uriPart, HttpCompletionOption.ResponseContentRead).Result;
 
@@ -198,7 +179,7 @@ namespace RestClient
         {
             if (disposing)
             {
-                this.InvalidateHandler();
+                this.InvalidateHttpClient();
             }
         }
 
@@ -231,16 +212,18 @@ namespace RestClient
             }
         }
 
-        private void InvalidateHandler()
+        private void InvalidateHttpClient()
         {
-            if (this.httpClient != null)
+            if (this.httpClient == null)
             {
-                this.httpClient.Dispose();
-                this.httpClient = null;
+                return;
             }
+
+            this.httpClient.Dispose();
+            this.httpClient = null;
         }
 
-        private void EnsureHandler()
+        private void EnsureHttpClient()
         {
             if (this.httpClient != null)
             {
@@ -252,16 +235,14 @@ namespace RestClient
 
         private void InitHttpClient()
         {
-            WebRequestHandler httpClientHandler = new WebRequestHandler();
-
             if (string.IsNullOrEmpty(this.apikey))
             {
-                throw new RestClientException("ApiKey is missing");
+                throw new RestClientException("ApiKey is missing", RestClientErrorCodes.RestClientConfigurationError);
             }
 
             if (string.IsNullOrEmpty(this.thumbprint))
             {
-                throw new RestClientException("Certificate Thumbprint is missing");
+                throw new RestClientException("Certificate Thumbprint is missing", RestClientErrorCodes.RestClientConfigurationError);
             }
 
             X509Store store = new X509Store(StoreLocation.CurrentUser);
@@ -270,7 +251,7 @@ namespace RestClient
             X509Certificate2Collection certificateColl = store.Certificates.Find(X509FindType.FindByThumbprint, this.thumbprint, false);
             if (certificateColl.Count < 0)
             {
-                throw new RestClientException("Certificate not found.");
+                throw new RestClientException("Certificate not found.", RestClientErrorCodes.RestClientConfigurationError);
             }
 
             X509Certificate2 cert = certificateColl[0];
@@ -278,10 +259,11 @@ namespace RestClient
 
             if (!verify)
             {
-                throw new RestClientException("Certificate not valid");
+                throw new RestClientException("Certificate not valid", RestClientErrorCodes.RestClientConfigurationError);
             }
 
-            httpClientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
+            WebRequestHandler httpClientHandler = new WebRequestHandler { ClientCertificateOptions = ClientCertificateOption.Manual };
+
             httpClientHandler.ClientCertificates.Add(cert);
 
             this.httpClient = new HttpClient(httpClientHandler, true);

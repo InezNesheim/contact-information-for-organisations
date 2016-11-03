@@ -38,7 +38,7 @@ namespace RestClient.Deserialize
             }
             catch (Exception e)
             {
-                throw new RestClientException(ErrorOnDeserialization, e);                
+                throw new RestClientException(ErrorOnDeserialization, RestClientErrorCodes.RestClientDeserialiationError, e);                
             }
 
             return resources;
@@ -61,7 +61,7 @@ namespace RestClient.Deserialize
             }
             catch (Exception e)
             {
-                throw new RestClientException(ErrorOnDeserialization, e);                
+                throw new RestClientException(ErrorOnDeserialization, RestClientErrorCodes.RestClientDeserialiationError, e);                
             }
 
             return resource;

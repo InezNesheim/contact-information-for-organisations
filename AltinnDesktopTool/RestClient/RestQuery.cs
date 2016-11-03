@@ -33,10 +33,10 @@ namespace RestClient
 
         private readonly ILog log;
         private readonly AltinnRestClient restClient;
+        private readonly IRestQueryConfig restQueryConfig;
         private readonly List<RestQueryControllerAttribute> controllers = new List<RestQueryControllerAttribute>();
 
         private bool isAuthenticated;
-        private IRestQueryConfig restQueryConfig;
 
         #endregion
 
@@ -54,59 +54,16 @@ namespace RestClient
         {
             this.restQueryConfig = restQueryConfig;
             this.log = log;
-            this.restClient = new AltinnRestClient(restQueryConfig.BaseAddress, restQueryConfig.ApiKey, restQueryConfig.ThumbPrint,
-                                                   restQueryConfig.IgnoreSslErrors);
-
-            if (restQueryConfig.Timeout > 0)
+            this.restClient = new AltinnRestClient
             {
-                this.restClient.Timeout = restQueryConfig.Timeout;
-            }
+                BaseAddress = restQueryConfig.BaseAddress,
+                ApiKey = restQueryConfig.ApiKey,
+                IgnoreSslErrors = restQueryConfig.IgnoreSslErrors,
+                Thumbprint = restQueryConfig.ThumbPrint,
+                Timeout = restQueryConfig.Timeout
+            };
 
             this.InitControllers();
-        }
-
-        #endregion
-
-        #region Private enums
-
-        private enum LogLevel
-        {
-            Debug = 0,
-            Error,
-            Warning,
-            Info,
-            Fatal,
-        }
-
-        #endregion
-
-        #region public properties
-
-        /// <summary>
-        /// Gets or sets the configuration as required by the RestQuery.
-        /// </summary>
-        /// <remarks>
-        /// The configuration may be changed in which it will reconnect according to new configuration at first request.
-        /// </remarks>
-        public IRestQueryConfig Config
-        {
-            get
-            {
-                return this.restQueryConfig;
-            }
-
-            set
-            {
-                this.restQueryConfig = value;
-                this.restClient.BaseAddress = this.restQueryConfig.BaseAddress;
-                this.restClient.ApiKey = this.restQueryConfig.ApiKey;
-                this.restClient.Thumbprint = this.restQueryConfig.ThumbPrint;
-
-                if (this.restQueryConfig.Timeout > 0)
-                {
-                    this.restClient.Timeout = this.restQueryConfig.Timeout;
-                }
-            }
         }
 
         #endregion
@@ -132,7 +89,8 @@ namespace RestClient
             if (controller == null)
             {
                 string err = string.Format(ControllerNotFoundForTypeException, typeof(T));
-                this.Log(err, LogLevel.Error);
+                this.log.Error(err, null);
+
                 throw new RestClientException(err);
             }
 
@@ -142,7 +100,7 @@ namespace RestClient
             }
             catch (Exception ex)
             {
-                this.Log(ControllerExceptionText, LogLevel.Error, ex);
+                this.log.Error(ControllerExceptionText, ex);
 
                 if (ex is RestClientException)
                 {
@@ -172,7 +130,7 @@ namespace RestClient
             if (controller == null)
             {
                 string err = string.Format(ControllerNotFoundForTypeException, typeof(T));
-                this.Log(err, LogLevel.Error);
+                this.log.Error(err, null);
 
                 throw new RestClientException(err);
             }
@@ -183,7 +141,7 @@ namespace RestClient
             }
             catch (Exception ex)
             {
-                this.Log(ControllerExceptionText, LogLevel.Error, ex);
+                this.log.Error(ControllerExceptionText, ex);
 
                 if (ex is RestClientException)
                 {
@@ -213,7 +171,8 @@ namespace RestClient
             if (controller == null)
             {
                 string err = string.Format(ControllerNotFoundForUrl, url);
-                this.Log(err, LogLevel.Error);
+                this.log.Error(err, null);
+
                 throw new RestClientException(err);
             }
 
@@ -223,7 +182,7 @@ namespace RestClient
             }
             catch (Exception ex)
             {
-                this.Log(ControllerExceptionText, LogLevel.Error, ex);
+                this.log.Error(ControllerExceptionText, ex);
 
                 if (ex is RestClientException)
                 {
@@ -385,53 +344,11 @@ namespace RestClient
                         }
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     // In some situation an exception is raised which is not harmfull.
-                    this.Log("Error while browsing assemblies for controllers (harmless)", LogLevel.Warning, ex);
+                    this.log.Warn("Error while browsing assemblies for controllers (harmless)");
                 }
-            }
-        }
-
-        /// <summary>
-        /// Local logging which takes into account whether _log object is defined or not
-        /// </summary>
-        /// <param name="text">Error text</param>
-        /// <param name="level">Logging level</param>
-        /// <param name="ex">Optional exception</param>
-        private void Log(string text,  LogLevel level, Exception ex = null)
-        {
-            if (this.log == null)
-            {
-                return;
-            }
-
-            try
-            {
-                switch (level)
-                {
-                    case LogLevel.Debug:
-                        this.log.Debug(text);
-                        break;
-                    case LogLevel.Error:
-                        this.log.Error(text, ex);
-                        break;
-                    case LogLevel.Warning:
-                        this.log.Warn(text);
-                        break;
-                    case LogLevel.Info:
-                        this.log.Info(text);
-                        break;
-                    case LogLevel.Fatal:
-                        this.log.Fatal(text, ex);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(level), level, null);
-                }
-            }
-            // ReSharper disable once EmptyGeneralCatchClause
-            catch
-            {
             }
         }
 
