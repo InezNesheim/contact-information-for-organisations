@@ -84,6 +84,7 @@ namespace AltinnDesktopTool.ViewModel
         {
             this.logger.Debug("Handling search result received event.");
             this.Model.ResultCollection = args.Item;
+            this.Model.SelectAllChecked = false;
             this.Model.IsBusy = false;
         }
 
